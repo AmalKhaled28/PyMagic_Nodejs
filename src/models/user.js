@@ -76,7 +76,7 @@ User.init(
       type: DataTypes.DATE,
       field: 'last_login_at'
     },
-    earnedPoints: {
+    earned_points: {
       type: DataTypes.INTEGER,
       field: 'earned_points'
     },

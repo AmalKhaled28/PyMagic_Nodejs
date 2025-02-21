@@ -61,10 +61,29 @@ const getUserByEmail = async (req, res) => {
       res.status(500).json({ error: 'Error retrieving user' })
     }
 }
+
+const getUserEarnedPoints = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    console.log("Earned Points:", user.earned_points); // Debugging
+    console.log("User:", user); // Debugging
+
+
+    res.json({ earned_points: user.earned_points });
+
+  } catch (err) {
+    res.status(500).json({ error: 'Error retrieving user' });
+  }
+};
+
 module.exports = {
   registerUser,
   getUserById,
   updateUser,
   deleteUser,
-  getUserByEmail
+  getUserByEmail,
+  getUserEarnedPoints
 }

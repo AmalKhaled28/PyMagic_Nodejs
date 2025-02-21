@@ -5,7 +5,8 @@ const {
   getUserById,
   updateUser,
   deleteUser,
-  getUserByEmail
+  getUserByEmail,
+  getUserEarnedPoints
 } = require('../controllers/userController')
 
 // Create a user
@@ -22,5 +23,8 @@ router.delete('/:id', deleteUser)
 
 // Get a user by email
 router.get('/email/:email', getUserByEmail)
+
+router.get('/points/:id', getUserEarnedPoints)
+
 
 module.exports = router
