@@ -9,9 +9,8 @@ Unit.init(
       type: DataTypes.STRING,
       primaryKey: true
     },
-    sectionId: {
+    section_id: {
       type: DataTypes.INTEGER,
-      field: 'section_id'
     },
     name: {
       type: DataTypes.STRING
@@ -19,9 +18,8 @@ Unit.init(
     description: {
       type: DataTypes.STRING
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

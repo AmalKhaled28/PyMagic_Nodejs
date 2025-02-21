@@ -9,9 +9,8 @@ Lesson.init(
       type: DataTypes.STRING,
       primaryKey: true
     },
-    unitId: {
+    unit_id: {
       type: DataTypes.STRING,
-      field: 'unit_id'
     },
     title: {
       type: DataTypes.STRING
@@ -19,17 +18,14 @@ Lesson.init(
     description: {
       type: DataTypes.STRING
     },
-    flashCard: {
+    flash_card: {
       type: DataTypes.STRING,
-      field: 'flash_card'
     },
-    videoUrl: {
+    video_url: {
       type: DataTypes.STRING,
-      field: 'video_url'
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

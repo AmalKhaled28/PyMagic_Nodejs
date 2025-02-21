@@ -16,9 +16,8 @@ Section.init(
     description: {
       type: DataTypes.STRING
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

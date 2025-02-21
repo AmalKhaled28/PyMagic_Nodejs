@@ -13,13 +13,11 @@ Motivation.init(
     text: {
       type: DataTypes.STRING
     },
-    scoreLevel: {
+    score_level: {
       type: DataTypes.STRING,
-      field: 'score_level'
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

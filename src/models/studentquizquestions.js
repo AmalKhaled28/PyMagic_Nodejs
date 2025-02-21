@@ -10,24 +10,20 @@ StudentQuizQuestion.init(
       primaryKey: true,
       autoIncrement: true
     },
-    questionId: {
+    question_id: {
       type: DataTypes.INTEGER,
-      field: 'question_id'
     },
-    quizId: {
+    quiz_id: {
       type: DataTypes.INTEGER,
-      field: 'quiz_id'
     },
     answer: {
       type: DataTypes.STRING
     },
-    isCorrect: {
+    is_correct: {
       type: DataTypes.BOOLEAN,
-      field: 'is_correct'
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

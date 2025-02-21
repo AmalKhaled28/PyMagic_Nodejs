@@ -16,9 +16,8 @@ Reward.init(
     image: {
       type: DataTypes.STRING
     },
-    requiredPoints: {
+    required_points: {
       type: DataTypes.INTEGER,
-      field: 'required_points'
     }
   },
   {

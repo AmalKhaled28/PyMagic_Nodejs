@@ -10,17 +10,14 @@ Achievement.init(
       primaryKey: true,
       autoIncrement: true
     },
-    userId: {
+    user_id: {
       type: DataTypes.INTEGER,
-      field: 'user_id'
     },
-    rewardId: {
+    reward_id: {
       type: DataTypes.INTEGER,
-      field: 'reward_id'
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

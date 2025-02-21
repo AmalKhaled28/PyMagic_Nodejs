@@ -10,9 +10,8 @@ Chatbot.init(
       primaryKey: true,
       autoIncrement: true
     },
-    userId: {
+    user_id: {
       type: DataTypes.INTEGER,
-      field: 'user_id'
     },
     prompt: {
       type: DataTypes.STRING
@@ -20,9 +19,8 @@ Chatbot.init(
     answer: {
       type: DataTypes.STRING
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

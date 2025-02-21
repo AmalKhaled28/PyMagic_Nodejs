@@ -10,9 +10,8 @@ Question.init(
       primaryKey: true,
       autoIncrement: true
     },
-    lessonId: {
+    lesson_id: {
       type: DataTypes.STRING,
-      field: 'lesson_id'
     },
     question: {
       type: DataTypes.STRING
@@ -23,9 +22,8 @@ Question.init(
     options: {
       type: DataTypes.JSON
     },
-    correctAnswer: {
+    correct_answer: {
       type: DataTypes.STRING,
-      field: 'correct_answer'
     },
     hint: {
       type: DataTypes.STRING
@@ -36,9 +34,8 @@ Question.init(
     points: {
       type: DataTypes.INTEGER
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

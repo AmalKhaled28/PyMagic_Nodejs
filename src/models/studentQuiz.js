@@ -10,32 +10,26 @@ StudentQuiz.init(
       primaryKey: true,
       autoIncrement: true
     },
-    lessonId: {
+    lesson_id: {
       type: DataTypes.STRING,
-      field: 'lesson_id'
     },
-    unitId: {
+    unit_id: {
       type: DataTypes.STRING,
-      field: 'unit_id'
     },
-    userId: {
+    user_id: {
       type: DataTypes.INTEGER,
-      field: 'user_id'
     },
-    isPassed: {
+    is_passed: {
       type: DataTypes.BOOLEAN,
-      field: 'is_passed'
     },
     score: {
       type: DataTypes.INTEGER
     },
-    earnedPoints: {
+    earned_points: {
       type: DataTypes.INTEGER,
-      field: 'earned_points'
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },

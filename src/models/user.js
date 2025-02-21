@@ -59,9 +59,8 @@ User.init(
       primaryKey: true,
       autoIncrement: true
     },
-    avatarId: {
+    avatar_id: {
       type: DataTypes.INTEGER,
-      field: 'avatar_id'
     },
     name: {
       type: DataTypes.STRING
@@ -72,28 +71,23 @@ User.init(
     password: {
       type: DataTypes.STRING
     },
-    lastLoginAt: {
+    last_login_at: {
       type: DataTypes.DATE,
-      field: 'last_login_at'
     },
     earned_points: {
       type: DataTypes.INTEGER,
-      field: 'earned_points'
     },
-    gameLevel: {
+    game_level: {
       type: DataTypes.INTEGER,
-      field: 'game_level'
     },
-    parentEmail: {
+    parent_email: {
       type: DataTypes.STRING,
-      field: 'parent_email'
     },
     age: {
       type: DataTypes.INTEGER
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
-      field: 'created_at',
       defaultValue: DataTypes.NOW
     }
   },
