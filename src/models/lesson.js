@@ -16,12 +16,15 @@ Lesson.init(
       type: DataTypes.STRING
     },
     description: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     flash_card: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     video_url: {
+      type: DataTypes.TEXT,
+    },
+    language: {
       type: DataTypes.STRING,
     },
     created_at: {

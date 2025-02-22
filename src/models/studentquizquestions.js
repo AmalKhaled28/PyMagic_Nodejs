@@ -17,7 +17,7 @@ StudentQuizQuestion.init(
       type: DataTypes.INTEGER,
     },
     answer: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     is_correct: {
       type: DataTypes.BOOLEAN,

@@ -3,9 +3,9 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('questions', [
-      // ========================
-      // Unit 1.1.1 - Programming Basics
-      // ========================
+      // ========================================================
+      // section 1, unit 1, lesson 1 {1.1.1} - Programming Basics
+      // ==========================================================
       {
         id: 1,
         lesson_id: '1.1.1',
@@ -212,7 +212,7 @@ module.exports = {
       },
 
       // ========================
-      // Unit 1.2.1 - Python Introduction
+      // section 1, unit 2, lesson 1 {1.2.1} - Python Introduction
       // ========================
       {
         id: 18,
@@ -347,9 +347,9 @@ module.exports = {
         created_at: new Date(),
       },
 
-      // ========================
-      // Unit 1.2.2 - Python Print
-      // ========================
+      // ==================================================
+      // section 1, unit 2, lesson 2 {1.2.2} - Python Print
+      // ===================================================
       {
         id: 29,
         lesson_id: '1.2.2',

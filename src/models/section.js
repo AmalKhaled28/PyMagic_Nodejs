@@ -14,7 +14,7 @@ Section.init(
       type: DataTypes.STRING
     },
     description: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     created_at: {
       type: DataTypes.DATE,

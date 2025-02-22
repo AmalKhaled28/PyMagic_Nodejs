@@ -14,10 +14,10 @@ Chatbot.init(
       type: DataTypes.INTEGER,
     },
     prompt: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     answer: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     created_at: {
       type: DataTypes.DATE,

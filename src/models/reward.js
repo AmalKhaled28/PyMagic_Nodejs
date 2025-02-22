@@ -10,7 +10,7 @@ Reward.init(
       primaryKey: true,
       autoIncrement: true
     },
-    type: {
+    text: {
       type: DataTypes.STRING
     },
     image: {

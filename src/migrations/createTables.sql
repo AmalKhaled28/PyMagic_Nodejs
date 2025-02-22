@@ -4,26 +4,33 @@ CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     avatar_id INT,
     name VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     last_login_at TIMESTAMP,
     earned_points INT,
     game_level INT,
-    parent_email VARCHAR(255),
+    parent_email VARCHAR(255) UNIQUE,
     age INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE motivations (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    text VARCHAR(255),
+    text TEXT,
     score_level VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE answer_motivation (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    text TEXT,
+    answer_type ENUM('correct', 'wrong'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE rewards (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    type VARCHAR(255),
+    text VARCHAR(255),
     image VARCHAR(255),
     required_points INT
 );
@@ -40,8 +47,8 @@ CREATE TABLE achievements (
 CREATE TABLE chatbot (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
-    prompt VARCHAR(255),
-    answer VARCHAR(255),
+    prompt TEXT,
+    answer TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -49,7 +56,7 @@ CREATE TABLE chatbot (
 CREATE TABLE sections (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
-    description VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -57,7 +64,7 @@ CREATE TABLE units (
     id VARCHAR(255) PRIMARY KEY,
     section_id INT,
     name VARCHAR(255),
-    description VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (section_id) REFERENCES sections(id)
 );
@@ -66,9 +73,10 @@ CREATE TABLE lessons (
     id VARCHAR(255) PRIMARY KEY,
     unit_id VARCHAR(255),
     title VARCHAR(255),
-    description VARCHAR(255),
-    flash_card VARCHAR(255),
-    video_url VARCHAR(255),
+    description TEXT,
+    flash_card TEXT,
+    video_url TEXT,
+    language VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (unit_id) REFERENCES units(id)
 );
@@ -76,11 +84,11 @@ CREATE TABLE lessons (
 CREATE TABLE questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     lesson_id VARCHAR(255),
-    question VARCHAR(255),
+    question TEXT,
     type ENUM('multiple_choice', 'true_false'),
     options JSON,
-    correct_answer VARCHAR(255),
-    hint VARCHAR(255),
+    correct_answer TEXT,
+    hint TEXT,
     level ENUM('easy', 'medium', 'hard'),
     points INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -105,9 +113,12 @@ CREATE TABLE student_quiz_questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     question_id INT,
     quiz_id INT,
-    answer VARCHAR(255),
+    answer TEXT,
     is_correct BOOLEAN,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (question_id) REFERENCES questions(id),
     FOREIGN KEY (quiz_id) REFERENCES student_quizzes(id)
 );
+
+
+-- Get-Content D:\PymagicBackend\src\migrations\createTables1.sql | mysql -u root -p pymagic

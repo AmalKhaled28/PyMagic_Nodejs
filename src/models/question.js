@@ -14,7 +14,7 @@ Question.init(
       type: DataTypes.STRING,
     },
     question: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     type: {
       type: DataTypes.ENUM('multiple_choice', 'true_false')
@@ -23,7 +23,7 @@ Question.init(
       type: DataTypes.JSON
     },
     correct_answer: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     hint: {
       type: DataTypes.STRING

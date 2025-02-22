@@ -66,7 +66,8 @@ User.init(
       type: DataTypes.STRING
     },
     email: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     },
     password: {
       type: DataTypes.STRING
@@ -82,6 +83,7 @@ User.init(
     },
     parent_email: {
       type: DataTypes.STRING,
+      unique: true
     },
     age: {
       type: DataTypes.INTEGER
