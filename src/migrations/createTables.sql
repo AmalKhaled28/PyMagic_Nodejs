@@ -3,14 +3,14 @@ USE pymagic;
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     avatar_id INT,
-    name VARCHAR(255),
+    name VARCHAR(255)  NOT NULL,
     email VARCHAR(255) UNIQUE  NOT NULL,
-    password VARCHAR(255),
+    password VARCHAR(255) NOT NULL,
     last_login_at TIMESTAMP,
     earned_points INT,
     game_level INT,
     parent_email VARCHAR(255) UNIQUE,
-    age INT,
+    age INT NOT NULL,  
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

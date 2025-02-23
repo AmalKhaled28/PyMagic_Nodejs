@@ -68,7 +68,8 @@ User.init(
       type: DataTypes.INTEGER,
     },
     name: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
@@ -76,7 +77,8 @@ User.init(
       allowNull: false
     },
     password: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false
     },
     last_login_at: {
       type: DataTypes.DATE,
@@ -91,7 +93,8 @@ User.init(
       type: DataTypes.STRING
     },
     age: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     created_at: {
       type: DataTypes.DATE,
