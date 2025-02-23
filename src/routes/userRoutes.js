@@ -1,30 +1,22 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const authMiddleware = require('../middlewares/auth');
+
 const {
   registerUser,
-  getUserById,
-  updateUser,
-  deleteUser,
-  getUserByEmail,
-  getUserEarnedPoints
-} = require('../controllers/userController')
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  getUserProfile
+} = require('../controllers/userController');
 
-// Create a user
-router.post('/register', registerUser)
+// **Public Routes**
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
-// Get a user by id
-router.get('/:id', getUserById)
+// **Protected Routes (Require Authentication)**
+router.get('/profile', authMiddleware, getUserProfile);
 
-// Update a user by id
-router.put('/:id', updateUser)
-
-// Delete a user by id
-router.delete('/:id', deleteUser)
-
-// Get a user by email
-router.get('/email/:email', getUserByEmail)
-
-router.get('/points/:id', getUserEarnedPoints)
-
-
-module.exports = router
+module.exports = router;

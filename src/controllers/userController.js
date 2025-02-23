@@ -1,89 +1,96 @@
-const User = require('../models/user')
-
 // Create a user
+// 
+
+/////////////////////////////////////////
+
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+// **Register User**
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, parentEmail, age } = req.body
-    const newUser = await User.create({ name, email, password, parentEmail, age })
-    res.status(201).json({ message: 'User created', userId: newUser.userId })
+    const { name, email, password, parentEmail, age } = req.body;
+    
+    const existingUser = await User.getByEmail(email);
+    if (existingUser) return res.status(400).json({ error: 'Email already exists' });
+
+    const newUser = await User.create({ name, email, password, parent_email: parentEmail, age });
+
+    res.status(201).json({ message: 'User created', userId: newUser.id });
   } catch (err) {
-    res.status(500).json({ error: 'Error creating user' })
+    res.status(500).json({ error: 'Error creating user' });
   }
-}
+};
 
-// Find a user by ID
-const getUserById = async (req, res) => {
+// **Login User**
+const loginUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id)
-    if (!user) return res.status(404).json({ error: 'User not found' })
-    res.json(user)
-  } catch (err) {
-    res.status(500).json({ error: 'Error retrieving user' })
-  }
-}
+    const { email, password, rememberMe } = req.body;
 
-// Update a user by ID
-const updateUser = async (req, res) => {
-  try {
-    const [updated] = await User.update(req.body, {
-      where: { userId: req.params.id }
-    })
-    if (updated) {
-      const updatedUser = await User.findByPk(req.params.id)
-      return res.json(updatedUser)
-    }
-    res.status(404).json({ error: 'User not found' })
-  } catch (err) {
-    res.status(500).json({ error: 'Error updating user' })
-  }
-}
-
-// Delete a user by ID
-const deleteUser = async (req, res) => {
-  try {
-    const deleted = await User.destroy({
-      where: { userId: req.params.id }
-    })
-    if (deleted) return res.json({ message: 'User deleted' })
-    res.status(404).json({ error: 'User not found' })
-  } catch (err) {
-    res.status(500).json({ error: 'Error deleting user' })
-  }
-}
-
-const getUserByEmail = async (req, res) => {
-    try {
-      const { email } = req.params
-      const user = await User.getByEmail(email)
-      if (!user) return res.status(404).json({ error: 'User not found' })
-      res.json(user)
-    } catch (err) {
-      res.status(500).json({ error: 'Error retrieving user' })
-    }
-}
-
-const getUserEarnedPoints = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await User.getByEmail(email) || await User.getByEmail(req.body.parentEmail);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    console.log("Earned Points:", user.earned_points); // Debugging
-    console.log("User:", user); // Debugging
+    const isPasswordValid = await user.checkPassword(password);
+    if (!isPasswordValid) return res.status(401).json({ error: 'Invalid credentials' });
 
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: rememberMe ? '1h' : '1h' });
 
-    res.json({ earned_points: user.earned_points });
-
+    res.json({ message: 'Login successful', token });
   } catch (err) {
-    res.status(500).json({ error: 'Error retrieving user' });
+    res.status(500).json({ error: 'Error logging in'+err });
+  }
+};
+
+// **Forgot Password**
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.getByEmail(email);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // هنا يمكنك توليد رمز عشوائي أو رابط إعادة تعيين كلمة المرور وإرساله عبر البريد الإلكتروني
+    res.json({ message: 'Password reset link sent' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error processing request' });
+  }
+};
+
+
+// **Reset Password**
+const resetPassword = async (req, res) => {
+  try {
+    const { email, password, resetToken } = req.body;
+    const user = await User.getByEmail(email);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // هنا يمكنك التحقق من صحة الرمز المميز وتحديث كلمة المرور
+    res.json({ message: 'Password reset successful' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error processing request' });
+  }
+};
+
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, { attributes: { exclude: ['password'] } });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching user' });
   }
 };
 
 module.exports = {
   registerUser,
-  getUserById,
-  updateUser,
-  deleteUser,
-  getUserByEmail,
-  getUserEarnedPoints
-}
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  getUserProfile
+};
+
+
+
+

@@ -4,7 +4,7 @@ CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     avatar_id INT,
     name VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
+    email VARCHAR(255) UNIQUE  NOT NULL,
     password VARCHAR(255),
     last_login_at TIMESTAMP,
     earned_points INT,

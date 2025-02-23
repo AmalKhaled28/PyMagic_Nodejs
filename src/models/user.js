@@ -45,10 +45,15 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const bcrypt = require('bcrypt');
 
 class User extends Model {
   static async getByEmail(email) {
-    return await this.findOne({ where: { email } })
+    return await this.findOne({ where: { email } });
+  }
+
+  async checkPassword(password) {
+    return await bcrypt.compare(password, this.password);
   }
 }
 
@@ -67,7 +72,8 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
-      unique: true
+      unique: true,
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING
@@ -82,8 +88,7 @@ User.init(
       type: DataTypes.INTEGER,
     },
     parent_email: {
-      type: DataTypes.STRING,
-      unique: true
+      type: DataTypes.STRING
     },
     age: {
       type: DataTypes.INTEGER
@@ -97,7 +102,14 @@ User.init(
     sequelize,
     modelName: 'User',
     tableName: 'users',
-    timestamps: false
+    timestamps: false,
+    hooks: {
+      beforeCreate: async (user) => {
+        if (user.password) {
+          user.password = await bcrypt.hash(user.password, 10);
+        }
+      }
+    }
   }
 );
 
