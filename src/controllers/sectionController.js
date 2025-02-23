@@ -1,19 +1,30 @@
-const Section = require("../models/section");
+// const Section = require("../models/section");
+// const Unit = require("../models/unit");
+// const Lesson = require("../models/lesson");
+const { Section, Unit, Lesson } = require("../models/index");
 
-exports.getSections = async (req, res) => {
-    try {
-        const sections = await Section.findAll();
-        res.json(sections);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
+//change it to function the export as in the usercontroller
+exports.getSectionDetails = async (req, res) => {
+  try {
+    const sectionId = req.params.id; //eager loading
+    const section = await Section.findOne({
+      where: { id: sectionId },
+      include: [
+        {
+          model: Unit,
+          as: "units",
+          include: [{ model: Lesson, as: "lessons" ,  attributes: ["id"] }],
+        },
+      ],
+    });
 
-exports.createSection = async (req, res) => {
-    try {
-        const section = await Section.create(req.body);
-        res.status(201).json(section);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+    if (!section) {
+      return res.status(404).json({ message: "Section not found" });
     }
+
+    res.json(section);
+  } catch (error) {
+    console.error("Error fetching section details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
