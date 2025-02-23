@@ -52,7 +52,7 @@ const forgotPassword = async (req, res) => {
     const user = await User.getByEmail(email);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // هنا يمكنك توليد رمز عشوائي أو رابط إعادة تعيين كلمة المرور وإرساله عبر البريد الإلكتروني
+    //return forget password link 
     res.json({ message: 'Password reset link sent' });
   } catch (err) {
     res.status(500).json({ error: 'Error processing request' });
@@ -67,7 +67,7 @@ const resetPassword = async (req, res) => {
     const user = await User.getByEmail(email);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // هنا يمكنك التحقق من صحة الرمز المميز وتحديث كلمة المرور
+    //check password and update it 
     res.json({ message: 'Password reset successful' });
   } catch (err) {
     res.status(500).json({ error: 'Error processing request' });
