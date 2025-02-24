@@ -11,11 +11,11 @@ const StudentQuiz = require('./studentQuiz');
 const StudentQuizQuestion = require('./studentquizquestions');
 
 // Example associations:
-User.hasMany(Achievement, { foreignKey: 'user_id' });
-Achievement.belongsTo(User, { foreignKey: 'user_id' });
+User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements' });
+Achievement.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-Reward.hasMany(Achievement, { foreignKey: 'reward_id' });
-Achievement.belongsTo(Reward, { foreignKey: 'reward_id' });
+Reward.hasMany(Achievement, { foreignKey: 'reward_id', as: 'achievements' });
+Achievement.belongsTo(Reward, { foreignKey: 'reward_id', as: 'reward' });
 
 Section.hasMany(Unit, { foreignKey: 'section_id', as: 'units' });
 Unit.belongsTo(Section, { foreignKey: 'section_id', as: 'section' });
