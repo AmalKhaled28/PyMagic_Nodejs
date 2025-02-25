@@ -11,7 +11,7 @@ Question.init(
       autoIncrement: true
     },
     lesson_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     question: {
       type: DataTypes.TEXT
@@ -23,10 +23,10 @@ Question.init(
       type: DataTypes.JSON
     },
     correct_answer: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT
     },
     hint: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     level: {
       type: DataTypes.ENUM('easy', 'medium', 'hard')

@@ -6,11 +6,15 @@ class Lesson extends Model {}
 Lesson.init(
   {
     id: {
-      type: DataTypes.STRING,
-      primaryKey: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    lesson_id: {
+      type: DataTypes.STRING
     },
     unit_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     title: {
       type: DataTypes.STRING
@@ -19,13 +23,13 @@ Lesson.init(
       type: DataTypes.TEXT
     },
     flash_card: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT
     },
     video_url: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING
     },
     language: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     created_at: {
       type: DataTypes.DATE,

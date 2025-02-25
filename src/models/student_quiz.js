@@ -11,22 +11,22 @@ StudentQuiz.init(
       autoIncrement: true
     },
     lesson_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     unit_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     user_id: {
       type: DataTypes.INTEGER,
     },
     is_passed: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN
     },
     score: {
       type: DataTypes.INTEGER
     },
     earned_points: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     created_at: {
       type: DataTypes.DATE,

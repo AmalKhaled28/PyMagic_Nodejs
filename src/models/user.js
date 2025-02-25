@@ -90,7 +90,8 @@ User.init(
       type: DataTypes.INTEGER,
     },
     parent_email: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     },
     age: {
       type: DataTypes.INTEGER,

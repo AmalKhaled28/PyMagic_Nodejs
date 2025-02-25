@@ -3,14 +3,14 @@ USE pymagic;
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     avatar_id INT,
-    name VARCHAR(255)  NOT NULL,
-    email VARCHAR(255) UNIQUE  NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     last_login_at TIMESTAMP,
     earned_points INT,
     game_level INT,
     parent_email VARCHAR(255) UNIQUE,
-    age INT NOT NULL,  
+    age INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -61,7 +61,8 @@ CREATE TABLE sections (
 );
 
 CREATE TABLE units (
-    id VARCHAR(255) PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    unit_id VARCHAR(255),
     section_id INT,
     name VARCHAR(255),
     description TEXT,
@@ -70,8 +71,9 @@ CREATE TABLE units (
 );
 
 CREATE TABLE lessons (
-    id VARCHAR(255) PRIMARY KEY,
-    unit_id VARCHAR(255),
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    lesson_id VARCHAR(255),
+    unit_id INT,
     title VARCHAR(255),
     description TEXT,
     flash_card TEXT,
@@ -83,7 +85,7 @@ CREATE TABLE lessons (
 
 CREATE TABLE questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    lesson_id VARCHAR(255),
+    lesson_id INT,
     question TEXT,
     type ENUM('multiple_choice', 'true_false'),
     options JSON,
@@ -97,8 +99,8 @@ CREATE TABLE questions (
 
 CREATE TABLE student_quizzes (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    lesson_id VARCHAR(255),
-    unit_id VARCHAR(255),
+    lesson_id INT,
+    unit_id INT,
     user_id INT,
     is_passed BOOLEAN,
     score INT,
@@ -121,4 +123,4 @@ CREATE TABLE student_quiz_questions (
 );
 
 
--- Get-Content D:\PymagicBackend\src\migrations\createTables1.sql | mysql -u root -p pymagic
+-- -- Get-Content D:\PymagicBackend\src\migrations\createTables1.sql | mysql -u root -p pymagic

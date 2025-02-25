@@ -17,7 +17,7 @@ Reward.init(
       type: DataTypes.STRING
     },
     required_points: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     }
   },
   {

@@ -20,7 +20,7 @@ StudentQuizQuestion.init(
       type: DataTypes.TEXT
     },
     is_correct: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN
     },
     created_at: {
       type: DataTypes.DATE,

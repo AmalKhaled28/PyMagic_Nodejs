@@ -11,10 +11,10 @@ Motivation.init(
       autoIncrement: true
     },
     text: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     score_level: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     created_at: {
       type: DataTypes.DATE,

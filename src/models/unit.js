@@ -6,8 +6,12 @@ class Unit extends Model {}
 Unit.init(
   {
     id: {
-      type: DataTypes.STRING,
-      primaryKey: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    unit_id: {
+      type: DataTypes.STRING
     },
     section_id: {
       type: DataTypes.INTEGER,

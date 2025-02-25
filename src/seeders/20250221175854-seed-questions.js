@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -8,7 +8,7 @@ module.exports = {
       // ==========================================================
       {
         id: 1,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What do computers understand?',
         type: 'multiple_choice',
         options: JSON.stringify(['English and Arabic', 'Colors and shapes', '0s and 1s', 'Funny sounds']),
@@ -20,7 +20,7 @@ module.exports = {
       },
       {
         id: 2,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What is easier than writing 0s and 1s?',
         type: 'multiple_choice',
         options: JSON.stringify(['Drawing pictures', 'Using programming languages', 'Counting stars', 'Writing a book']),
@@ -32,7 +32,7 @@ module.exports = {
       },
       {
         id: 3,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What does "programming" help us do?',
         type: 'multiple_choice',
         options: JSON.stringify(['Teach a computer how to cook', 'Tell a computer exactly what to do', 'Make friends with a computer', 'Turn a computer into a toy']),
@@ -44,7 +44,7 @@ module.exports = {
       },
       {
         id: 4,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What do we call giving instructions to a computer?',
         type: 'multiple_choice',
         options: JSON.stringify(['Programming', 'Painting', 'Storytelling', 'Singing']),
@@ -56,7 +56,7 @@ module.exports = {
       },
       {
         id: 5,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What kind of information do computers truly understand?',
         type: 'multiple_choice',
         options: JSON.stringify(['Spoken languages', 'Colors and shapes', '0s and 1s', 'Silly noises']),
@@ -68,7 +68,7 @@ module.exports = {
       },
       {
         id: 6,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What makes it simpler to communicate with computers?',
         type: 'multiple_choice',
         options: JSON.stringify(['Drawings', 'Programming languages', 'Counting stars', 'Writing stories']),
@@ -80,7 +80,7 @@ module.exports = {
       },
       {
         id: 7,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What is the main purpose of programming?',
         type: 'multiple_choice',
         options: JSON.stringify(['Bake cookies', 'Give step-by-step instructions', 'Make friends', 'Create toys']),
@@ -92,7 +92,7 @@ module.exports = {
       },
       {
         id: 8,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What’s writing computer instructions called?',
         type: 'multiple_choice',
         options: JSON.stringify(['Programming', 'Drawing', 'Storytelling', 'Singing']),
@@ -104,7 +104,7 @@ module.exports = {
       },
       {
         id: 9,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Why use programming languages?',
         type: 'multiple_choice',
         options: JSON.stringify(['Talk to computers', 'Make music', 'Learn human languages', 'Decorate computers']),
@@ -116,7 +116,7 @@ module.exports = {
       },
       {
         id: 10,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'What happens when we write a program?',
         type: 'multiple_choice',
         options: JSON.stringify(['Computer thinks', 'Computer follows instructions', 'Computer talks', 'Computer gets smart']),
@@ -128,7 +128,7 @@ module.exports = {
       },
       {
         id: 11,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'How does programming help us?',
         type: 'multiple_choice',
         options: JSON.stringify(['Chat faster', 'Do tasks quickly', 'Teach eating', 'Watch TV']),
@@ -140,7 +140,7 @@ module.exports = {
       },
       {
         id: 12,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Programming is like asking a robot for help.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -152,7 +152,7 @@ module.exports = {
       },
       {
         id: 13,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Computers understand English/Arabic.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -164,7 +164,7 @@ module.exports = {
       },
       {
         id: 14,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Computers only understand 0s/1s.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -176,7 +176,7 @@ module.exports = {
       },
       {
         id: 15,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Programming languages translate for computers.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -188,7 +188,7 @@ module.exports = {
       },
       {
         id: 16,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Writing 0s/1s is easy for humans.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -200,7 +200,7 @@ module.exports = {
       },
       {
         id: 17,
-        lesson_id: '1.1.1',
+        lesson_id: 1, // Updated to integer
         question: 'Computers understand instructions without translation.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -216,7 +216,7 @@ module.exports = {
       // ========================
       {
         id: 18,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'What is Python?',
         type: 'multiple_choice',
         options: JSON.stringify(['Snake', 'Programming tool', 'Game', 'Robot']),
@@ -228,7 +228,7 @@ module.exports = {
       },
       {
         id: 19,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'What can you do with Python?',
         type: 'multiple_choice',
         options: JSON.stringify(['Math, art, games', 'Bake', 'Ride bike', 'Play soccer']),
@@ -240,7 +240,7 @@ module.exports = {
       },
       {
         id: 20,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'Best thing about Python?',
         type: 'multiple_choice',
         options: JSON.stringify(['Hard to learn', 'Needs lots of code', 'Does much with little code', 'Makes sleep']),
@@ -252,7 +252,7 @@ module.exports = {
       },
       {
         id: 21,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'What can Python help do?',
         type: 'multiple_choice',
         options: JSON.stringify(['Math', 'Say hello', 'Make games', 'All']),
@@ -264,7 +264,7 @@ module.exports = {
       },
       {
         id: 22,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'Who can learn Python?',
         type: 'multiple_choice',
         options: JSON.stringify(['Scientists only', 'Everyone', 'Adults only', 'Robots']),
@@ -276,7 +276,7 @@ module.exports = {
       },
       {
         id: 23,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'How to make computer say your name?',
         type: 'multiple_choice',
         options: JSON.stringify(['Python', 'Phone', 'Calculator', 'Dictionary']),
@@ -288,7 +288,7 @@ module.exports = {
       },
       {
         id: 24,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'What happens with Python code?',
         type: 'multiple_choice',
         options: JSON.stringify(['Computer listens', 'Turns off', 'Ignores', 'Sings']),
@@ -300,7 +300,7 @@ module.exports = {
       },
       {
         id: 25,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'What is Python used for?',
         type: 'multiple_choice',
         options: JSON.stringify(['Math only', 'Games only', 'Many things', 'Scientists only']),
@@ -312,7 +312,7 @@ module.exports = {
       },
       {
         id: 26,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'How hard is Python?',
         type: 'multiple_choice',
         options: JSON.stringify(['Easy', 'Impossible', '10 years', 'Adults only']),
@@ -324,7 +324,7 @@ module.exports = {
       },
       {
         id: 27,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'Why is Python fun?',
         type: 'multiple_choice',
         options: JSON.stringify(['Hard', 'Makes cool stuff', 'Only pictures', 'Snake name']),
@@ -336,7 +336,7 @@ module.exports = {
       },
       {
         id: 28,
-        lesson_id: '1.2.1',
+        lesson_id: 2, // Updated to integer
         question: 'Python is for...',
         type: 'multiple_choice',
         options: JSON.stringify(['Everyone', 'Scientists', 'Game', 'Numbers only']),
@@ -352,7 +352,7 @@ module.exports = {
       // ===================================================
       {
         id: 29,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'What does print() do?',
         type: 'multiple_choice',
         options: JSON.stringify(['Shows on screen', 'Prints paper', 'Dances', 'Turns off']),
@@ -364,7 +364,7 @@ module.exports = {
       },
       {
         id: 30,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'How to show a word?',
         type: 'multiple_choice',
         options: JSON.stringify(['print("Hello")', 'print(Hello)', 'show[Hello]', 'word(Hello)']),
@@ -376,7 +376,7 @@ module.exports = {
       },
       {
         id: 31,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'How to show a number?',
         type: 'multiple_choice',
         options: JSON.stringify(['print(5)', 'print("5")', 'number(5)', 'show[5]']),
@@ -388,7 +388,7 @@ module.exports = {
       },
       {
         id: 32,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'How to show 2+2 result?',
         type: 'multiple_choice',
         options: JSON.stringify(['print(2+2)', 'math(2+2)', 'print(2,2)', 'result[2+2]']),
@@ -400,7 +400,7 @@ module.exports = {
       },
       {
         id: 33,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'What does print("Fun!") show?',
         type: 'multiple_choice',
         options: JSON.stringify(['Fun!', 'Hard!', 'Nothing', 'Error']),
@@ -412,7 +412,7 @@ module.exports = {
       },
       {
         id: 34,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Why use quotes?',
         type: 'multiple_choice',
         options: JSON.stringify(['Show text', 'Count letters', 'Confuse', 'Longer code']),
@@ -424,7 +424,7 @@ module.exports = {
       },
       {
         id: 35,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'What if no print()?',
         type: 'multiple_choice',
         options: JSON.stringify(['No display', 'Still shows', 'Draws', 'Stops']),
@@ -436,7 +436,7 @@ module.exports = {
       },
       {
         id: 36,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Correct way to print "Hello"?',
         type: 'multiple_choice',
         options: JSON.stringify(['print("Hello")', 'print(Hello)', 'print[Hello]', 'print/Hello/']),
@@ -448,7 +448,7 @@ module.exports = {
       },
       {
         id: 37,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Print helps...',
         type: 'multiple_choice',
         options: JSON.stringify(['Make website', 'Show results', 'Run computer', 'Draw']),
@@ -460,7 +460,7 @@ module.exports = {
       },
       {
         id: 38,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'How to print 8-2?',
         type: 'multiple_choice',
         options: JSON.stringify(['print(8-2)', 'print[8-2]', 'print(8,2)', 'print("8-2")']),
@@ -472,7 +472,7 @@ module.exports = {
       },
       {
         id: 39,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'What does print("Hello World") show?',
         type: 'multiple_choice',
         options: JSON.stringify(['Hello World', 'Hello', 'World', '"Hello World"']),
@@ -484,7 +484,7 @@ module.exports = {
       },
       {
         id: 40,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'How to print number 10?',
         type: 'multiple_choice',
         options: JSON.stringify(['print(10)', 'print("10")', 'number(10)', 'show(10)']),
@@ -496,7 +496,7 @@ module.exports = {
       },
       {
         id: 41,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Print shows on screen.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -508,7 +508,7 @@ module.exports = {
       },
       {
         id: 42,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Print only for words.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -520,7 +520,7 @@ module.exports = {
       },
       {
         id: 43,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Print can show math results.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -532,7 +532,7 @@ module.exports = {
       },
       {
         id: 44,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Print helps understand code.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -544,7 +544,7 @@ module.exports = {
       },
       {
         id: 45,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Cannot use print to check code.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -556,7 +556,7 @@ module.exports = {
       },
       {
         id: 46,
-        lesson_id: '1.2.2',
+        lesson_id: 3, // Updated to integer
         question: 'Print is unimportant.',
         type: 'true_false',
         options: JSON.stringify(['True', 'False']),
@@ -566,10 +566,10 @@ module.exports = {
         points: 5,
         created_at: new Date(),
       }
-    ], {})
+    ], {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('questions', null, {})
+    await queryInterface.bulkDelete('questions', null, {});
   }
-}
+};

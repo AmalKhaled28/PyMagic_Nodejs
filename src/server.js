@@ -3,24 +3,21 @@ const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const sequelize = require('./config/db');
 
-///////
+
 const cors = require("cors");
 const sectionRoutes = require("./routes/sectionRoutes");
-//////
 
 dotenv.config();
 const app = express();
-///////
+
 app.use(cors());
-///////
+
 app.use(express.json());
 
 // Routes
 app.use('/api/users', userRoutes);
 
-///////
 app.use("/sections", sectionRoutes);
-///////
 
 // Database Connection
 sequelize.sync()
