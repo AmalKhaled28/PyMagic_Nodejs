@@ -9,6 +9,7 @@ const Lesson = require('./lesson');
 const Question = require('./question');
 const StudentQuiz = require('./student_quiz');
 const StudentQuizQuestion = require('./student_quiz_question');
+const AnswerMotivation = require('./answer_motivation');  
 
 // Example associations:
 User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements' });
@@ -52,5 +53,6 @@ module.exports = {
   Lesson,
   Question,
   StudentQuiz,
-  StudentQuizQuestion
+  StudentQuizQuestion,
+  AnswerMotivation
 };

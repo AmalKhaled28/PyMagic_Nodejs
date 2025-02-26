@@ -79,6 +79,160 @@ module.exports = {
         video_url: '/videos/lesson_python_variable_naming.mp4',
         language: 'English',
         created_at: new Date()
+      },
+      {
+        id: 8,
+        lesson_id: '1.4.1',
+        unit_id: 4,
+        title: 'String Operators (+, *)',
+        description: 'Introduction to string operators in Python',
+        flash_card: 'String operators allow you to manipulate strings. The + operator concatenates strings, while the * operator repeats a string a specified number of times.',
+        video_url: '/videos/lesson_python_string_operators.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 9,
+        lesson_id: '1.5.1',
+        unit_id: 5,
+        title: 'Basic Arithmetic in Python (+, -, *, /)',
+        description: 'Introduction to basic arithmetic operations in Python',
+        flash_card: 'Python supports basic arithmetic operations: addition (+), subtraction (-), multiplication (*), and division (/). These operations can be performed on numbers.',
+        video_url: '/videos/lesson_python_basic_arithmetic.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 10,
+        lesson_id: '1.5.2',
+        unit_id: 5,
+        title: 'Order of Operation',
+        description: 'Understanding the order of operations in Python',
+        flash_card: 'Python follows the standard order of operations (PEMDAS/BODMAS): Parentheses/Brackets, Exponents/Orders, Multiplication and Division (from left to right), Addition and Subtraction (from left to right).',
+        video_url: '/videos/lesson_python_order_of_operation.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 11,
+        lesson_id: '1.5.3',
+        unit_id: 5,
+        title: 'Working with Strings and Numbers in Python',
+        description: 'Combining strings and numbers in Python',
+        flash_card: 'You can convert numbers to strings using the str() function and concatenate them with other strings. Similarly, you can convert strings to numbers using int() or float() functions.',
+        video_url: '/videos/lesson_python_strings_and_numbers.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 12,
+        lesson_id: '1.6.1',
+        unit_id: 6,
+        title: 'Comparison Operators (==, <, >)',
+        description: 'Introduction to comparison operators in Python',
+        flash_card: 'Comparison operators are used to compare values: == (equal to), != (not equal to), < (less than), > (greater than), <= (less than or equal to), >= (greater than or equal to).',
+        video_url: '/videos/lesson_python_comparison_operators.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 13,
+        lesson_id: '1.6.2',
+        unit_id: 6,
+        title: 'If Statement',
+        description: 'Introduction to the if statement in Python',
+        flash_card: 'The if statement allows you to execute a block of code only if a certain condition is true. If the condition is false, the code block is skipped.',
+        video_url: '/videos/lesson_python_if_statement.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 14,
+        lesson_id: '1.6.3',
+        unit_id: 6,
+        title: 'If Else Statement',
+        description: 'Introduction to the if-else statement in Python',
+        flash_card: 'The if-else statement allows you to execute one block of code if a condition is true, and another block if the condition is false.',
+        video_url: '/videos/lesson_python_if_else_statement.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 15,
+        lesson_id: '1.7.1',
+        unit_id: 7,
+        title: 'For Loops',
+        description: 'Introduction to for loops in Python',
+        flash_card: 'A for loop is used to iterate over a sequence (like a list, tuple, or string) and execute a block of code for each item in the sequence.',
+        video_url: '/videos/lesson_python_for_loops.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 16,
+        lesson_id: '1.8.1',
+        unit_id: 8,
+        title: 'Introduction to Lists',
+        description: 'Introduction to lists in Python',
+        flash_card: 'A list is a collection of items that are ordered and changeable. Lists are written with square brackets and can contain items of different data types.',
+        video_url: '/videos/lesson_python_lists_intro.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 17,
+        lesson_id: '1.8.2',
+        unit_id: 8,
+        title: 'Accessing List Items',
+        description: 'How to access items in a list in Python',
+        flash_card: 'You can access items in a list by referring to their index. Python uses zero-based indexing, so the first item has an index of 0.',
+        video_url: '/videos/lesson_python_accessing_list_items.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 18,
+        lesson_id: '1.8.3',
+        unit_id: 8,
+        title: 'Concatenation Operation on Lists (+, *)',
+        description: 'How to concatenate and repeat lists in Python',
+        flash_card: 'You can concatenate lists using the + operator and repeat lists using the * operator. These operations create new lists without modifying the original lists.',
+        video_url: '/videos/lesson_python_list_concatenation.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 19,
+        lesson_id: '1.9.1',
+        unit_id: 9,
+        title: 'What are Functions?',
+        description: 'Introduction to functions in Python',
+        flash_card: 'A function is a block of reusable code that performs a specific task. Functions help in organizing code and making it more readable and reusable.',
+        video_url: '/videos/lesson_python_functions_intro.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 20,
+        lesson_id: '1.9.2',
+        unit_id: 9,
+        title: 'Built-in Functions',
+        description: 'Introduction to built-in functions in Python',
+        flash_card: 'Python comes with a set of built-in functions like print(), len(), type(), etc. These functions are always available and can be used without needing to define them.',
+        video_url: '/videos/lesson_python_built_in_functions.mp4',
+        language: 'English',
+        created_at: new Date()
+      },
+      {
+        id: 21,
+        lesson_id: '1.9.3',
+        unit_id: 9,
+        title: 'Syntax of a Function',
+        description: 'Understanding the syntax of a function in Python',
+        flash_card: 'A function is defined using the def keyword, followed by the function name and parentheses. The code block within the function is indented and executed when the function is called.',
+        video_url: '/videos/lesson_python_function_syntax.mp4',
+        language: 'English',
+        created_at: new Date()
       }
     ], {});
   },
