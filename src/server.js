@@ -5,7 +5,10 @@ const sequelize = require('./config/db');
 const cors = require("cors");
 const sectionRoutes = require("./routes/sectionRoutes");
 const quizRoutes = require('./routes/quizRoutes'); // استيراد مسارات الكويز
+const lessonRoutes = require("./routes/lessonRoutes");
 const bodyParser = require('body-parser');
+const path = require("path");
+
 
 
 dotenv.config();
@@ -27,6 +30,9 @@ app.use("/sections", sectionRoutes);
 
 app.use('/api/quiz', quizRoutes); // تعديل المسار ليكون ضمن '/api/'
 
+app.use("/api", lessonRoutes);
+app.use("/videos", express.static(path.join(__dirname, "public/videos")));
+
 
 // Database Connection
 sequelize.sync()
@@ -36,3 +42,5 @@ sequelize.sync()
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+
+///

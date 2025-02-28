@@ -129,159 +129,83 @@ const { Op, Sequelize } = require('sequelize');
 
 class QuizController {
 
-  static async getQuizQuestions(req, res) {
-    try {
-      const { id } = req.params;
-      if (!id) return res.status(400).json({ success: false, message: 'Lesson ID is required' });
 
-      const quizQuestions = await Question.findAll({
-        where: { lesson_id: id, level: { [Op.in]: ['easy', 'medium', 'hard'] } },
-        order: Sequelize.literal('RAND()'),
-      });
+    static async getQuizQuestions(req, res) {
+        try {
+            const { id } = req.params;
+            if (!id) return res.status(400).json({ success: false, message: 'Lesson ID is required' });
+            console.log('lesson_id', id);
+            
+            const quizQuestions = await Question.findAll({
+                where: { lesson_id: id, level: { [Op.in]: ['easy', 'medium', 'hard'] } },
+                order: Sequelize.literal('RAND()'),
+            });
 
-      const selectedQuestions = {
-        easy: quizQuestions.filter(q => q.level === 'easy').slice(0, 3),
-        medium: quizQuestions.filter(q => q.level === 'medium').slice(0, 4),
-        hard: quizQuestions.filter(q => q.level === 'hard').slice(0, 3),
-      };
+            const selectedQuestions = {
+                easy: quizQuestions.filter(q => q.level === 'easy').slice(0, 3),
+                medium: quizQuestions.filter(q => q.level === 'medium').slice(0, 4),
+                hard: quizQuestions.filter(q => q.level === 'hard').slice(0, 3),
+            };
 
-      res.json({ success: true, questions: [...selectedQuestions.easy, ...selectedQuestions.medium, ...selectedQuestions.hard] });
-    } catch (error) {
-      console.error('Error in getQuizQuestions:', error);
-      res.status(500).json({ success: false, message: 'Server error', error: error.message });
-    }
-  }
-
-
-// sumbit quiz 
-
-
-// static async submitQuiz(req, res) {
-//     try {
-//         const { user_id, lesson_id, unit_id, quiz_type, answers } = req.body;
-
-//         // التحقق من البيانات المدخلة
-//         if (!user_id || !quiz_type || !Array.isArray(answers)) {
-//             return res.status(400).json({ success: false, message: 'Invalid input data' });
-//         }
-
-//         let score = 0, earnedPoints = 0;
-
-//         // إنشاء سجل الـ quiz بناءً على النوع
-//         let quiz;
-//         if (quiz_type === 'lesson') {
-//             if (!lesson_id) {
-//                 return res.status(400).json({ success: false, message: 'Lesson ID is required for lesson quiz' });
-//             }
-//             quiz = await StudentQuiz.create({ user_id, lesson_id, score: 0, earned_points: 0, is_passed: false });
-//         } else if (quiz_type === 'unit') {
-//             if (!unit_id) {
-//                 return res.status(400).json({ success: false, message: 'Unit ID is required for unit quiz' });
-//             }
-//             quiz = await StudentQuiz.create({ user_id, unit_id, score: 0, earned_points: 0, is_passed: false });
-//         } else {
-//             return res.status(400).json({ success: false, message: 'Invalid quiz type' });
-//         }
-
-//         // جلب الأسئلة من الـ database
-//         const questions = await Question.findAll({
-//             where: { id: { [Op.in]: answers.map(ans => ans.question_id) } }
-//         });
-
-//         // جلب الرسائل التحفيزية
-//         const answerMotivations = await AnswerMotivation.findAll();
-//         const motivationMap = answerMotivations.reduce((acc, item) => {
-//             acc[item.answer_type] = item.text;
-//             return acc;
-//         }, {});
-
-//         // تصحيح الإجابات وحساب الـ score
-//         for (const ans of answers) {
-//             const question = questions.find(q => q.id === ans.question_id);
-//             if (!question) continue;
-
-//             const isCorrect = question.correct_answer === ans.selected_answer;
-//             if (isCorrect) {
-//                 score += 1;
-//                 earnedPoints += question.points;
-//             }
-
-//             // تسجيل إجابة الطالب في الـ database
-//             await StudentQuizQuestion.create({
-//                 quiz_id: quiz.id,
-//                 question_id: ans.question_id,
-//                 answer: ans.selected_answer,
-//                 is_correct: isCorrect
-//             });
-
-//             // إضافة رسالة تحفيزية للإجابة
-//             ans.motivation_message = motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!';
-//         }
-
-//         // تحديد إذا كان الطالب قد نجح في الـ quiz
-//         const isPassed = score >= 5;
-//         await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
-
-//         // إرسال الرد النهائي
-//         res.json({ success: true, score, earned_points: earnedPoints, is_passed: isPassed, answers });
-//     } catch (error) {
-//         console.error('Error in submitQuiz:', error);
-//         res.status(500).json({ success: false, message: 'Server error', error: error.message });
-//     }
-// }
-
-
-  static async submitQuiz(req, res) {
-    try {
-      const { user_id, lesson_id, answers } = req.body;
-
-      if (!user_id || !lesson_id || !Array.isArray(answers)) {
-        return res.status(400).json({ success: false, message: 'Invalid input data' });
-      }
-
-      let score = 0, earnedPoints = 0;
-
-      const quiz = await StudentQuiz.create({ user_id, lesson_id, score: 0, earned_points: 0, is_passed: false });
-
-      const questions = await Question.findAll({
-        where: { id: { [Op.in]: answers.map(ans => ans.question_id) } }
-      });
-
-      const answerMotivations = await AnswerMotivation.findAll();
-      const motivationMap = answerMotivations.reduce((acc, item) => {
-        acc[item.answer_type] = item.text;
-        return acc;
-      }, {});
-
-      for (const ans of answers) {
-        const question = questions.find(q => q.id === ans.question_id);
-        if (!question) continue;
-
-        const isCorrect = question.correct_answer === ans.selected_answer;
-        if (isCorrect) {
-          score += 1;
-          earnedPoints += question.points;
+            const questions = [...selectedQuestions.easy, ...selectedQuestions.medium, ...selectedQuestions.hard];
+            res.json({ success: true, questions });
+        } catch (error) {
+            console.error('Error in getQuizQuestions:', error);
+            res.status(500).json({ success: false, message: 'Server error', error: error.message });
         }
-
-        await StudentQuizQuestion.create({
-          quiz_id: quiz.id,
-          question_id: ans.question_id,
-          answer: ans.selected_answer,
-          is_correct: isCorrect
-        });
-
-        ans.motivation_message = motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!';
-      }
-
-      const isPassed = score >= 5;
-      await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
-
-      res.json({ success: true, score, earned_points: earnedPoints, is_passed: isPassed, answers });
-    } catch (error) {
-      console.error('Error in submitQuiz:', error);
-      res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
-  }
+
+    static async submitQuiz(req, res) {
+        try {
+            const { user_id, lesson_id, answers } = req.body;
+            
+            if (!user_id || !lesson_id || !Array.isArray(answers)) {
+                return res.status(400).json({ success: false, message: 'Invalid input data' });
+            }
+
+            let score = 0, earnedPoints = 0;
+
+            const quiz = await StudentQuiz.create({ user_id, lesson_id, score: 0, earned_points: 0, is_passed: false });
+            
+            const questions = await Question.findAll({
+                where: { id: { [Op.in]: answers.map(ans => ans.question_id) } }
+            });
+
+            const answerMotivations = await AnswerMotivation.findAll();
+            const motivationMap = answerMotivations.reduce((acc, item) => {
+                acc[item.answer_type] = item.text;
+                return acc;
+            }, {});
+
+            for (const ans of answers) {
+                const question = questions.find(q => q.id === ans.question_id);
+                if (!question) continue;
+
+                const isCorrect = question.correct_answer === ans.selected_answer;
+                if (isCorrect) {
+                    score += 1;
+                    earnedPoints += question.points;
+                }
+
+                await StudentQuizQuestion.create({
+                    quiz_id: quiz.id,
+                    question_id: ans.question_id,
+                    answer: ans.selected_answer,
+                    is_correct: isCorrect
+                });
+
+                ans.motivation_message = motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!';
+            }
+
+            const isPassed = score >= 5;
+            await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
+
+            res.json({ success: true, score, earned_points: earnedPoints, is_passed: isPassed, answers });
+        } catch (error) {
+            console.error('Error in submitQuiz:', error);
+            res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        }
+    }
 
 
 ////////////////////////////////////////
@@ -339,8 +263,7 @@ static async getUnitQuiz(req, res) {
 }
 
 
-
-
+///////////////////////////////
 
 static async submitUnitQuiz(req, res) {
     try {

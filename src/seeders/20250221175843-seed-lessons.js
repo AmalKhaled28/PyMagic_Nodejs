@@ -10,7 +10,7 @@ module.exports = {
         title: 'What is Programming?',
         description: 'An introduction to programming',
         flash_card: 'Programming is like asking a computer to do something for you, just like asking your mom for a sandwich. Instead of words, we use special languages to tell computers what to do!',
-        video_url: '/videos/lesson1_what_is_programming.mp4',
+        video_url: '/videos/lesson_python_intro.mp4',
         language: 'English',
         created_at: new Date()
       },
