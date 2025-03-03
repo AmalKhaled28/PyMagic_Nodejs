@@ -1,7 +1,9 @@
+// routes/chatbot.js
 const express = require('express');
 const router = express.Router();
-const chatbotController = require('../controllers/chatbotController');
+const ChatbotController = require('../controllers/chatbotController');
 
-router.get('/', chatbotController.getAllResponses);
+router.get('/messages', ChatbotController.getMessages);
+router.post('/send', ChatbotController.sendMessage);
 
 module.exports = router;

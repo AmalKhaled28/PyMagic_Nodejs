@@ -8,8 +8,7 @@ const quizRoutes = require('./routes/quizRoutes'); // استيراد مسارا�
 const lessonRoutes = require("./routes/lessonRoutes");
 const bodyParser = require('body-parser');
 const path = require("path");
-
-
+const chatbotRoutes = require('./routes/chatbotRoutes'); // Ensure this path is correct
 
 dotenv.config();
 const app = express();
@@ -31,6 +30,7 @@ app.use("/sections", sectionRoutes);
 app.use('/api/quiz', quizRoutes); // تعديل المسار ليكون ضمن '/api/'
 
 app.use("/api", lessonRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 app.use("/videos", express.static(path.join(__dirname, "public/videos")));
 
 
