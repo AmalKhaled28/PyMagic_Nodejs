@@ -21,6 +21,7 @@ router.post('/unit/submit', QuizController.submitUnitQuiz);
 // router.get('/check-access/:user_id/:lesson_id', QuizController.checkLessonAccess); // Check if you can access the new lesson based on the previous lesson
 router.get('/progress/:user_id', QuizController.getUserQuizProgress); // to get the user's quiz progress
 
+router.get('/review/:quiz_id', QuizController.getQuizReviewDetails); // to get the quiz review details
 
 module.exports = router;
 

@@ -690,8 +690,8 @@ static async submitUnitQuiz(req, res) {
             // Transform the data to include names instead of type
             const progressData = quizzes.map(quiz => ({
                 id: quiz.id,
-                lesson_id: quiz.lesson_id || null,
-                unit_id: quiz.unit_id || null,
+                lesson_id: quiz.lesson_id ? String(quiz.lesson_id) : null, // Convert to string
+                unit_id: quiz.unit_id ? String(quiz.unit_id) : null,
                 name: quiz.lesson ? quiz.lesson.title : quiz.unit ? quiz.unit.name : 'Unknown', // Use lesson or unit name
                 score: quiz.score || 0, // Default to 0 if null
                 total_questions: 10, // Assume 10 questions per quiz (adjust based on your logic)
@@ -706,6 +706,64 @@ static async submitUnitQuiz(req, res) {
             res.status(500).json({ success: false, message: 'Server error', error: error.message });
         }
     }
+
+
+    static async getQuizReviewDetails(req, res) {
+        try {
+          const { quiz_id } = req.params; // Assuming quiz_id is passed as a parameter
+          if (!quiz_id) {
+            return res.status(400).json({ success: false, message: 'Quiz ID is required' });
+          }
+      
+          // Fetch the quiz data for the user (including questions and user answers via StudentQuizQuestion)
+          const quiz = await StudentQuiz.findOne({
+            where: { id: quiz_id },
+            include: [
+              {
+                model: StudentQuizQuestion, // Use StudentQuizQuestion to link to questions
+                as: 'questions', // Match the alias from models/index.js
+                attributes: ['id', 'question_id', 'answer', 'is_correct'],
+                include: [
+                  {
+                    model: Question, // Include the Question details
+                    as: 'question', // Match the alias from models/index.js
+                    attributes: ['id', 'question', 'type', 'options', 'correct_answer'], // Use fields from Question model
+                  },
+                ],
+              },
+            ],
+          });
+      
+          if (!quiz) {
+            return res.status(404).json({ success: false, message: 'Quiz not found' });
+          }
+      
+          // Transform the data into a format suitable for the frontend
+          const reviewData = {
+            score: quiz.score || 0,
+            total_questions: quiz.questions.length,
+            earned_points: quiz.earned_points || 0,
+            is_passed: quiz.is_passed || false,
+            answers: quiz.questions.map((quizQuestion) => {
+              const question = quizQuestion.question; // Access the Question data
+              return {
+                question_id: question.id,
+                question: question.question,
+                options: question.options || [], // Use the JSON options from Question model
+                correct_answer: question.correct_answer || 'No correct answer',
+                user_answer: quizQuestion.answer || 'No answer provided',
+                isCorrect: quizQuestion.is_correct || false,
+              };
+            }),
+          };
+      
+          res.json({ success: true, reviewData });
+        } catch (error) {
+          console.error('Error in getQuizReviewDetails:', error);
+          res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        }
+      }
+    
 }
 
 module.exports = QuizController;
