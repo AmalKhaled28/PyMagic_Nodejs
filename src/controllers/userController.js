@@ -83,14 +83,66 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const getUserProfilePage = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Achievement,
+          include: [
+            {
+              model: Reward,
+              attributes: ["text", "image"],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // Transform achievements data
+    const achievements = user.Achievements.map((achievement) => ({
+      title: achievement.Reward.text,
+      description: `Unlocked on ${achievement.created_at}`,
+    }));
+
+    res.json({
+      name: user.name,
+      earned_points: user.earned_points,
+      achievements,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching user profile" });
+  }
+};
+
+const getUserProfileInfo = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.json({
+      success: true,
+      user: {
+        name: user.name,
+        points: user.earned_points || 0
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+}
+
+
 module.exports = {
   registerUser,
   loginUser,
   forgotPassword,
   resetPassword,
-  getUserProfile
+  getUserProfile,
+  getUserProfilePage,
+  getUserProfileInfo
 };
-
-
-
-
