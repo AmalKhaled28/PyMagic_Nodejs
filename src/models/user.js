@@ -85,6 +85,7 @@ User.init(
     },
     earned_points: {
       type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
     game_level: {
       type: DataTypes.INTEGER,
