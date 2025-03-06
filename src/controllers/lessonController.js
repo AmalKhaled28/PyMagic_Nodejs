@@ -1,4 +1,4 @@
-const Lesson = require('../models/lesson');
+// const Lesson = require('../models/lesson');
 
 // exports.getAllLessons = async (req, res) => {
 //     try {
@@ -53,6 +53,7 @@ const Lesson = require('../models/lesson');
 // };
 
 
+const Lesson = require('../models/lesson');
 
 exports.getLessonDetails = async (req, res) => {
     try {

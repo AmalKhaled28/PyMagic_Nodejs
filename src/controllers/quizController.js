@@ -986,6 +986,189 @@ static async submitUnitQuiz(req, res) {
         }
       }
     
+
+    //   static async checkLessonAccess(req, res) {
+    //     try {
+    //       const { user_id, lesson_id } = req.params;
+    //       if (!user_id || !lesson_id) return res.status(400).json({ success: false, message: 'User ID and Lesson ID are required' });
+      
+    //       // Fetch the current lesson
+    //       const currentLesson = await Lesson.findOne({ where: { id: lesson_id } });
+    //       if (!currentLesson) return res.status(404).json({ success: false, message: 'Lesson not found' });
+      
+    //       // Fetch the unit for the current lesson
+    //       const currentUnit = await Unit.findOne({ where: { id: currentLesson.unit_id } });
+    //       if (!currentUnit) return res.status(404).json({ success: false, message: 'Unit not found' });
+      
+    //       // Step 1: Determine if this is the first lesson in the unit
+    //       const firstLessonInUnit = await Lesson.findOne({
+    //         where: { unit_id: currentLesson.unit_id },
+    //         order: [['id', 'ASC']], // Use 'created_at' instead of 'id' if preferred
+    //       });
+    //       const isFirstLessonInUnit = firstLessonInUnit.id === currentLesson.id;
+      
+    //       // Step 2: Determine if this is the first unit in the section
+    //       const firstUnitInSection = await Unit.findOne({
+    //         where: { section_id: currentUnit.section_id },
+    //         order: [['id', 'ASC']], // Use 'created_at' instead of 'id' if preferred
+    //       });
+    //       const isFirstUnitInSection = firstUnitInSection.id === currentUnit.id;
+      
+    //       // Step 3: If this is the very first lesson in the course (first lesson of first unit), grant access
+    //       if (isFirstLessonInUnit && isFirstUnitInSection) {
+    //         return res.json({ success: true, message: 'Access granted (first lesson of the course).' });
+    //       }
+      
+    //       // Step 4: If this is the first lesson in a unit (but not the first unit), check the previous unit's quiz
+    //       if (isFirstLessonInUnit && !isFirstUnitInSection) {
+    //         const previousUnit = await Unit.findOne({
+    //           where: { section_id: currentUnit.section_id, id: { [Op.lt]: currentUnit.id } },
+    //           order: [['id', 'DESC']], // Get the unit just before this one
+    //         });
+    //         if (previousUnit) {
+    //           const unitQuiz = await StudentQuiz.findOne({
+    //             where: { user_id, unit_id: previousUnit.id, is_passed: true },
+    //           });
+    //           if (!unitQuiz) {
+    //             return res.status(403).json({ success: false, message: 'You must pass the previous unit quiz to continue.' });
+    //           }
+    //         }
+    //       }
+      
+    //       // Step 5: If this is not the first lesson in the unit, check the previous lesson's quiz
+    //       if (!isFirstLessonInUnit) {
+    //         const previousLesson = await Lesson.findOne({
+    //           where: { unit_id: currentLesson.unit_id, id: { [Op.lt]: currentLesson.id } },
+    //           order: [['id', 'DESC']], // Get the lesson just before this one in the same unit
+    //         });
+    //         if (previousLesson) {
+    //           const lessonQuiz = await StudentQuiz.findOne({
+    //             where: { user_id, lesson_id: previousLesson.id, is_passed: true },
+    //           });
+    //           if (!lessonQuiz) {
+    //             return res.status(403).json({ success: false, message: 'You must pass the previous lesson quiz to continue.' });
+    //           }
+    //         }
+    //       }
+      
+    //       // If all conditions pass, grant access
+    //       res.json({ success: true, message: 'Access granted.' });
+    //     } catch (error) {
+    //       console.error('Error in checkLessonAccess:', error);
+    //       res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    //     }
+    // }
+
+
+    static async checkLessonAccess(req, res) {
+        try {
+          const { user_id, lesson_id, unit_id } = req.params; // Add unit_id as an optional parameter
+          if (!user_id) return res.status(400).json({ success: false, message: 'User ID is required' });
+      
+          // Case 1: Checking access for a unit quiz (unit_id provided, no lesson_id)
+          if (unit_id && !lesson_id) {
+            const currentUnit = await Unit.findOne({ where: { id: unit_id } });
+            if (!currentUnit) return res.status(404).json({ success: false, message: 'Unit not found' });
+      
+            // Find the last lesson in the unit (highest id or latest created_at)
+            const lastLessonInUnit = await Lesson.findOne({
+              where: { unit_id: currentUnit.id },
+              order: [['id', 'DESC']], // Use 'created_at' instead of 'id' if preferred
+            });
+      
+            if (!lastLessonInUnit) {
+              return res.status(404).json({ success: false, message: 'No lessons found in this unit.' });
+            }
+      
+            // Check if the user has passed the quiz for the last lesson
+            const lastLessonQuiz = await StudentQuiz.findOne({
+              where: { user_id, lesson_id: lastLessonInUnit.id, is_passed: true },
+            });
+      
+            if (!lastLessonQuiz) {
+              return res.status(403).json({
+                success: false,
+                message: 'You must pass the last lesson quiz in this unit to access the unit quiz.',
+              });
+            }
+      
+            return res.json({ success: true, message: 'Access granted to unit quiz.' });
+          }
+      
+          // Case 2: Checking access for a lesson (lesson_id provided)
+          if (!lesson_id) return res.status(400).json({ success: false, message: 'Lesson ID is required for lesson access' });
+      
+          const currentLesson = await Lesson.findOne({ where: { id: lesson_id } });
+          if (!currentLesson) return res.status(404).json({ success: false, message: 'Lesson not found' });
+      
+          const currentUnit = await Unit.findOne({ where: { id: currentLesson.unit_id } });
+          if (!currentUnit) return res.status(404).json({ success: false, message: 'Unit not found' });
+      
+          // Step 1: Determine if this is the first lesson in the unit
+          const firstLessonInUnit = await Lesson.findOne({
+            where: { unit_id: currentLesson.unit_id },
+            order: [['id', 'ASC']], // Use 'created_at' instead of 'id' if preferred
+          });
+          const isFirstLessonInUnit = firstLessonInUnit.id === currentLesson.id;
+      
+          // Step 2: Determine if this is the first unit in the section
+          const firstUnitInSection = await Unit.findOne({
+            where: { section_id: currentUnit.section_id },
+            order: [['id', 'ASC']], // Use 'created_at' instead of 'id' if preferred
+          });
+          const isFirstUnitInSection = firstUnitInSection.id === currentUnit.id;
+      
+          // Step 3: If this is the very first lesson in the course, grant access
+          if (isFirstLessonInUnit && isFirstUnitInSection) {
+            return res.json({ success: true, message: 'Access granted (first lesson of the course).' });
+          }
+      
+          // Step 4: If this is the first lesson in a unit (but not the first unit), check the previous unit's quiz
+          if (isFirstLessonInUnit && !isFirstUnitInSection) {
+            const previousUnit = await Unit.findOne({
+              where: { section_id: currentUnit.section_id, id: { [Op.lt]: currentUnit.id } },
+              order: [['id', 'DESC']], // Get the unit just before this one
+            });
+            if (previousUnit) {
+              const unitQuiz = await StudentQuiz.findOne({
+                where: { user_id, unit_id: previousUnit.id, is_passed: true },
+              });
+              if (!unitQuiz) {
+                return res.status(403).json({
+                  success: false,
+                  message: 'You must pass the previous unit quiz to continue.',
+                });
+              }
+            }
+          }
+      
+          // Step 5: If this is not the first lesson in the unit, check the previous lesson's quiz
+          if (!isFirstLessonInUnit) {
+            const previousLesson = await Lesson.findOne({
+              where: { unit_id: currentLesson.unit_id, id: { [Op.lt]: currentLesson.id } },
+              order: [['id', 'DESC']], // Get the lesson just before this one in the same unit
+            });
+            if (previousLesson) {
+              const lessonQuiz = await StudentQuiz.findOne({
+                where: { user_id, lesson_id: previousLesson.id, is_passed: true },
+              });
+              if (!lessonQuiz) {
+                return res.status(403).json({
+                  success: false,
+                  message: 'You must pass the previous lesson quiz to continue.',
+                });
+              }
+            }
+          }
+      
+          // If all conditions pass, grant access to the lesson
+          res.json({ success: true, message: 'Access granted.' });
+        } catch (error) {
+          console.error('Error in checkLessonAccess:', error);
+          res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        }
+      }
+
 }
 
 module.exports = QuizController;
