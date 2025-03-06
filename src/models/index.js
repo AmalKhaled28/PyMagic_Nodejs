@@ -9,7 +9,7 @@ const Lesson = require('./lesson');
 const Question = require('./question');
 const StudentQuiz = require('./student_quiz');
 const StudentQuizQuestion = require('./student_quiz_question');
-const AnswerMotivation = require('./answer_motivation');  
+const AnswerMotivation = require('./answer_motivation');
 
 // Example associations:
 User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements' });
@@ -21,8 +21,8 @@ Achievement.belongsTo(Reward, { foreignKey: 'reward_id', as: 'reward' });
 Section.hasMany(Unit, { foreignKey: 'section_id', as: 'units' });
 Unit.belongsTo(Section, { foreignKey: 'section_id', as: 'section' });
 
-Unit.hasMany(Lesson, { foreignKey: 'unit_id', as: 'lessons' });  // No change needed
-Lesson.belongsTo(Unit, { foreignKey: 'unit_id', as: 'unit' });   // No change needed
+Unit.hasMany(Lesson, { foreignKey: 'unit_id', as: 'lessons' });
+Lesson.belongsTo(Unit, { foreignKey: 'unit_id', as: 'unit' });
 
 Lesson.hasMany(Question, { foreignKey: 'lesson_id', as: 'questions' });
 Question.belongsTo(Lesson, { foreignKey: 'lesson_id', as: 'lesson' });

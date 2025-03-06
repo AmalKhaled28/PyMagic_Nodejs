@@ -389,8 +389,9 @@
 
 // test
 // controllers/quizController.js
-const { Question, StudentQuiz, StudentQuizQuestion, AnswerMotivation, Lesson, Unit } = require('../models');
+const { Question, StudentQuiz, StudentQuizQuestion, AnswerMotivation, Lesson, Unit, User } = require('../models');
 const { Op, Sequelize } = require('sequelize');
+const AchievementController = require('./achievementController'); // Import AchievementController
 
 class QuizController {
     // Existing getQuizQuestions (Lesson Quiz)
@@ -421,6 +422,98 @@ class QuizController {
     // Existing submitQuiz (Lesson Quiz)
     // controllers/quizController.js
 // controllers/quizController.js
+// static async submitQuiz(req, res) {
+//     try {
+//         const { user_id, lesson_id, answers } = req.body;
+        
+//         console.log("Received submitQuiz request:", { user_id, lesson_id, answers });
+
+//         if (!user_id || !lesson_id || !Array.isArray(answers) || answers.length === 0) {
+//             return res.status(400).json({ success: false, message: 'Invalid input data' });
+//         }
+
+//         let score = 0, earnedPoints = 0;
+
+//         const quiz = await StudentQuiz.create({ 
+//             user_id, 
+//             lesson_id, 
+//             score: 0, 
+//             earned_points: 0, 
+//             is_passed: false 
+//         });
+        
+//         // Fetch questions without including StudentQuizQuestion initially
+//         const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
+//         const questions = await Question.findAll({
+//             where: { id: { [Op.in]: questionIds } }
+//         });
+
+//         console.log("Fetched questions:", questions);
+
+//         if (!questions || questions.length === 0) {
+//             return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
+//         }
+
+//         const answerMotivations = await AnswerMotivation.findAll();
+//         const motivationMap = answerMotivations.reduce((acc, item) => {
+//             acc[item.answer_type] = item.text;
+//             return acc;
+//         }, {});
+
+//         const detailedAnswers = [];
+
+//         for (const ans of answers) {
+//             const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
+//             if (!question) {
+//                 console.warn(`Question with ID ${ans.question_id} not found. Skipping...`);
+//                 continue;
+//             }
+
+//             console.log(`Checking answer for question ${ans.question_id}:`, { selected_answer: ans.selected_answer, correct_answer: question.correct_answer });
+
+//             const isCorrect = question.correct_answer === ans.selected_answer;
+//             if (isCorrect) {
+//                 score += 1;
+//                 earnedPoints += question.points || 0; // Ensure points exist, default to 0 if not
+//             }
+
+//             await StudentQuizQuestion.create({
+//                 quiz_id: quiz.id,
+//                 question_id: question.id,
+//                 answer: ans.selected_answer,
+//                 is_correct: isCorrect
+//             });
+
+//             const detailedAnswer = {
+//                 question_id: question.id,
+//                 question: question.question,
+//                 options: question.options,
+//                 correct_answer: question.correct_answer,
+//                 user_answer: ans.selected_answer,
+//                 is_correct: isCorrect,
+//                 motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!'
+//             };
+//             detailedAnswers.push(detailedAnswer);
+//         }
+
+//         console.log("Calculated score:", score, "Earned points:", earnedPoints, "Detailed answers:", detailedAnswers);
+
+//         const isPassed = score >= 5;
+//         await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
+
+//         res.json({ 
+//             success: true, 
+//             score, 
+//             earned_points: earnedPoints, 
+//             is_passed: isPassed, 
+//             answers: detailedAnswers // Return detailed answers for review
+//         });
+//     } catch (error) {
+//         console.error('Error in submitQuiz:', error);
+//         res.status(500).json({ success: false, message: 'Server error', error: error.message });
+//     }
+// }
+
 static async submitQuiz(req, res) {
     try {
         const { user_id, lesson_id, answers } = req.body;
@@ -500,11 +593,22 @@ static async submitQuiz(req, res) {
         const isPassed = score >= 5;
         await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
 
+        // Update user's earned_points in the User table
+        const user = await User.findByPk(user_id);
+        if (user) {
+            user.earned_points += earnedPoints; // Add the earned points to the existing total
+            await user.save();
+        }
+
+        // Check and unlock achievements after updating points
+        await AchievementController.checkAndUnlockAchievements({ params: { userId: user_id } }, res);
+
         res.json({ 
             success: true, 
             score, 
             earned_points: earnedPoints, 
             is_passed: isPassed, 
+            total_user_points: user ? user.earned_points : 0, // Return updated total points
             answers: detailedAnswers // Return detailed answers for review
         });
     } catch (error) {
@@ -565,6 +669,99 @@ static async submitQuiz(req, res) {
 
     // Enhanced submitUnitQuiz
     // controllers/quizController.js
+// static async submitUnitQuiz(req, res) {
+//     try {
+//         const { user_id, unit_id, answers } = req.body;
+
+//         console.log("Received submitUnitQuiz request:", { user_id, unit_id, answers }); // Debug log
+
+//         if (!user_id || !unit_id || !Array.isArray(answers) || answers.length === 0) {
+//             return res.status(400).json({ success: false, message: 'Invalid input data' });
+//         }
+
+//         let score = 0, earnedPoints = 0;
+
+//         const unitQuiz = await StudentQuiz.create({
+//             user_id,
+//             unit_id,
+//             score: 0,
+//             earned_points: 0,
+//             is_passed: false
+//         });
+
+//         // Fetch questions without including StudentQuizQuestion initially (similar to submitQuiz fix)
+//         const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
+//         const questions = await Question.findAll({
+//             where: { id: { [Op.in]: questionIds } }
+//         });
+
+//         console.log("Fetched questions for unit quiz:", questions); // Debug log
+
+//         if (!questions || questions.length === 0) {
+//             return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
+//         }
+
+//         const answerMotivations = await AnswerMotivation.findAll();
+//         const motivationMap = answerMotivations.reduce((acc, item) => {
+//             acc[item.answer_type] = item.text;
+//             return acc;
+//         }, {});
+
+//         const detailedAnswers = [];
+
+//         for (const ans of answers) {
+//             const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
+//             if (!question) {
+//                 console.warn(`Question with ID ${ans.question_id} not found. Skipping...`);
+//                 continue;
+//             }
+
+//             console.log(`Checking answer for question ${ans.question_id}:`, { user_answer: ans.user_answer, correct_answer: question.correct_answer }); // Debug log
+
+//             const isCorrect = question.correct_answer.toLowerCase() === ans.user_answer.toLowerCase(); // Case-insensitive comparison
+//             if (isCorrect) {
+//                 score += 1;
+//                 earnedPoints += question.points || 0; // Ensure points exist, default to 0 if not
+//             }
+
+//             await StudentQuizQuestion.create({
+//                 quiz_id: unitQuiz.id,
+//                 question_id: question.id,
+//                 answer: ans.user_answer,
+//                 is_correct: isCorrect
+//             });
+
+//             const detailedAnswer = {
+//                 question_id: question.id,
+//                 question: question.question,
+//                 options: question.options,
+//                 correct_answer: question.correct_answer,
+//                 user_answer: ans.user_answer,
+//                 is_correct: isCorrect,
+//                 motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!'
+//             };
+//             detailedAnswers.push(detailedAnswer);
+//         }
+
+//         console.log("Calculated score for unit quiz:", score, "Earned points:", earnedPoints, "Detailed answers:", detailedAnswers); // Debug log
+
+//         const isPassed = score >= questions.length / 2; // Assume passing score is 50%
+//         await unitQuiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
+
+//         res.json({
+//             success: true,
+//             score,
+//             earned_points: earnedPoints,
+//             is_passed: isPassed,
+//             answers: detailedAnswers // Return detailed answers for review
+//         });
+//     } catch (error) {
+//         console.error('Error in submitUnitQuiz:', error);
+//         res.status(500).json({ success: false, message: 'Server error', error: error.message });
+//     }
+// }
+
+
 static async submitUnitQuiz(req, res) {
     try {
         const { user_id, unit_id, answers } = req.body;
@@ -585,7 +782,7 @@ static async submitUnitQuiz(req, res) {
             is_passed: false
         });
 
-        // Fetch questions without including StudentQuizQuestion initially (similar to submitQuiz fix)
+        // Fetch questions without including StudentQuizQuestion initially
         const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
         const questions = await Question.findAll({
             where: { id: { [Op.in]: questionIds } }
@@ -644,21 +841,46 @@ static async submitUnitQuiz(req, res) {
         const isPassed = score >= questions.length / 2; // Assume passing score is 50%
         await unitQuiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
 
-        res.json({
-            success: true,
-            score,
-            earned_points: earnedPoints,
-            is_passed: isPassed,
-            answers: detailedAnswers // Return detailed answers for review
-        });
+        // Update user's earned_points in the User table
+        const user = await User.findByPk(user_id);
+        if (user) {
+            user.earned_points += earnedPoints; // Add the earned points to the existing total
+            await user.save();
+        } else {
+            throw new Error("User not found");
+        }
+
+        // Check and unlock achievements after updating points
+        // Pass req and res objects instead of a custom object
+        const achievementResponse = await AchievementController.checkAndUnlockAchievements(req, res);
+        const newAchievements = achievementResponse.achievements || []; // Ensure achievements are returned
+
+        // If the response was already sent in checkAndUnlockAchievements, do not send another response here
+        if (!res.headersSent) {
+            res.json({
+                success: true,
+                score,
+                earned_points: earnedPoints,
+                is_passed: isPassed,
+                total_user_points: user ? user.earned_points : 0, // Return updated total points
+                answers: detailedAnswers, // Return detailed answers for review
+                achievements: newAchievements // Return new achievements
+            });
+        }
     } catch (error) {
         console.error('Error in submitUnitQuiz:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        let errorMessage = "Server error";
+        let errorDetails = error.message || "Unknown error";
+        if (error.response && error.response.status) {
+            errorMessage = `HTTP Error ${error.response.status}`;
+            errorDetails = error.response.data?.message || errorDetails;
+        }
+        res.status(500).json({ success: false, message: errorMessage, error: errorDetails });
     }
 }
 
 
- 
+
     static async getUserQuizProgress(req, res) {
         try {
             const { user_id } = req.params;
