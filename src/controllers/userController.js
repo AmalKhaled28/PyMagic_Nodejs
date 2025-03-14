@@ -29,6 +29,7 @@ const registerUser = async (req, res) => {
 // **Login User**
 const loginUser = async (req, res) => {
   try {
+  
     const { email, password, rememberMe } = req.body;
 
     const user = await User.getByEmail(email) || await User.getByEmail(req.body.parentEmail);
@@ -37,13 +38,18 @@ const loginUser = async (req, res) => {
     const isPasswordValid = await user.checkPassword(password);
     if (!isPasswordValid) return res.status(401).json({ error: 'Invalid credentials' });
 
+    // تحديث `last_login_at` بالتاريخ الحالي
+    user.last_login_at = new Date();
+    await user.save(); // حفظ التغيير في قاعدة البيانات
+
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: rememberMe ? '7d' : '1h' });
 
-    res.json({ message: 'Login successful', token });
+    res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
-    res.status(500).json({ error: 'Error logging in'+err });
+    res.status(500).json({ error: 'Error logging in ' + err });
   }
 };
+
 
 // **Forgot Password**
 const forgotPassword = async (req, res) => {
@@ -74,6 +80,7 @@ const resetPassword = async (req, res) => {
   }
 };
 
+////
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, { attributes: { exclude: ['password'] } });

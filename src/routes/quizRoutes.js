@@ -30,7 +30,12 @@
 const express = require('express');
 const QuizController = require('../controllers/quizController');
 
+const authMiddleware = require('../middlewares/auth');
+
 const router = express.Router();
+
+
+router.use(authMiddleware);
 
 router.get('/lesson/:id', QuizController.getQuizQuestions);
 router.post('/submit', QuizController.submitQuiz);

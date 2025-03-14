@@ -1,18 +1,19 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-    const token = req.header('Authorization');
-    
+    const token = req.cookies.token; // جلب التوكن من الكوكيز
+
     if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
+        return res.status(401).json({ message: "Access denied. No token provided." });
     }
 
     try {
-        const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
-        req.user = decoded; // Attach user data to request
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded; // إرفاق بيانات المستخدم في الطلب
         next();
     } catch (error) {
-        res.status(400).json({ message: 'Invalid token.' });
+        console.log(error);
+        
+        res.status(400).json({ message: "JWT Token expired." });
     }
 };
-

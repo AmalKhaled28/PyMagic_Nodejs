@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const answerMotivationController = require('../controllers/answerMotivationController');
+// const express = require('express');
+// const router = express.Router();
+// const answerMotivationController = require('../controllers/answerMotivationController');
 
-router.get('/', answerMotivationController.getAllAnswerMotivations);
+// router.get('/', answerMotivationController.getAllAnswerMotivations);
 
-module.exports = router;
+// module.exports = router;

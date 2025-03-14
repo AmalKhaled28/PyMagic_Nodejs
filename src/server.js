@@ -10,29 +10,37 @@ const lessonRoutes = require("./routes/lessonRoutes");
 const bodyParser = require('body-parser');
 const path = require("path");
 const chatbotRoutes = require('./routes/chatbotRoutes');
+const cookieParser = require("cookie-parser");
+// Import models to ensure associations are loaded
+const models = require('./models/index');
+
 
 // Load environment variables
 dotenv.config();
 
 // Initialize express app
 const app = express();
-
-// Import models to ensure associations are loaded
-const models = require('./models/index');
-
-app.use(cors()); // Allow all origins temporarily for testing
-
-app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from frontend
-  optionsSuccessStatus: 200, // Some browsers (e.g., older IE) require this
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow all necessary methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
-  credentials: true // Allow cookies if needed
-}));
-
+app.use(cookieParser()); // مهم لقراءة الكوكيز
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+
+
+app.use(express.json());
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
+
 
 // Routes
 app.use('/api/users', userRoutes);
@@ -43,17 +51,7 @@ app.use("/api", lessonRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use("/videos", express.static(path.join(__dirname, "public/videos")));
 app.use("/images", express.static(path.join(__dirname, "public/images")));
-// app.use("/images", express.static(path.join(__dirname, "public/images"), {
-//   setHeaders: (res, path) => {
-//     res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-//     res.set('Access-Control-Allow-Methods', 'GET');
-//     res.set('Access-Control-Allow-Headers', 'Content-Type');
-//     res.set('Access-Control-Max-Age', '86400'); // Cache CORS for 24 hours
-//     if (path.endsWith('.svg')) {
-//       res.set('Content-Type', 'image/svg+xml'); // Ensure SVG MIME type
-//     }
-//   }
-// }));
+
 
 
 // Database Connection

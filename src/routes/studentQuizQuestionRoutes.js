@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const studentQuizQuestionController = require('../controllers/studentQuizQuestionController');
+// const express = require('express');
+// const router = express.Router();
+// const studentQuizQuestionController = require('../controllers/studentQuizQuestionController');
 
-router.get('/', studentQuizQuestionController.getAllStudentQuizQuestions);
+// router.get('/', studentQuizQuestionController.getAllStudentQuizQuestions);
 
-module.exports = router;
+// module.exports = router;

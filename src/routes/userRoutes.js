@@ -9,10 +9,11 @@ const {
   forgotPassword,
   resetPassword,
   getUserProfile,
-  getUserProfileInfo
+  getUserProfileInfo,
 } = UserController; // Destructure the required methods from UserController
 
-// **Public Routes**
+//Protected Routes (Require Authentication)**
+
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/forgot-password', forgotPassword);
@@ -21,6 +22,10 @@ router.post('/reset-password', resetPassword);
 // **Protected Routes (Require Authentication)**
 router.get('/profile', authMiddleware, getUserProfile);
 
-router.get('/profile/:userId', UserController.getUserProfileInfo);
+router.get('/profile/:userId', authMiddleware, UserController.getUserProfileInfo);
+
+
+
+
 
 module.exports = router;
