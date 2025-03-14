@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
 // **Login User**
 const loginUser = async (req, res) => {
   try {
-  
+
     const { email, password, rememberMe } = req.body;
 
     const user = await User.getByEmail(email) || await User.getByEmail(req.body.parentEmail);
@@ -38,13 +38,25 @@ const loginUser = async (req, res) => {
     const isPasswordValid = await user.checkPassword(password);
     if (!isPasswordValid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    // تحديث `last_login_at` بالتاريخ الحالي
+    // Update `last_login_at` with the current date
     user.last_login_at = new Date();
-    await user.save(); // حفظ التغيير في قاعدة البيانات
+    await user.save(); // Save changes to the database
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: rememberMe ? '7d' : '1h' });
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: rememberMe ? '7d' : '1h',
+    });
 
-    res.status(200).json({ message: 'Login successful', token });
+    // Include user details in the response
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        //add more static user data as needed
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: 'Error logging in ' + err });
   }
