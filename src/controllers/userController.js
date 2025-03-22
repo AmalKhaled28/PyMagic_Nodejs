@@ -44,7 +44,7 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: rememberMe ? '7d' : '1h',
-    });
+    });    
 
     // Include user details in the response
     res.status(200).json({

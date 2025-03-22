@@ -13,6 +13,7 @@ const chatbotRoutes = require('./routes/chatbotRoutes');
 const cookieParser = require("cookie-parser");
 // Import models to ensure associations are loaded
 const models = require('./models/index');
+const avatarRoutes = require('./routes/avatarRoutes');
 
 
 // Load environment variables
@@ -51,6 +52,8 @@ app.use("/api", lessonRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use("/videos", express.static(path.join(__dirname, "public/videos")));
 app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.use('/', avatarRoutes);
+
 
 
 

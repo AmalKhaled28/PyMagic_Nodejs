@@ -10,9 +10,6 @@ Unit.init(
       primaryKey: true,
       autoIncrement: true
     },
-    unit_id: {
-      type: DataTypes.STRING
-    },
     section_id: {
       type: DataTypes.INTEGER,
     },

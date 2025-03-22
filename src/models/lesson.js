@@ -10,9 +10,6 @@ Lesson.init(
       primaryKey: true,
       autoIncrement: true
     },
-    lesson_id: {
-      type: DataTypes.STRING
-    },
     unit_id: {
       type: DataTypes.INTEGER,
     },

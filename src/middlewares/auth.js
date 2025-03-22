@@ -14,6 +14,6 @@ module.exports = (req, res, next) => {
     } catch (error) {
         console.log(error);
         
-        res.status(400).json({ message: "JWT Token expired." });
+        res.status(401).json({ message: "JWT Token expired." });
     }
 };

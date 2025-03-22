@@ -10,6 +10,9 @@ const Question = require('./question');
 const StudentQuiz = require('./student_quiz');
 const StudentQuizQuestion = require('./student_quiz_question');
 const AnswerMotivation = require('./answer_motivation');
+const Asset = require('./assets');
+const UserAsset = require('./user_assets');
+const UserPreference = require('./user_preferences');
 
 // Example associations:
 User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements' });
@@ -42,6 +45,15 @@ StudentQuizQuestion.belongsTo(Question, { foreignKey: 'question_id', as: 'questi
 StudentQuiz.hasMany(StudentQuizQuestion, { foreignKey: 'quiz_id', as: 'questions' });
 StudentQuizQuestion.belongsTo(StudentQuiz, { foreignKey: 'quiz_id', as: 'quiz' });
 
+User.hasMany(UserAsset, { foreignKey: 'user_id', as: 'userAssets' });
+UserAsset.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+UserAsset.belongsTo(Asset, { foreignKey: 'asset_id', as: 'asset' });
+
+User.hasOne(UserPreference, { foreignKey: 'user_id', as: 'preference' });
+UserPreference.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+
+
 module.exports = {
   User,
   Motivation,
@@ -54,5 +66,8 @@ module.exports = {
   Question,
   StudentQuiz,
   StudentQuizQuestion,
-  AnswerMotivation
+  AnswerMotivation,
+  Asset,
+  UserAsset,
+  UserPreference,
 };

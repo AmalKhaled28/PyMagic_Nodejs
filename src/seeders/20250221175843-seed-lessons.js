@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.bulkInsert('lessons', [
       {
         id: 1,
-        lesson_id: '1.1.1',
         unit_id: 1,
         title: 'What is Programming?',
         description: 'An introduction to programming',
@@ -16,7 +15,6 @@ module.exports = {
       },
       {
         id: 2,
-        lesson_id: '1.2.1',
         unit_id: 2,
         title: 'Python Introduction',
         description: 'An introduction to Python programming language',
@@ -27,7 +25,6 @@ module.exports = {
       },
       {
         id: 3,
-        lesson_id: '1.2.2',
         unit_id: 2,
         title: 'Python Print',
         description: 'Using the print function in Python',
@@ -38,7 +35,6 @@ module.exports = {
       },
       {
         id: 4,
-        lesson_id: '1.2.3',
         unit_id: 2,
         title: 'Python Comments',
         description: 'Using comments in Python',
@@ -49,7 +45,6 @@ module.exports = {
       },
       {
         id: 5,
-        lesson_id: '1.2.4',
         unit_id: 2,
         title: 'Python Data Types',
         description: 'Understanding data types in Python',
@@ -60,7 +55,6 @@ module.exports = {
       },
       {
         id: 6,
-        lesson_id: '1.3.1',
         unit_id: 3,
         title: 'What are Variables?',
         description: 'Introduction to variables in programming',
@@ -71,7 +65,6 @@ module.exports = {
       },
       {
         id: 7,
-        lesson_id: '1.3.2',
         unit_id: 3,
         title: 'Naming Variables',
         description: 'Rules for naming variables in programming',
@@ -82,7 +75,6 @@ module.exports = {
       },
       {
         id: 8,
-        lesson_id: '1.4.1',
         unit_id: 4,
         title: 'String Operators (+, *)',
         description: 'Introduction to string operators in Python',
@@ -93,7 +85,6 @@ module.exports = {
       },
       {
         id: 9,
-        lesson_id: '1.5.1',
         unit_id: 5,
         title: 'Basic Arithmetic in Python (+, -, *, /)',
         description: 'Introduction to basic arithmetic operations in Python',
@@ -104,7 +95,6 @@ module.exports = {
       },
       {
         id: 10,
-        lesson_id: '1.5.2',
         unit_id: 5,
         title: 'Order of Operation',
         description: 'Understanding the order of operations in Python',
@@ -115,7 +105,6 @@ module.exports = {
       },
       {
         id: 11,
-        lesson_id: '1.5.3',
         unit_id: 5,
         title: 'Working with Strings and Numbers in Python',
         description: 'Combining strings and numbers in Python',
@@ -126,7 +115,6 @@ module.exports = {
       },
       {
         id: 12,
-        lesson_id: '1.6.1',
         unit_id: 6,
         title: 'Comparison Operators (==, <, >)',
         description: 'Introduction to comparison operators in Python',
@@ -137,7 +125,6 @@ module.exports = {
       },
       {
         id: 13,
-        lesson_id: '1.6.2',
         unit_id: 6,
         title: 'If Statement',
         description: 'Introduction to the if statement in Python',
@@ -148,7 +135,6 @@ module.exports = {
       },
       {
         id: 14,
-        lesson_id: '1.6.3',
         unit_id: 6,
         title: 'If Else Statement',
         description: 'Introduction to the if-else statement in Python',
@@ -159,7 +145,6 @@ module.exports = {
       },
       {
         id: 15,
-        lesson_id: '1.7.1',
         unit_id: 7,
         title: 'For Loops',
         description: 'Introduction to for loops in Python',
@@ -170,7 +155,6 @@ module.exports = {
       },
       {
         id: 16,
-        lesson_id: '1.8.1',
         unit_id: 8,
         title: 'Introduction to Lists',
         description: 'Introduction to lists in Python',
@@ -181,7 +165,6 @@ module.exports = {
       },
       {
         id: 17,
-        lesson_id: '1.8.2',
         unit_id: 8,
         title: 'Accessing List Items',
         description: 'How to access items in a list in Python',
@@ -192,7 +175,6 @@ module.exports = {
       },
       {
         id: 18,
-        lesson_id: '1.8.3',
         unit_id: 8,
         title: 'Concatenation Operation on Lists (+, *)',
         description: 'How to concatenate and repeat lists in Python',
@@ -203,7 +185,6 @@ module.exports = {
       },
       {
         id: 19,
-        lesson_id: '1.9.1',
         unit_id: 9,
         title: 'What are Functions?',
         description: 'Introduction to functions in Python',
@@ -214,7 +195,6 @@ module.exports = {
       },
       {
         id: 20,
-        lesson_id: '1.9.2',
         unit_id: 9,
         title: 'Built-in Functions',
         description: 'Introduction to built-in functions in Python',
@@ -225,7 +205,6 @@ module.exports = {
       },
       {
         id: 21,
-        lesson_id: '1.9.3',
         unit_id: 9,
         title: 'Syntax of a Function',
         description: 'Understanding the syntax of a function in Python',

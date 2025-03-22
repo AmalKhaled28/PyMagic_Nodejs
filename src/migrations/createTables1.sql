@@ -2,6 +2,7 @@ USE pymagic;
 
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    avatar_id INT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -61,6 +62,7 @@ CREATE TABLE sections (
 
 CREATE TABLE units (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    unit_id VARCHAR(255),
     section_id INT,
     name VARCHAR(255),
     description TEXT,
@@ -70,6 +72,7 @@ CREATE TABLE units (
 
 CREATE TABLE lessons (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    lesson_id VARCHAR(255),
     unit_id INT,
     title VARCHAR(255),
     description TEXT,
@@ -117,39 +120,6 @@ CREATE TABLE student_quiz_questions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (question_id) REFERENCES questions(id),
     FOREIGN KEY (quiz_id) REFERENCES student_quizzes(id)
-);
-
-
-CREATE TABLE assets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    type ENUM('face', 'brow', 'eye', 'hairstyle', 'headdress', 'lip', 'nose') NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    image_url VARCHAR(255) NOT NULL,
-    price INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE user_assets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    asset_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (asset_id) REFERENCES assets(id)
-);
-
-CREATE TABLE user_preferences (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    face VARCHAR(255),
-    brow VARCHAR(255),
-    eye VARCHAR(255),
-    hairstyle VARCHAR(255),
-    lip VARCHAR(255),
-    nose VARCHAR(255),
-    headdress VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 

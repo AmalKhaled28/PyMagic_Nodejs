@@ -64,9 +64,6 @@ User.init(
       primaryKey: true,
       autoIncrement: true
     },
-    avatar_id: {
-      type: DataTypes.INTEGER,
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false
