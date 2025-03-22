@@ -39,15 +39,15 @@ exports.getUserPreferences = async (req, res) => {
   }
 };
 
-exports.getUser = async (req, res) => {
-  try {
-    const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
+// exports.getUser = async (req, res) => {
+//   try {
+//     const user = await User.findByPk(req.params.id);
+//     if (!user) return res.status(404).json({ message: "User not found" });
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// };
 
 exports.getAssets = async (req, res) => {
   try {
