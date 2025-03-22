@@ -5,10 +5,21 @@ exports.savePreferences = async (req, res) => {
   try {
     const { userId, ...preferences } = req.body;
     
-    const [result] = await UserPreference.upsert({
-      user_id: userId,
-      ...preferences
+    // Check if the user already has preferences
+    const existingPreferences = await UserPreference.findOne({
+      where: { user_id: userId }
     });
+
+    if (existingPreferences) {
+      // Update existing preferences
+      await existingPreferences.update(preferences);
+    } else {
+      // Create new preferences
+      await UserPreference.create({
+        user_id: userId,
+        ...preferences
+      });
+    }
 
     res.json({ success: true, message: "Preferences saved!" });
   } catch (error) {
@@ -49,14 +60,23 @@ exports.getAssets = async (req, res) => {
 
 exports.getOwnedAssets = async (req, res) => {
   try {
-    const assets = await UserAsset.findAll({
+    const userAssets = await UserAsset.findAll({
       where: { user_id: req.params.id },
-      include: [{ model: Asset, as: "asset" }]
+      include: [{ 
+        model: Asset,
+        as: "asset"
+      }]
     });
+
+    const ownedAssets = userAssets
+      .map(ua => ua.asset)
+      .filter(asset => asset !== null);
+
+    res.json(ownedAssets);
     
-    res.json(assets.map(ua => ua.Asset));
   } catch (error) {
-    res.status(500).send(error);
+    console.error('Error fetching owned assets:', error);
+    res.status(500).send({ error: 'Server error' });
   }
 };
 
@@ -96,7 +116,13 @@ exports.buyItem = async (req, res) => {
     }, { transaction });
 
     await transaction.commit();
-    res.json({ success: true, message: "Item Purchased!" });
+    // Return the purchased asset data
+    res.json({ 
+      success: true, 
+      message: "Item Purchased!",
+      asset: asset.get({ plain: true }) // Convert Sequelize instance to plain object
+    });
+    
   } catch (error) {
     await transaction.rollback();
     res.status(500).send(error);
