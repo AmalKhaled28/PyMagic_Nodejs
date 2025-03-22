@@ -5,7 +5,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await Asset.bulkCreate([
       // Face assets
-      { type: 'face', name: 'Boy Face 1', image_url: '/assets/faces/boy_face_1.svg', price: 50 },
+      { type: 'face', name: 'Boy Face 1', image_url: '/assets/faces/boy_face_1.svg', price: 0 },
       { type: 'face', name: 'Boy Face 2', image_url: '/assets/faces/boy_face_2.svg', price: 50 },
       { type: 'face', name: 'Boy Face 3', image_url: '/assets/faces/boy_face_3.svg', price: 50 },
       { type: 'face', name: 'Boy Face 4', image_url: '/assets/faces/boy_face_4.svg', price: 50 },
