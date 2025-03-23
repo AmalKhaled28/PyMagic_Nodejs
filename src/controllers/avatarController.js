@@ -109,22 +109,31 @@ exports.buyItem = async (req, res) => {
       return res.status(400).json({ message: "Not Enough Points!" });
     }
 
+    // Deduct the points from the user
     await user.decrement('earned_points', { by: asset.price, transaction });
+
+    // Create the UserAsset record to mark the asset as owned
     await UserAsset.create({
       user_id: userId,
       asset_id: assetId
     }, { transaction });
 
+    // Fetch the updated user data to get the new earned_points value
+    const updatedUser = await User.findByPk(userId, { transaction });
+
     await transaction.commit();
-    // Return the purchased asset data
+
+    // Return the purchased asset data and the updated points
     res.json({ 
       success: true, 
       message: "Item Purchased!",
-      asset: asset.get({ plain: true }) // Convert Sequelize instance to plain object
+      asset: asset.get({ plain: true }), // Convert Sequelize instance to plain object
+      updatedPoints: updatedUser.earned_points // Include the updated points
     });
     
   } catch (error) {
     await transaction.rollback();
-    res.status(500).send(error);
+    console.error('Error purchasing item:', error);
+    res.status(500).send({ error: 'Server error' });
   }
 };
