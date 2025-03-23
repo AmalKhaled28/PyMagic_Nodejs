@@ -22,9 +22,7 @@ router.post('/reset-password', resetPassword);
 // **Protected Routes (Require Authentication)**
 router.get('/profile', authMiddleware, getUserProfile);
 
-router.get('/profile/:userId', authMiddleware, UserController.getUserProfileInfo);
-
-
+router.get('/profile/:userId', authMiddleware,getUserProfileInfo);
 
 
 

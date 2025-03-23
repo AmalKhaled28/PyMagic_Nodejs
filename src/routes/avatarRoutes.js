@@ -8,7 +8,6 @@ router.use(authMiddleware);
 
 router.post('/save-preferences', avatarController.savePreferences);
 router.get('/user-preferences/:userId', avatarController.getUserPreferences);
-router.get('/user/:id', avatarController.getUser);
 router.get('/assets', avatarController.getAssets);
 router.get('/user/:id/owned-assets', avatarController.getOwnedAssets);
 router.post('/buy', avatarController.buyItem);
