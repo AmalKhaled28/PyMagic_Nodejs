@@ -7,7 +7,7 @@ const authMiddleware = require('../middlewares/auth');
 router.use(authMiddleware);
 
 
-router.get('/messages', ChatbotController.getMessages);
+router.post('/messages', ChatbotController.getMessages);
 router.post('/send', ChatbotController.sendMessage);
 
 module.exports = router;

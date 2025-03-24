@@ -88,17 +88,32 @@ class ChatbotController {
 
   static async getMessages(req, res) {
     try {
+      // Ensure user is authenticated
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
       const messages = await Chatbot.findAll({
-        where: { user_id: req.user?.id || 1 }, // Adjust based on authentication
+        where: { user_id: req.user.id },
         order: [['created_at', 'ASC']],
       });
-      res.json(messages.map(msg => ({
-        text: msg.prompt,
-        sender: 'user',
-      })).concat(messages.map(msg => ({
-        text: msg.answer,
-        sender: 'bot',
-      }))));
+
+      // Create a paired array of messages (prompt followed by response)
+      const pairedMessages = messages.reduce((acc, msg) => {
+        acc.push({
+          text: msg.prompt,
+          sender: 'user',
+          timestamp: msg.created_at,
+        });
+        acc.push({
+          text: msg.answer,
+          sender: 'bot',
+          timestamp: msg.created_at,
+        });
+        return acc;
+      }, []);
+
+      res.json(pairedMessages);
     } catch (error) {
       console.error('Error fetching messages:', error);
       res.status(500).json({ error: 'Failed to fetch messages' });

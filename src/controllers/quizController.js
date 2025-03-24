@@ -882,54 +882,89 @@ static async submitUnitQuiz(req, res) {
 
 
     static async getUserQuizProgress(req, res) {
-        try {
-            const { user_id } = req.params;
-            if (!user_id) {
-                return res.status(400).json({ success: false, message: 'User ID is required' });
-            }
-
-            // Fetch all quiz results for the user (both lesson and unit quizzes)
-            const quizzes = await StudentQuiz.findAll({
-                where: { user_id },
-                attributes: ['id', 'lesson_id', 'unit_id', 'score', 'earned_points', 'is_passed', 'created_at'],
-                include: [
-                    {
-                        model: Lesson,
-                        as: 'lesson', // Use the alias 'lesson'
-                        attributes: ['id', 'title'], // Include lesson title
-                        required: false
-                    },
-                    {
-                        model: Unit,
-                        as: 'unit', // Use the alias 'unit'
-                        attributes: ['id', 'name'], // Include unit name
-                        required: false
-                    }
-                ],
-                order: [['created_at', 'DESC']] // Order by most recent
-            });
-
-            // Transform the data to include names instead of type
-            const progressData = quizzes.map(quiz => ({
-                id: quiz.id,
-                lesson_id: quiz.lesson_id ? String(quiz.lesson_id) : null, // Convert to string
-                unit_id: quiz.unit_id ? String(quiz.unit_id) : null,
-                name: quiz.lesson ? quiz.lesson.title : quiz.unit ? quiz.unit.name : 'Unknown', // Use lesson or unit name
-                score: quiz.score || 0, // Default to 0 if null
-                total_questions: 10, // Assume 10 questions per quiz (adjust based on your logic)
-                earned_points: quiz.earned_points || 0, // Default to 0 if null
-                is_passed: quiz.is_passed || false,
-                date: quiz.created_at
-            }));
-
-            res.json({ success: true, progress: progressData });
-        } catch (error) {
-            console.error('Error in getUserQuizProgress:', error);
-            res.status(500).json({ success: false, message: 'Server error', error: error.message });
+      try {
+        const { user_id } = req.params;
+        if (!user_id) {
+          return res.status(400).json({ success: false, message: 'User ID is required' });
         }
+    
+        // Fetch all quiz results for the user
+        const quizzes = await StudentQuiz.findAll({
+          where: { user_id },
+          attributes: ['id', 'lesson_id', 'unit_id', 'score', 'earned_points', 'is_passed', 'created_at'],
+          include: [
+            {
+              model: Lesson,
+              as: 'lesson',
+              attributes: ['id', 'title', 'unit_id'],
+              required: false
+            },
+            {
+              model: Unit,
+              as: 'unit',
+              attributes: ['id', 'name'],
+              required: false
+            },
+            {
+              model: StudentQuizQuestion,
+              as: 'questions', // Include the questions to count them
+              attributes: ['id'], // We only need the ID to count
+              required: false
+            }
+          ],
+          order: [['created_at', 'DESC']]
+        });
+    
+        // Group lessons by unit to determine lesson numbers
+        const lessonOrderByUnit = {};
+        quizzes.forEach(quiz => {
+          if (quiz.lesson && quiz.lesson.unit_id) {
+            if (!lessonOrderByUnit[quiz.lesson.unit_id]) {
+              lessonOrderByUnit[quiz.lesson.unit_id] = [];
+            }
+            if (!lessonOrderByUnit[quiz.lesson.unit_id].some(l => l.id === quiz.lesson.id)) {
+              lessonOrderByUnit[quiz.lesson.unit_id].push({
+                id: quiz.lesson.id,
+                title: quiz.lesson.title
+              });
+            }
+          }
+        });
+    
+        // Assign lesson numbers and calculate total questions
+        const progressData = quizzes.map(quiz => {
+          let lessonNumber = null;
+          if (quiz.lesson && quiz.lesson.unit_id) {
+            const lessonsInUnit = lessonOrderByUnit[quiz.lesson.unit_id];
+            lessonNumber = lessonsInUnit.findIndex(l => l.id === quiz.lesson.id) + 1;
+          }
+    
+          // Calculate total questions by counting the associated StudentQuizQuestions
+          const totalQuestions = quiz.questions ? quiz.questions.length : 0;
+    
+          return {
+            id: quiz.id,
+            lesson_id: quiz.lesson_id ? String(quiz.lesson_id) : null,
+            unit_id: quiz.unit_id ? String(quiz.unit_id) : (quiz.lesson ? String(quiz.lesson.unit_id) : null),
+            lesson_number: lessonNumber,
+            name: quiz.lesson ? quiz.lesson.title : quiz.unit ? quiz.unit.name : 'Unknown',
+            score: quiz.score || 0,
+            total_questions: totalQuestions || 10, // Fallback to 10 if no questions are found
+            earned_points: quiz.earned_points || 0,
+            is_passed: quiz.is_passed || false,
+            date: quiz.created_at
+          };
+        });
+    
+        res.json({ success: true, progress: progressData });
+      } catch (error) {
+        console.error('Error in getUserQuizProgress:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+      }
     }
 
-
+  
+    
     static async getQuizReviewDetails(req, res) {
         try {
           const { quiz_id } = req.params; // Assuming quiz_id is passed as a parameter
