@@ -98,22 +98,23 @@ class ChatbotController {
         order: [['created_at', 'ASC']],
       });
 
-      // Create a paired array of messages (prompt followed by response)
-      const pairedMessages = messages.reduce((acc, msg) => {
-        acc.push({
+      let messageList = [];
+
+      messages.forEach(msg => {
+        messageList.push({
           text: msg.prompt,
           sender: 'user',
           timestamp: msg.created_at,
         });
-        acc.push({
+        messageList.push({
           text: msg.answer,
           sender: 'bot',
           timestamp: msg.created_at,
         });
-        return acc;
-      }, []);
+        
+      });
 
-      res.json(pairedMessages);
+      res.json(messageList);
     } catch (error) {
       console.error('Error fetching messages:', error);
       res.status(500).json({ error: 'Failed to fetch messages' });
