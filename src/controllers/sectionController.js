@@ -3,31 +3,6 @@
 // const Lesson = require("../models/lesson");
 const { Section, Unit, Lesson, StudentQuiz } = require("../models/index");
 
-//change it to function the export as in the usercontroller
-// exports.getSectionDetails = async (req, res) => {
-//   try {
-//     const sectionId = req.params.id; //eager loading
-//     const section = await Section.findOne({
-//       where: { id: sectionId },
-//       include: [
-//         {
-//           model: Unit,
-//           as: "units",
-//           include: [{ model: Lesson, as: "lessons" ,  attributes: ["id"] }],
-//         },
-//       ],
-//     });
-
-//     if (!section) {
-//       return res.status(404).json({ message: "Section not found" });
-//     }
-
-//     res.json(section);
-//   } catch (error) {
-//     console.error("Error fetching section details:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 exports.getSectionDetails = async (req, res) => {
   try {
@@ -83,6 +58,7 @@ exports.getSectionDetails = async (req, res) => {
 exports.getSectionFlashcards = async (req, res) => {
   try {
     const sectionId = req.params.id;
+    const userId = req.user.id; // Assuming user ID is available from auth middleware
 
     const section = await Section.findOne({
       where: { id: sectionId },
@@ -95,6 +71,15 @@ exports.getSectionFlashcards = async (req, res) => {
               model: Lesson,
               as: "lessons",
               attributes: ["id", "title", "flash_card"],
+              include: [
+                {
+                  model: StudentQuiz,
+                  as: "quizzes",
+                  where: { user_id: userId },
+                  required: false, // Left join to include lessons without quizzes
+                  attributes: ["id", "is_passed"],
+                },
+              ],
             },
           ],
         },
@@ -108,17 +93,19 @@ exports.getSectionFlashcards = async (req, res) => {
     // Group flashcards by unit
     const flashcardsByUnit = section.units.map(unit => ({
       unitId: unit.id,
-      unitName: unit.name, // Assuming Unit model has a 'name' field, adjust if different
-      lessons: unit.lessons.map(lesson => ({
+      unitName: unit.name,
+      lessons: unit.lessons.map((lesson, index) => ({
         lessonId: lesson.id,
         lessonName: lesson.title,
-        flashCard: lesson.flash_card
-      }))
+        lessonNumber: index + 1, // Add lesson number within the unit
+        flashCard: lesson.flash_card,
+        isPassed: lesson.quizzes && lesson.quizzes.length > 0 ? lesson.quizzes[0].is_passed : false,
+      })),
     }));
 
     res.json({
       sectionId: section.id,
-      units: flashcardsByUnit
+      units: flashcardsByUnit,
     });
   } catch (error) {
     console.error("Error fetching flashcards:", error);
