@@ -4,16 +4,65 @@
 const { Section, Unit, Lesson, StudentQuiz } = require("../models/index");
 
 //change it to function the export as in the usercontroller
+// exports.getSectionDetails = async (req, res) => {
+//   try {
+//     const sectionId = req.params.id; //eager loading
+//     const section = await Section.findOne({
+//       where: { id: sectionId },
+//       include: [
+//         {
+//           model: Unit,
+//           as: "units",
+//           include: [{ model: Lesson, as: "lessons" ,  attributes: ["id"] }],
+//         },
+//       ],
+//     });
+
+//     if (!section) {
+//       return res.status(404).json({ message: "Section not found" });
+//     }
+
+//     res.json(section);
+//   } catch (error) {
+//     console.error("Error fetching section details:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 exports.getSectionDetails = async (req, res) => {
   try {
-    const sectionId = req.params.id; //eager loading
+    const sectionId = req.params.id;
+    const userId = req.user.id; // Assuming user ID is available from auth middleware
+
     const section = await Section.findOne({
       where: { id: sectionId },
       include: [
         {
           model: Unit,
           as: "units",
-          include: [{ model: Lesson, as: "lessons" ,  attributes: ["id"] }],
+          include: [
+            {
+              model: Lesson,
+              as: "lessons",
+              attributes: ["id", "title"], // Include title for clarity
+              include: [
+                {
+                  model: StudentQuiz,
+                  as: "quizzes",
+                  where: { user_id: userId },
+                  required: false, // Left join to include lessons without quizzes
+                  attributes: ["id", "is_passed"],
+                },
+              ],
+            },
+            {
+              model: StudentQuiz,
+              as: "quizzes",
+              where: { user_id: userId, lesson_id: null }, // Unit-level quizzes
+              required: false,
+              attributes: ["id", "is_passed"],
+            },
+          ],
         },
       ],
     });
@@ -28,7 +77,6 @@ exports.getSectionDetails = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 
 
