@@ -1,4 +1,4 @@
-USE pymagic;
+USE py_magic;
 
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
