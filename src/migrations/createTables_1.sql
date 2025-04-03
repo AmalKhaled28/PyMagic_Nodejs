@@ -15,52 +15,26 @@ CREATE TABLE users (
 
 CREATE TABLE motivations (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    text TEXT,
     score_level VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE motivation_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    motivation_id INT,
-    language VARCHAR(50), -- e.g., 'en', 'fr', 'es',ar
-    text TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (motivation_id) REFERENCES motivations(id)
-);
-
 CREATE TABLE answer_motivation (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    text TEXT,
     answer_type ENUM('correct', 'wrong'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE answer_motivation_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    answer_motivation_id INT,
-    language VARCHAR(50),
-    text TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (answer_motivation_id) REFERENCES answer_motivation(id)
-);
-
 CREATE TABLE rewards (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    image VARCHAR(255),
-    required_points INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE reward_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    reward_id INT,
-    language VARCHAR(50),
     text VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (reward_id) REFERENCES rewards(id)
+    image VARCHAR(255),
+    required_points INT
 );
 
--- not need to translate
-CREATE TABLE achievements ( 
+CREATE TABLE achievements (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     reward_id INT,
@@ -69,7 +43,6 @@ CREATE TABLE achievements (
     FOREIGN KEY (reward_id) REFERENCES rewards(id)
 );
 
--- not need to translate
 CREATE TABLE chatbot (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -82,65 +55,44 @@ CREATE TABLE chatbot (
 CREATE TABLE sections (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE units (
     id INT PRIMARY KEY AUTO_INCREMENT,
     section_id INT,
+    name VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (section_id) REFERENCES sections(id)
-);
-
-CREATE TABLE unit_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    unit_id INT,
-    language VARCHAR(50),
-    name VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (unit_id) REFERENCES units(id)
 );
 
 CREATE TABLE lessons (
     id INT PRIMARY KEY AUTO_INCREMENT,
     unit_id INT,
+    title VARCHAR(255),
+    description TEXT,
+    flash_card TEXT,
+    video_url TEXT,
+    language VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (unit_id) REFERENCES units(id)
 );
 
-CREATE TABLE lesson_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    lesson_id INT,
-    language VARCHAR(50),
-    title VARCHAR(255),
-    flash_card TEXT,
-    video_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (lesson_id) REFERENCES lessons(id)
-);
------------------------
 CREATE TABLE questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     lesson_id INT,
+    question TEXT,
     type ENUM('multiple_choice', 'true_false'),
+    options JSON,
+    correct_answer TEXT,
+    hint TEXT,
     level ENUM('easy', 'medium', 'hard'),
     points INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (lesson_id) REFERENCES lessons(id)
 );
-
-CREATE TABLE question_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    question_id INT,
-    language VARCHAR(50),
-    question TEXT,
-    options JSON,
-    correct_answer TEXT,
-    hint TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (question_id) REFERENCES questions(id)
-);
--------------------------
 
 CREATE TABLE student_quizzes (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -167,6 +119,7 @@ CREATE TABLE student_quiz_questions (
     FOREIGN KEY (quiz_id) REFERENCES student_quizzes(id)
 );
 
+
 CREATE TABLE assets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     type ENUM('face', 'brow', 'eye', 'hairstyle', 'headdress', 'lip', 'nose') NOT NULL,
@@ -185,7 +138,6 @@ CREATE TABLE user_assets (
     FOREIGN KEY (asset_id) REFERENCES assets(id)
 );
 
-
 CREATE TABLE user_preferences (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -200,4 +152,5 @@ CREATE TABLE user_preferences (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- -- Get-Content D:\PymagicBackend\src\migrations\createTables.sql | mysql -u root -p pymagic
+
+-- -- Get-Content D:\PymagicBackend\src\migrations\createTables_1.sql | mysql -u root -p pymagic
