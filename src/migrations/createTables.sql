@@ -141,7 +141,7 @@ CREATE TABLE lesson_translations (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (lesson_id) REFERENCES lessons(id)
 );
------------------------
+
 CREATE TABLE questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     lesson_id INT,
@@ -165,7 +165,6 @@ CREATE TABLE question_translations (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (question_id) REFERENCES questions(id)
 );
--------------------------
 
 CREATE TABLE student_quizzes (
     id INT PRIMARY KEY AUTO_INCREMENT,

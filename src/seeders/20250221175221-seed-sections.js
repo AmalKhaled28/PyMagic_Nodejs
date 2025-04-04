@@ -23,7 +23,6 @@ module.exports = {
         section_id: 1,
         language: 'en',
         name: 'Programming Basics',
-        description: 'Introduction to programming concepts',
         created_at: new Date(),
         updated_at: new Date()
       },
@@ -32,7 +31,6 @@ module.exports = {
         section_id: 2,
         language: 'en',
         name: 'Advanced Topics',
-        description: 'In-depth advanced programming topics',
         created_at: new Date(),
         updated_at: new Date()
       },

@@ -111,12 +111,12 @@ MotivationTranslation.belongsTo(Motivation, {
 
 Question.hasMany(QuestionTranslation, {
   foreignKey: 'question_id',
-  as: 'translations'
+  as: 'translations' // Renamed association to avoid collision
 });
 
 QuestionTranslation.belongsTo(Question, {
   foreignKey: 'question_id',
-  as: 'question'
+  as: 'parent_question' // Renamed association to avoid collision
 });
 
 Reward.hasMany(RewardTranslation, {
