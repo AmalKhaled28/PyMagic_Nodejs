@@ -10,13 +10,15 @@ CREATE TABLE users (
     game_level INT,
     parent_email VARCHAR(255) UNIQUE,
     age INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE motivations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     score_level VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE motivation_translations (
@@ -25,13 +27,15 @@ CREATE TABLE motivation_translations (
     language VARCHAR(50), -- e.g., 'en', 'fr', 'es',ar
     text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (motivation_id) REFERENCES motivations(id)
 );
 
 CREATE TABLE answer_motivation (
     id INT PRIMARY KEY AUTO_INCREMENT,
     answer_type ENUM('correct', 'wrong'),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE answer_motivation_translations (
@@ -40,6 +44,7 @@ CREATE TABLE answer_motivation_translations (
     language VARCHAR(50),
     text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (answer_motivation_id) REFERENCES answer_motivation(id)
 );
 
@@ -47,7 +52,8 @@ CREATE TABLE rewards (
     id INT PRIMARY KEY AUTO_INCREMENT,
     image VARCHAR(255),
     required_points INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE reward_translations (
@@ -56,6 +62,7 @@ CREATE TABLE reward_translations (
     language VARCHAR(50),
     text VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (reward_id) REFERENCES rewards(id)
 );
 
@@ -65,6 +72,7 @@ CREATE TABLE achievements (
     user_id INT,
     reward_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (reward_id) REFERENCES rewards(id)
 );
@@ -76,19 +84,31 @@ CREATE TABLE chatbot (
     prompt TEXT,
     answer TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE sections (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE section_translations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    section_id INT,
+    language VARCHAR(50),
     name VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (section_id) REFERENCES sections(id)
 );
 
 CREATE TABLE units (
     id INT PRIMARY KEY AUTO_INCREMENT,
     section_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (section_id) REFERENCES sections(id)
 );
 
@@ -98,6 +118,7 @@ CREATE TABLE unit_translations (
     language VARCHAR(50),
     name VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (unit_id) REFERENCES units(id)
 );
 
@@ -105,6 +126,7 @@ CREATE TABLE lessons (
     id INT PRIMARY KEY AUTO_INCREMENT,
     unit_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (unit_id) REFERENCES units(id)
 );
 
@@ -116,6 +138,7 @@ CREATE TABLE lesson_translations (
     flash_card TEXT,
     video_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (lesson_id) REFERENCES lessons(id)
 );
 -----------------------
@@ -126,6 +149,7 @@ CREATE TABLE questions (
     level ENUM('easy', 'medium', 'hard'),
     points INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (lesson_id) REFERENCES lessons(id)
 );
 
@@ -138,6 +162,7 @@ CREATE TABLE question_translations (
     correct_answer TEXT,
     hint TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 -------------------------
@@ -151,6 +176,7 @@ CREATE TABLE student_quizzes (
     score INT,
     earned_points INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (lesson_id) REFERENCES lessons(id),
     FOREIGN KEY (unit_id) REFERENCES units(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -163,6 +189,7 @@ CREATE TABLE student_quiz_questions (
     answer TEXT,
     is_correct BOOLEAN,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (question_id) REFERENCES questions(id),
     FOREIGN KEY (quiz_id) REFERENCES student_quizzes(id)
 );
@@ -173,7 +200,8 @@ CREATE TABLE assets (
     name VARCHAR(50) NOT NULL,
     image_url VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE user_assets (
@@ -181,6 +209,7 @@ CREATE TABLE user_assets (
     user_id INT,
     asset_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (asset_id) REFERENCES assets(id)
 );
@@ -197,6 +226,7 @@ CREATE TABLE user_preferences (
     nose VARCHAR(255),
     headdress VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

@@ -10,13 +10,11 @@ Section.init(
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING
-    },
-    description: {
-      type: DataTypes.TEXT
-    },
     created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     }
@@ -25,7 +23,8 @@ Section.init(
     sequelize,
     modelName: 'Section',
     tableName: 'sections',
-    timestamps: false
+    timestamps: true, // Enable Sequelize to handle created_at and updated_at
+    underscored: true // Use snake_case for column names
   }
 );
 

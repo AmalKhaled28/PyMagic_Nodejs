@@ -10,6 +10,7 @@ const Question = require('./question');
 const StudentQuiz = require('./student_quiz');
 const StudentQuizQuestion = require('./student_quiz_question');
 const AnswerMotivation = require('./answer_motivation');
+const AnswerMotivationTranslation = require('./answer_motivation_translations');
 const Asset = require('./assets');
 const UserAsset = require('./user_assets');
 const UserPreference = require('./user_preferences');
@@ -52,7 +53,15 @@ UserAsset.belongsTo(Asset, { foreignKey: 'asset_id', as: 'asset' });
 User.hasOne(UserPreference, { foreignKey: 'user_id', as: 'preference' });
 UserPreference.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
+AnswerMotivation.hasMany(AnswerMotivationTranslation, {
+  foreignKey: 'answer_motivation_id',
+  as: 'translations'
+});
 
+AnswerMotivationTranslation.belongsTo(AnswerMotivation, {
+  foreignKey: 'answer_motivation_id',
+  as: 'answerMotivation'
+});
 
 module.exports = {
   User,
@@ -67,6 +76,7 @@ module.exports = {
   StudentQuiz,
   StudentQuizQuestion,
   AnswerMotivation,
+  AnswerMotivationTranslation,
   Asset,
   UserAsset,
   UserPreference,

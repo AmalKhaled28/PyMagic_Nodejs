@@ -10,13 +10,15 @@ AnswerMotivation.init(
       primaryKey: true,
       autoIncrement: true
     },
-    text: {
-      type: DataTypes.TEXT
-    },
     answer_type: {
-      type: DataTypes.ENUM('correct', 'wrong')
+      type: DataTypes.ENUM('correct', 'wrong'),
+      allowNull: false
     },
     created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     }
@@ -25,7 +27,8 @@ AnswerMotivation.init(
     sequelize,
     modelName: 'AnswerMotivation',
     tableName: 'answer_motivation',
-    timestamps: false
+    timestamps: true,
+    underscored: true
   }
 );
 
