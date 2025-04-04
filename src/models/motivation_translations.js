@@ -1,21 +1,31 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const Motivation = require('./motivation');
 
-class Reward extends Model {}
+class MotivationTranslation extends Model {}
 
-Reward.init(
+MotivationTranslation.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    image: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    required_points: {
+    motivation_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Motivation,
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
+    },
+    language: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
+    text: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
     created_at: {
@@ -29,11 +39,11 @@ Reward.init(
   },
   {
     sequelize,
-    modelName: 'Reward',
-    tableName: 'rewards',
+    modelName: 'MotivationTranslation',
+    tableName: 'motivation_translations',
     timestamps: true, // Enable Sequelize to handle created_at and updated_at
     underscored: true // Use snake_case for column names
   }
 );
 
-module.exports = Reward;
+module.exports = MotivationTranslation;

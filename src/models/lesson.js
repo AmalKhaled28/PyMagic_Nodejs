@@ -12,23 +12,18 @@ Lesson.init(
     },
     unit_id: {
       type: DataTypes.INTEGER,
-    },
-    title: {
-      type: DataTypes.STRING
-    },
-    description: {
-      type: DataTypes.TEXT
-    },
-    flash_card: {
-      type: DataTypes.TEXT
-    },
-    video_url: {
-      type: DataTypes.STRING
-    },
-    language: {
-      type: DataTypes.STRING
+      allowNull: false,
+      references: {
+        model: 'units', // Table name for the foreign key
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     },
     created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     }
@@ -37,7 +32,8 @@ Lesson.init(
     sequelize,
     modelName: 'Lesson',
     tableName: 'lessons',
-    timestamps: false
+    timestamps: true, // Enable Sequelize to handle created_at and updated_at
+    underscored: true // Use snake_case for column names
   }
 );
 

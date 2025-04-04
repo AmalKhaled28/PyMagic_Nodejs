@@ -14,8 +14,14 @@ const AnswerMotivationTranslation = require('./answer_motivation_translations');
 const Asset = require('./assets');
 const UserAsset = require('./user_assets');
 const UserPreference = require('./user_preferences');
+const SectionTranslation = require('./section_translations');
+const UnitTranslation = require('./unit_translations');
+const LessonTranslation = require('./lesson_translations');
+const MotivationTranslation = require('./motivation_translations');
+const QuestionTranslation = require('./question_translations');
+const RewardTranslation = require('./reward_translations');
 
-// Example associations:
+// for associations:
 User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements' });
 Achievement.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
@@ -63,6 +69,66 @@ AnswerMotivationTranslation.belongsTo(AnswerMotivation, {
   as: 'answerMotivation'
 });
 
+Section.hasMany(SectionTranslation, {
+  foreignKey: 'section_id',
+  as: 'translations'
+});
+
+SectionTranslation.belongsTo(Section, {
+  foreignKey: 'section_id',
+  as: 'section'
+});
+
+Unit.hasMany(UnitTranslation, {
+  foreignKey: 'unit_id',
+  as: 'translations'
+});
+
+UnitTranslation.belongsTo(Unit, {
+  foreignKey: 'unit_id',
+  as: 'unit'
+});
+
+Lesson.hasMany(LessonTranslation, {
+  foreignKey: 'lesson_id',
+  as: 'translations'
+});
+
+LessonTranslation.belongsTo(Lesson, {
+  foreignKey: 'lesson_id',
+  as: 'lesson'
+});
+
+Motivation.hasMany(MotivationTranslation, {
+  foreignKey: 'motivation_id',
+  as: 'translations'
+});
+
+MotivationTranslation.belongsTo(Motivation, {
+  foreignKey: 'motivation_id',
+  as: 'motivation'
+});
+
+Question.hasMany(QuestionTranslation, {
+  foreignKey: 'question_id',
+  as: 'translations'
+});
+
+QuestionTranslation.belongsTo(Question, {
+  foreignKey: 'question_id',
+  as: 'question'
+});
+
+Reward.hasMany(RewardTranslation, {
+  foreignKey: 'reward_id',
+  as: 'translations'
+});
+
+RewardTranslation.belongsTo(Reward, {
+  foreignKey: 'reward_id',
+  as: 'reward'
+});
+
 module.exports = {
   User,
   Motivation,
@@ -80,4 +146,10 @@ module.exports = {
   Asset,
   UserAsset,
   UserPreference,
+  SectionTranslation,
+  UnitTranslation,
+  LessonTranslation,
+  MotivationTranslation,
+  QuestionTranslation,
+  RewardTranslation,
 };

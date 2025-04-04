@@ -1,105 +1,361 @@
-const { Sequelize } = require('sequelize');
-const { QueryInterface } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('motivations', [
-      {
-        id: 1,
-        text: 'Fantastic work! You\'re mastering this!',
-        score_level: 'exultant',
-        created_at: new Date()
-      },
-      {
-        id: 2,
-        text: 'You are doing great! Keep up the momentum!',
-        score_level: 'exultant',
-        created_at: new Date()
-      },
-      {
-        id: 3,
-        text: 'Amazing progress! Keep pushing forward!',
-        score_level: 'exultant',
-        created_at: new Date()
-      },
-      {
-        id: 4,
-        text: 'Nice effort! You\'re getting better!',
-        score_level: 'good',
-        created_at: new Date()
-      },
-      {
-        id: 5,
-        text: 'Good job! Stay consistent and you\'ll improve!',
-        score_level: 'good',
-        created_at: new Date()
-      },
-      {
-        id: 6,
-        text: 'You\'re on the right track! Keep practicing!',
-        score_level: 'good',
-        created_at: new Date()
-      },
-      {
-        id: 7,
-        text: 'Don’t give up! Every mistake is a step toward success!',
-        score_level: 'bad',
-        created_at: new Date()
-      },
-      {
-        id: 8,
-        text: 'Keep trying! Learning takes time and effort!',
-        score_level: 'bad',
-        created_at: new Date()
-      },
-      {
-        id: 9,
-        text: 'Failure is just part of the journey. Keep going!',
-        score_level: 'bad',
-        created_at: new Date()
-      },
-      {
-        id: 10,
-        text: 'You are unstoppable! Keep reaching for your goals!',
-        score_level: 'exultant',
-        created_at: new Date()
-      },
-      {
-        id: 11,
-        text: 'Your dedication is inspiring! Keep up the great work!',
-        score_level: 'exultant',
-        created_at: new Date()
-      },
-      {
-        id: 12,
-        text: "You're improving every day! Stay focused!'",
-        score_level: 'good',
-        created_at: new Date()
-      },
-      {
-        id: 13,
-        text: 'Great effort! Keep building on your strengths!',
-        score_level: 'good',
-        created_at: new Date()
-      },
-      {
-        id: 14,
-        text: 'Mistakes help you grow! Keep going!',
-        score_level: 'bad',
-        created_at: new Date()
-      },
-      {
-        id: 15,
-        text: 'Every step forward is progress! Stay committed!',
-        score_level: 'bad',
-        created_at: new Date()
-      }
-    ], {});
+    // First insert base motivations (without text)
+    await queryInterface.bulkInsert(
+      "motivations",
+      [
+        {
+          id: 1,
+          score_level: "exultant",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 2,
+          score_level: "exultant",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 3,
+          score_level: "exultant",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 4,
+          score_level: "good",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 5,
+          score_level: "good",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 6,
+          score_level: "good",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 7,
+          score_level: "bad",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 8,
+          score_level: "bad",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 9,
+          score_level: "bad",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 10,
+          score_level: "exultant",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 11,
+          score_level: "exultant",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 12,
+          score_level: "good",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 13,
+          score_level: "good",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 14,
+          score_level: "bad",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 15,
+          score_level: "bad",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ],
+      {}
+    );
+
+    // Then insert translations (English and Arabic)
+    await queryInterface.bulkInsert(
+      "motivation_translations",
+      [
+        // English Translations
+        {
+          id: 1,
+          motivation_id: 1,
+          language: "en",
+          text: "Fantastic work! You're mastering this!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 2,
+          motivation_id: 2,
+          language: "en",
+          text: "You are doing great! Keep up the momentum!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 3,
+          motivation_id: 3,
+          language: "en",
+          text: "Amazing progress! Keep pushing forward!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 4,
+          motivation_id: 4,
+          language: "en",
+          text: "Nice effort! You're getting better!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 5,
+          motivation_id: 5,
+          language: "en",
+          text: "Good job! Stay consistent and you'll improve!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 6,
+          motivation_id: 6,
+          language: "en",
+          text: "You're on the right track! Keep practicing!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 7,
+          motivation_id: 7,
+          language: "en",
+          text: "Don't give up! Every mistake is a step toward success!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 8,
+          motivation_id: 8,
+          language: "en",
+          text: "Keep trying! Learning takes time and effort!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 9,
+          motivation_id: 9,
+          language: "en",
+          text: "Failure is just part of the journey. Keep going!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 10,
+          motivation_id: 10,
+          language: "en",
+          text: "You are unstoppable! Keep reaching for your goals!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 11,
+          motivation_id: 11,
+          language: "en",
+          text: "Your dedication is inspiring! Keep up the great work!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 12,
+          motivation_id: 12,
+          language: "en",
+          text: "You're improving every day! Stay focused!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 13,
+          motivation_id: 13,
+          language: "en",
+          text: "Great effort! Keep building on your strengths!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 14,
+          motivation_id: 14,
+          language: "en",
+          text: "Mistakes help you grow! Keep going!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 15,
+          motivation_id: 15,
+          language: "en",
+          text: "Every step forward is progress! Stay committed!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+
+        // Arabic Translations
+        {
+          id: 16,
+          motivation_id: 1,
+          language: "ar",
+          text: "شغل تحفة! أنت بتمسك الموضوع!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 17,
+          motivation_id: 2,
+          language: "ar",
+          text: "بتحسن والله! استمر على كده!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 18,
+          motivation_id: 3,
+          language: "ar",
+          text: "تقدم جامد! كمل في اللي أنت فيه!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 19,
+          motivation_id: 4,
+          language: "ar",
+          text: "مجهود كويس! أنت بتحسن!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 20,
+          motivation_id: 5,
+          language: "ar",
+          text: "عمل ممتاز! استمر وهتوصل!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 21,
+          motivation_id: 6,
+          language: "ar",
+          text: "أنت في الطريق الصح! استمر في التمرين!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 22,
+          motivation_id: 7,
+          language: "ar",
+          text: "متستسلمش! كل غلطة بتبقى خطوة للقدام!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 23,
+          motivation_id: 8,
+          language: "ar",
+          text: "استمر في المحاولة! التعلم محتاج وقت ومجهود!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 24,
+          motivation_id: 9,
+          language: "ar",
+          text: "الغلط جزء من الطريق! كمل!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 25,
+          motivation_id: 10,
+          language: "ar",
+          text: "أنت جامد! استمر في تحقيق أهدافك!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 26,
+          motivation_id: 11,
+          language: "ar",
+          text: "مجهودك ملهم! استمر في الشغل الجيد!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 27,
+          motivation_id: 12,
+          language: "ar",
+          text: "بتحسن كل يوم! ركز واستمر!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 28,
+          motivation_id: 13,
+          language: "ar",
+          text: "مجهود رائع! استغل نقاط قوتك!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 29,
+          motivation_id: 14,
+          language: "ar",
+          text: "الأخطاء بتساعدك تتعلم! كمل!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 30,
+          motivation_id: 15,
+          language: "ar",
+          text: "كل خطوة للقدام دي تقدم! استمر!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ],
+      {}
+    );
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('motivations', null, {});
-  }
+    // First delete translations to maintain referential integrity
+    await queryInterface.bulkDelete("motivation_translations", null, {});
+    // Then delete motivations
+    await queryInterface.bulkDelete("motivations", null, {});
+  },
 };
-
-

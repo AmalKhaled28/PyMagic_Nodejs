@@ -12,29 +12,30 @@ Question.init(
     },
     lesson_id: {
       type: DataTypes.INTEGER,
-    },
-    question: {
-      type: DataTypes.TEXT
+      allowNull: false,
+      references: {
+        model: 'lessons', // Table name for the foreign key
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     },
     type: {
-      type: DataTypes.ENUM('multiple_choice', 'true_false')
-    },
-    options: {
-      type: DataTypes.JSON
-    },
-    correct_answer: {
-      type: DataTypes.TEXT
-    },
-    hint: {
-      type: DataTypes.TEXT
+      type: DataTypes.ENUM('multiple_choice', 'true_false'),
+      allowNull: false
     },
     level: {
-      type: DataTypes.ENUM('easy', 'medium', 'hard')
+      type: DataTypes.ENUM('easy', 'medium', 'hard'),
+      allowNull: false
     },
     points: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     }
@@ -43,7 +44,8 @@ Question.init(
     sequelize,
     modelName: 'Question',
     tableName: 'questions',
-    timestamps: false
+    timestamps: true, // Enable Sequelize to handle created_at and updated_at
+    underscored: true // Use snake_case for column names
   }
 );
 

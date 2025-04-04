@@ -1,148 +1,428 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('rewards', [
-      {
-        id: 1,
-        text: 'Spellbook Scholar',
-        image: '/images/spellbook_scholar.svg',
-        required_points: 50
-      },
-      {
-        id: 2,
-        text: 'Daily Dedication',
-        image: '/images/daily_dedication.svg',
-        required_points: 75
-      },
-      {
-        id: 3,
-        text: 'Treasure Hunter',
-        image: '/images/treasure_hunter.svg',
-        required_points: 150
-      },
-      {
-        id: 4,
-        text: 'Master of the Arcane',
-        image: '/images/master_of_the_arcane.svg',
-        required_points: 250
-      },
-      {
-        id: 5,
-        text: 'First Spell Cast',
-        image: '/images/first_spell_cast.svg',
-        required_points: 350
-      },
-      {
-        id: 6,
-        text: 'Arcane Explorer',
-        image: '/images/arcane_explorer.svg',
-        required_points: 450
-      },
-      {
-        id: 7,
-        text: 'Blue Crystal Seeker',
-        image: '/images/blue_crystal.svg',
-        required_points: 550
-      },
-      {
-        id: 8,
-        text: 'Crystal Guardian',
-        image: '/images/crystal_guardian.svg',
-        required_points: 650
-      },
-      {
-        id: 9,
-        text: 'Cursed Crystal Conqueror',
-        image: '/images/cursed_crystals.svg',
-        required_points: 750
-      },
-      {
-        id: 10,
-        text: 'Keeper of Secrets',
-        image: '/images/book_of_secrets.svg',
-        required_points: 850
-      },
-      {
-        id: 11,
-        text: 'Golden Key Holder',
-        image: '/images/golden_key.svg',
-        required_points: 950
-      },
-      {
-        id: 12,
-        text: 'Mystic Candle Keeper',
-        image: '/images/mystic_candle.svg',
-        required_points: 1050
-      },
-      {
-        id: 13,
-        text: 'Mystic Jar Master',
-        image: '/images/mystic_jar.svg',
-        required_points: 1150
-      },
-      {
-        id: 14,
-        text: 'Mystic Sage',
-        image: '/images/mystic_sage.svg',
-        required_points: 1250
-      },
-      {
-        id: 15,
-        text: 'Potion Brewer',
-        image: '/images/potion_brewer.svg',
-        required_points: 1350
-      },
-      {
-        id: 16,
-        text: 'Sorcerer’s Hat Wearer',
-        image: '/images/sorcerers_hat.svg',
-        required_points: 1450
-      },
-      {
-        id: 17,
-        text: 'Sorcerer’s Quill Scribe',
-        image: '/images/sorcerers_quill.svg',
-        required_points: 1550
-      },
-      {
-        id: 18,
-        text: 'Arcane Amulet Wielder',
-        image: '/images/arcane_amulet.svg',
-        required_points: 1650
-      },
-      {
-        id: 19,
-        text: 'Arcane Crystal Collector',
-        image: '/images/arcane_crystal.svg',
-        required_points: 1750
-      },
-      {
-        id: 20,
-        text: 'Starbound Scholar',
-        image: '/images/starbound_books.svg',
-        required_points: 1850
-      },
-      {
-        id: 21,
-        text: 'Ultimate Sorcerer',
-        image: '/images/ultimate_sorcerer.svg',
-        required_points: 1950
-      },
-      {
-        id: 22,
-        text: 'Wisdom Seeker',
-        image: '/images/wisdom_feathers.svg',
-        required_points: 2100
-      },
-      {
-        id: 23,
-        text: 'Wizard’s Crown Bearer',
-        image: '/images/wizards_crown.svg',
-        required_points: 2300
-      }
-    ], {});
+    // First insert rewards (without text)
+    await queryInterface.bulkInsert(
+      "rewards",
+      [
+        { id: 1, image: "/images/spellbook_scholar.svg", required_points: 50 },
+        { id: 2, image: "/images/daily_dedication.svg", required_points: 75 },
+        { id: 3, image: "/images/treasure_hunter.svg", required_points: 150 },
+        {
+          id: 4,
+          image: "/images/master_of_the_arcane.svg",
+          required_points: 250,
+        },
+        { id: 5, image: "/images/first_spell_cast.svg", required_points: 350 },
+        { id: 6, image: "/images/arcane_explorer.svg", required_points: 450 },
+        { id: 7, image: "/images/blue_crystal.svg", required_points: 550 },
+        { id: 8, image: "/images/crystal_guardian.svg", required_points: 650 },
+        { id: 9, image: "/images/cursed_crystals.svg", required_points: 750 },
+        { id: 10, image: "/images/book_of_secrets.svg", required_points: 850 },
+        { id: 11, image: "/images/golden_key.svg", required_points: 950 },
+        { id: 12, image: "/images/mystic_candle.svg", required_points: 1050 },
+        { id: 13, image: "/images/mystic_jar.svg", required_points: 1150 },
+        { id: 14, image: "/images/mystic_sage.svg", required_points: 1250 },
+        { id: 15, image: "/images/potion_brewer.svg", required_points: 1350 },
+        { id: 16, image: "/images/sorcerers_hat.svg", required_points: 1450 },
+        { id: 17, image: "/images/sorcerers_quill.svg", required_points: 1550 },
+        { id: 18, image: "/images/arcane_amulet.svg", required_points: 1650 },
+        { id: 19, image: "/images/arcane_crystal.svg", required_points: 1750 },
+        { id: 20, image: "/images/starbound_books.svg", required_points: 1850 },
+        {
+          id: 21,
+          image: "/images/ultimate_sorcerer.svg",
+          required_points: 1950,
+        },
+        { id: 22, image: "/images/wisdom_feathers.svg", required_points: 2100 },
+        { id: 23, image: "/images/wizards_crown.svg", required_points: 2300 },
+      ],
+      {}
+    );
+
+    // Insert translations with explicit IDs
+    await queryInterface.bulkInsert(
+      "reward_translations",
+      [
+        // English Translations
+        {
+          id: 1,
+          reward_id: 1,
+          language: "en",
+          text: "Spellbook Scholar",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 2,
+          reward_id: 2,
+          language: "en",
+          text: "Daily Dedication",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 3,
+          reward_id: 3,
+          language: "en",
+          text: "Treasure Hunter",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 4,
+          reward_id: 4,
+          language: "en",
+          text: "Master of the Arcane",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 5,
+          reward_id: 5,
+          language: "en",
+          text: "First Spell Cast",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 6,
+          reward_id: 6,
+          language: "en",
+          text: "Arcane Explorer",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 7,
+          reward_id: 7,
+          language: "en",
+          text: "Blue Crystal Seeker",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 8,
+          reward_id: 8,
+          language: "en",
+          text: "Crystal Guardian",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 9,
+          reward_id: 9,
+          language: "en",
+          text: "Cursed Crystal Conqueror",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 10,
+          reward_id: 10,
+          language: "en",
+          text: "Keeper of Secrets",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 11,
+          reward_id: 11,
+          language: "en",
+          text: "Golden Key Holder",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 12,
+          reward_id: 12,
+          language: "en",
+          text: "Mystic Candle Keeper",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 13,
+          reward_id: 13,
+          language: "en",
+          text: "Mystic Jar Master",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 14,
+          reward_id: 14,
+          language: "en",
+          text: "Mystic Sage",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 15,
+          reward_id: 15,
+          language: "en",
+          text: "Potion Brewer",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 16,
+          reward_id: 16,
+          language: "en",
+          text: "Sorcerer's Hat Wearer",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 17,
+          reward_id: 17,
+          language: "en",
+          text: "Sorcerer's Quill Scribe",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 18,
+          reward_id: 18,
+          language: "en",
+          text: "Arcane Amulet Wielder",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 19,
+          reward_id: 19,
+          language: "en",
+          text: "Arcane Crystal Collector",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 20,
+          reward_id: 20,
+          language: "en",
+          text: "Starbound Scholar",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 21,
+          reward_id: 21,
+          language: "en",
+          text: "Ultimate Sorcerer",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 22,
+          reward_id: 22,
+          language: "en",
+          text: "Wisdom Seeker",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 23,
+          reward_id: 23,
+          language: "en",
+          text: "Wizard's Crown Bearer",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+
+        // Arabic Translations
+        {
+          id: 24,
+          reward_id: 1,
+          language: "ar",
+          text: "عالم كتاب التعاويذ",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 25,
+          reward_id: 2,
+          language: "ar",
+          text: "الالتزام اليومي",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 26,
+          reward_id: 3,
+          language: "ar",
+          text: "صائدي الكنوز",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 27,
+          reward_id: 4,
+          language: "ar",
+          text: "سيد السحر",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 28,
+          reward_id: 5,
+          language: "ar",
+          text: "أول تعويذة",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 29,
+          reward_id: 6,
+          language: "ar",
+          text: "مستكشف السحر",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 30,
+          reward_id: 7,
+          language: "ar",
+          text: "باحث الكريستال الأزرق",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 31,
+          reward_id: 8,
+          language: "ar",
+          text: "حارس الكريستال",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 32,
+          reward_id: 9,
+          language: "ar",
+          text: "فاتح الكريستال الملعون",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 33,
+          reward_id: 10,
+          language: "ar",
+          text: "حارس الأسرار",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 34,
+          reward_id: 11,
+          language: "ar",
+          text: "حامل المفتاح الذهبي",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 35,
+          reward_id: 12,
+          language: "ar",
+          text: "حامل الشمعة السحرية",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 36,
+          reward_id: 13,
+          language: "ar",
+          text: "سيد الجرة السحرية",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 37,
+          reward_id: 14,
+          language: "ar",
+          text: "الحكيم السحري",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 38,
+          reward_id: 15,
+          language: "ar",
+          text: "صانع الجرعات",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 39,
+          reward_id: 16,
+          language: "ar",
+          text: "مرتدي قبعة الساحر",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 40,
+          reward_id: 17,
+          language: "ar",
+          text: "ناسخ قلم الساحر",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 41,
+          reward_id: 18,
+          language: "ar",
+          text: "حامل التميمة السحرية",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 42,
+          reward_id: 19,
+          language: "ar",
+          text: "جامع الكريستال السحري",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 43,
+          reward_id: 20,
+          language: "ar",
+          text: "العالم النجمي",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 44,
+          reward_id: 21,
+          language: "ar",
+          text: "الساحر الأعظم",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 45,
+          reward_id: 22,
+          language: "ar",
+          text: "باحث الحكمة",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 46,
+          reward_id: 23,
+          language: "ar",
+          text: "حامل تاج الساحر",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ],
+      {}
+    );
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('rewards', null, {});
-  }
+    // First delete translations
+    await queryInterface.bulkDelete("reward_translations", null, {});
+    // Then delete rewards
+    await queryInterface.bulkDelete("rewards", null, {});
+  },
 };

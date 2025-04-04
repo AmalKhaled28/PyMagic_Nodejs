@@ -1,21 +1,21 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const AnswerMotivation = require('./answer_motivation');
+const Question = require('./question');
 
-class AnswerMotivationTranslation extends Model {}
+class QuestionTranslation extends Model {}
 
-AnswerMotivationTranslation.init(
+QuestionTranslation.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    answer_motivation_id: {
+    question_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: AnswerMotivation,
+        model: Question,
         key: 'id'
       },
       onDelete: 'CASCADE'
@@ -24,9 +24,21 @@ AnswerMotivationTranslation.init(
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    text: {
+    question: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    options: {
+      type: DataTypes.JSON,
+      allowNull: true
+    },
+    correct_answer: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    hint: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,
@@ -39,11 +51,11 @@ AnswerMotivationTranslation.init(
   },
   {
     sequelize,
-    modelName: 'AnswerMotivationTranslation',
-    tableName: 'answer_motivation_translations',
-    timestamps: true,
-    underscored: true
+    modelName: 'QuestionTranslation',
+    tableName: 'question_translations',
+    timestamps: true, // Enable Sequelize to handle created_at and updated_at
+    underscored: true // Use snake_case for column names
   }
 );
 
-module.exports = AnswerMotivationTranslation;
+module.exports = QuestionTranslation;

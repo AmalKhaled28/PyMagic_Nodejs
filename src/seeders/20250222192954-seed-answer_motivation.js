@@ -1,133 +1,361 @@
-const { Sequelize } = require('sequelize');
-const { QueryInterface } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('answer_motivation', [
-      {
-        id: 1,
-        text: 'Great job! You got it right!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 2,
-        text: 'Excellent work! Keep going!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 3,
-        text: 'Fantastic! You nailed it!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 4,
-        text: 'Oops! That was incorrect, but keep trying!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 5,
-        text: 'Not quite, but don’t give up!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 6,
-        text: 'That wasn’t right, but you’re learning!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 7,
-        text: 'Well done! Keep up the great work!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 8,
-        text: 'Superb! You’re improving every time!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 9,
-        text: 'Almost there! Review and try again!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 10,
-        text: 'You’re doing great! Keep pushing forward!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 11,
-        text: 'That’s okay! Learn from it and try again!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 12,
-        text: 'Nice try! Keep practicing and you’ll get it!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 13,
-        text: 'Amazing effort! You’re mastering this!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 14,
-        text: 'Brilliant! Keep it up!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 15,
-        text: 'You’re so close! Try again!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 16,
-        text: 'Every mistake is a step toward success!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 17,
-        text: 'Spot on! You’re getting better!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 18,
-        text: 'Great progress! Keep challenging yourself!',
-        answer_type: 'correct',
-        created_at: new Date()
-      },
-      {
-        id: 19,
-        text: 'Don’t worry! Mistakes help you learn!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      },
-      {
-        id: 20,
-        text: 'Keep at it! You’re on the right path!',
-        answer_type: 'wrong',
-        created_at: new Date()
-      }
-    ], {});
+    // First insert base answer motivations (without text)
+    await queryInterface.bulkInsert(
+      "answer_motivation",
+      [
+        {
+          id: 1,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 2,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 3,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 4,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 5,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 6,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 7,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 8,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 9,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 10,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 11,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 12,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 13,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 14,
+          answer_type: "correct",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 15,
+          answer_type: "wrong",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ],
+      {}
+    );
+
+    // Then insert translations (English and Arabic)
+    await queryInterface.bulkInsert(
+      "answer_motivation_translations",
+      [
+        // English Translations
+        {
+          id: 1,
+          answer_motivation_id: 1,
+          language: "en",
+          text: "Great job! You got it right!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 2,
+          answer_motivation_id: 2,
+          language: "en",
+          text: "Excellent work! Keep going!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 3,
+          answer_motivation_id: 3,
+          language: "en",
+          text: "Fantastic! You nailed it!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 4,
+          answer_motivation_id: 4,
+          language: "en",
+          text: "Oops! That was incorrect, but keep trying!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 5,
+          answer_motivation_id: 5,
+          language: "en",
+          text: "Not quite, but don't give up!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 6,
+          answer_motivation_id: 6,
+          language: "en",
+          text: "That wasn't right, but you're learning!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 7,
+          answer_motivation_id: 7,
+          language: "en",
+          text: "Well done! Keep up the great work!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 8,
+          answer_motivation_id: 8,
+          language: "en",
+          text: "Superb! You're improving every time!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 9,
+          answer_motivation_id: 9,
+          language: "en",
+          text: "Almost there! Review and try again!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 10,
+          answer_motivation_id: 10,
+          language: "en",
+          text: "You're doing great! Keep pushing forward!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 11,
+          answer_motivation_id: 11,
+          language: "en",
+          text: "That's okay! Learn from it and try again!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 12,
+          answer_motivation_id: 12,
+          language: "en",
+          text: "Nice try! Keep practicing and you'll get it!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 13,
+          answer_motivation_id: 13,
+          language: "en",
+          text: "Amazing effort! You're mastering this!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 14,
+          answer_motivation_id: 14,
+          language: "en",
+          text: "Brilliant! Keep it up!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 15,
+          answer_motivation_id: 15,
+          language: "en",
+          text: "You're so close! Try again!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+
+        // Arabic Translations
+        {
+          id: 16,
+          answer_motivation_id: 1,
+          language: "ar",
+          text: "عمل ممتاز! إجابتك صحيحة!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 17,
+          answer_motivation_id: 2,
+          language: "ar",
+          text: "إجابتك رائعة! استمر هكذا!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 18,
+          answer_motivation_id: 3,
+          language: "ar",
+          text: "مذهل! لقد أفلت تماماً!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 19,
+          answer_motivation_id: 4,
+          language: "ar",
+          text: "عذراً! الإجابة غير صحيحة، لكن استمر في المحاولة!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 20,
+          answer_motivation_id: 5,
+          language: "ar",
+          text: "ليس تماماً، لكن لا تستسلم!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 21,
+          answer_motivation_id: 6,
+          language: "ar",
+          text: "الإجابة غير صحيحة، لكنك تتعلم!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 22,
+          answer_motivation_id: 7,
+          language: "ar",
+          text: "أحسنت! استمر في العمل الجيد!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 23,
+          answer_motivation_id: 8,
+          language: "ar",
+          text: "رائع! أنت تتحسن في كل مرة!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 24,
+          answer_motivation_id: 9,
+          language: "ar",
+          text: "كدت تصل! راجع وحاول مرة أخرى!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 25,
+          answer_motivation_id: 10,
+          language: "ar",
+          text: "أنت تبلي بلاءً حسناً! استمر في التقدم!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 26,
+          answer_motivation_id: 11,
+          language: "ar",
+          text: "لا بأس! تعلم من الخطأ وحاول مرة أخرى!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 27,
+          answer_motivation_id: 12,
+          language: "ar",
+          text: "محاولة جيدة! استمر في الممارسة وسوف تنجح!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 28,
+          answer_motivation_id: 13,
+          language: "ar",
+          text: "جهد رائع! أنت تتقن هذا!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 29,
+          answer_motivation_id: 14,
+          language: "ar",
+          text: "رائع! استمر هكذا!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
+          id: 30,
+          answer_motivation_id: 15,
+          language: "ar",
+          text: "أنت قريب جداً! حاول مرة أخرى!",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      ],
+      {}
+    );
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('answer_motivation', null, {});
-  }
+    // First delete translations to maintain referential integrity
+    await queryInterface.bulkDelete("answer_motivation_translations", null, {});
+    // Then delete answer motivations
+    await queryInterface.bulkDelete("answer_motivation", null, {});
+  },
 };
