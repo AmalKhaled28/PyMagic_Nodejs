@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   getSectionDetails,
   getSectionFlashcards,
-  checkFlashcardAccess, // Add the new controller function
+  checkFlashcardAccess,
 } = require("../controllers/sectionController");
 
 const authMiddleware = require('../middlewares/auth');
@@ -13,6 +13,6 @@ router.use(authMiddleware);
 
 router.get("/:id", getSectionDetails);
 router.get("/:id/flashcards", getSectionFlashcards);
-router.get("/flashcard-access/:user_id/:lesson_id", checkFlashcardAccess); // New route
+router.get("/flashcard-access/:user_id/:lesson_id", checkFlashcardAccess);
 
 module.exports = router;

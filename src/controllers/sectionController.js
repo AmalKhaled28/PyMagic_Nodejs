@@ -1,31 +1,52 @@
-// const Section = require("../models/section");
-// const Unit = require("../models/unit");
-// const Lesson = require("../models/lesson");
-const { Section, Unit, Lesson, StudentQuiz } = require("../models/index");
-
+const { Section, Unit, Lesson, StudentQuiz, SectionTranslation, UnitTranslation, LessonTranslation } = require("../models/index");
 
 exports.getSectionDetails = async (req, res) => {
   try {
     const sectionId = req.params.id;
     const userId = req.user.id; // Assuming user ID is available from auth middleware
+    
+    const language = req.headers["accept-language"] || "en";
 
     const section = await Section.findOne({
       where: { id: sectionId },
+      attributes: ['id', 'created_at', 'updated_at'],
       include: [
+        {
+          model: SectionTranslation,
+          as: 'translations',
+          where: { language },
+          required: false,
+          attributes: ['name'],
+        },
         {
           model: Unit,
           as: "units",
+          attributes: ['id', 'section_id', 'created_at', 'updated_at'],
           include: [
+            {
+              model: UnitTranslation,
+              as: 'translations',
+              where: { language },
+              required: false,
+              attributes: ['name'],
+            },
             {
               model: Lesson,
               as: "lessons",
-              attributes: ["id", "title"], // Include title for clarity
+              attributes: ['id', 'unit_id', 'created_at', 'updated_at'],
               include: [
+                {
+                  model: LessonTranslation,
+                  as: 'translations',
+                  where: { language },
+                  required: false,
+                  attributes: ['title'],
+                },
                 {
                   model: StudentQuiz,
                   as: "quizzes",
                   where: { user_id: userId },
-                  required: false, // Left join to include lessons without quizzes
+                  required: false,
                   attributes: ["id", "is_passed"],
                 },
               ],
@@ -33,50 +54,83 @@ exports.getSectionDetails = async (req, res) => {
             {
               model: StudentQuiz,
               as: "quizzes",
-              where: { user_id: userId, lesson_id: null }, // Unit-level quizzes
+              where: { user_id: userId, lesson_id: null },
               required: false,
               attributes: ["id", "is_passed"],
             },
           ],
         },
       ],
+      order: [[{ model: Unit, as: 'units' }, 'id', 'ASC']], // Sort units by id in ascending order
     });
 
     if (!section) {
       return res.status(404).json({ message: "Section not found" });
     }
 
-    res.json(section);
+    // Format response to include translated names
+    const formattedSection = {
+      id: section.id,
+      name: section.translations.length > 0 ? section.translations[0].name : "Unnamed Section", // Fallback if no translation
+      units: section.units.map(unit => ({
+        id: unit.id,
+        name: unit.translations.length > 0 ? unit.translations[0].name : "Unnamed Unit", // Fallback if no translation
+        lessons: unit.lessons.map(lesson => ({
+          id: lesson.id,
+          title: lesson.translations.length > 0 ? lesson.translations[0].title : "Unnamed Lesson", // Fallback if no translation
+          quizzes: lesson.quizzes,
+        })),
+        quizzes: unit.quizzes,
+      })),
+    };
+
+    res.json(formattedSection);
   } catch (error) {
     console.error("Error fetching section details:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-
-
+// Update getSectionFlashcards to also sort units and use Arabic
 exports.getSectionFlashcards = async (req, res) => {
   try {
     const sectionId = req.params.id;
-    const userId = req.user.id; // Assuming user ID is available from auth middleware
+    const userId = req.user.id;
+    const language = req.headers["accept-language"] || "en";
 
     const section = await Section.findOne({
       where: { id: sectionId },
+      attributes: ['id', 'created_at', 'updated_at'],
       include: [
         {
           model: Unit,
           as: "units",
+          attributes: ['id', 'section_id', 'created_at', 'updated_at'],
           include: [
+            {
+              model: UnitTranslation,
+              as: 'translations',
+              where: { language },
+              required: false,
+              attributes: ['name'],
+            },
             {
               model: Lesson,
               as: "lessons",
-              attributes: ["id", "title", "flash_card"],
+              attributes: ['id', 'unit_id', 'created_at', 'updated_at'],
               include: [
+                {
+                  model: LessonTranslation,
+                  as: 'translations',
+                  where: { language },
+                  required: false,
+                  attributes: ['title', 'flash_card'],
+                },
                 {
                   model: StudentQuiz,
                   as: "quizzes",
                   where: { user_id: userId },
-                  required: false, // Left join to include lessons without quizzes
+                  required: false,
                   attributes: ["id", "is_passed"],
                 },
               ],
@@ -84,21 +138,22 @@ exports.getSectionFlashcards = async (req, res) => {
           ],
         },
       ],
+      order: [[{ model: Unit, as: 'units' }, 'id', 'ASC']], // Sort units by id in ascending order
     });
 
     if (!section) {
       return res.status(404).json({ message: "Section not found" });
     }
 
-    // Group flashcards by unit
+    // Group flashcards by unit with translated data
     const flashcardsByUnit = section.units.map(unit => ({
       unitId: unit.id,
-      unitName: unit.name,
+      unitName: unit.translations.length > 0 ? unit.translations[0].name : "Unnamed Unit",
       lessons: unit.lessons.map((lesson, index) => ({
         lessonId: lesson.id,
-        lessonName: lesson.title,
-        lessonNumber: index + 1, // Add lesson number within the unit
-        flashCard: lesson.flash_card,
+        lessonName: lesson.translations.length > 0 ? lesson.translations[0].title : "Unnamed Lesson",
+        lessonNumber: index + 1,
+        flashCard: lesson.translations.length > 0 ? lesson.translations[0].flash_card : null,
         isPassed: lesson.quizzes && lesson.quizzes.length > 0 ? lesson.quizzes[0].is_passed : false,
       })),
     }));
@@ -113,6 +168,7 @@ exports.getSectionFlashcards = async (req, res) => {
   }
 };
 
+// checkFlashcardAccess remains unchanged as it doesn't deal with translations or ordering
 exports.checkFlashcardAccess = async (req, res) => {
   try {
     const { user_id, lesson_id } = req.params;
@@ -121,7 +177,6 @@ exports.checkFlashcardAccess = async (req, res) => {
       return res.status(400).json({ message: "User ID and Lesson ID are required" });
     }
 
-    // Check if the user has passed the quiz for this lesson
     const quiz = await StudentQuiz.findOne({
       where: {
         user_id,
