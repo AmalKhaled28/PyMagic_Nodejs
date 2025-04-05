@@ -1,7 +1,6 @@
 // src/controllers/chatbotController.js
 require('dotenv').config();
 
-console.log('GEMINI_API_KEY after dotenv:', process.env.GEMINI_API_KEY); // Debug log
 
 let Chatbot; // Declare Chatbot outside the class to avoid circular dependency issues
 try {
@@ -17,8 +16,7 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
 
 class ChatbotController {
   static async sendMessage(req, res) {
-    console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY);
-    console.log('Received request body:', req.body); // Log the incoming message
+ 
     const { message } = req.body; // Ensure this is the only use of `message`
     if (!message || message.trim() === '') {
       return res.status(400).json({ error: 'Message cannot be empty' });
@@ -61,7 +59,7 @@ class ChatbotController {
         \`\`\`
         "See? You've created your own magical function! Now, whenever you need it, just call upon your potion!"
 
-        Now, answer this: ${message}
+        Now, please answer this *briefly and clearly for kids* (without too much detail): ${message}
       `;
 
       const result = await model.generateContent(fewShotPrompt);

@@ -1,5 +1,6 @@
 "use strict";
-
+/// rename question to question_text
+// replace صحيح / خطأ with صح / غلط
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // First, insert into questions table
