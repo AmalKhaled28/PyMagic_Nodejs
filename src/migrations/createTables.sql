@@ -157,7 +157,7 @@ CREATE TABLE question_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     question_id INT,
     language VARCHAR(50),
-    question TEXT,
+    question_text TEXT,
     options JSON,
     correct_answer TEXT,
     hint TEXT,
