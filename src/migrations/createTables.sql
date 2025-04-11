@@ -229,4 +229,28 @@ CREATE TABLE user_preferences (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE feedbacks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    student_quiz_id INT,
+    feedback_score INT, -- 1 to 5 (emoji scale)
+    comment TEXT, -- Optional text-based comment
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (student_quiz_id) REFERENCES student_quizzes(id)
+);
+
+
+CREATE TABLE analytics_events (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT, 
+  event_type VARCHAR(100),
+  event_data JSON,
+  duration INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Added foreign key
+);
 -- -- Get-Content D:\PymagicBackend\src\migrations\createTables.sql | mysql -u root -p pymagic

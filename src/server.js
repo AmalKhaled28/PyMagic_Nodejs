@@ -15,6 +15,7 @@ const models = require('./models/index');
 const avatarRoutes = require('./routes/avatarRoutes');
 const motivationRoutes = require('./routes/motivationRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const analyticsEventRoutes = require('./routes/analyticsEventRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -55,6 +56,7 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use('/', avatarRoutes);
 app.use('/api', motivationRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api', analyticsEventRoutes);
 
 
 // Database Connection

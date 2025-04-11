@@ -158,21 +158,59 @@ const getUserProfileInfo = async (req, res) => {
 
 
 // **Update User Profile**
+// const updateUserProfile = async (req, res) => {
+//   try {
+//     const { name, email, password, parentEmail } = req.body;
+//     const user = await User.findByPk(req.user.id);
+    
+//     if (!user) return res.status(404).json({ error: 'User not found' });
+
+//     // Update fields if they're provided
+//     if (name) user.name = name;
+//     if (email) user.email = email;
+//     if (parentEmail) user.parent_email = parentEmail;
+    
+//     // Handle password change separately
+//     if (password) {
+//       user.password = await bcrypt.hash(password, 10);
+//     }
+
+//     await user.save();
+
+//     res.status(200).json({ 
+//       message: 'Profile updated successfully',
+//       user: {
+//         id: user.id,
+//         name: user.name,
+//         email: user.email,
+//         parent_email: user.parent_email,
+//         // Don't return password
+//       }
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Error updating profile', details: err.message });
+//   }
+// };
+
 const updateUserProfile = async (req, res) => {
   try {
-    const { name, email, password, parentEmail } = req.body;
+    const { name, email, currentPassword, newPassword, parentEmail } = req.body;
     const user = await User.findByPk(req.user.id);
     
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // Update fields if they're provided
+    // Update basic fields
     if (name) user.name = name;
     if (email) user.email = email;
     if (parentEmail) user.parent_email = parentEmail;
     
-    // Handle password change separately
-    if (password) {
-      user.password = await bcrypt.hash(password, 10);
+    // Handle password change
+    if (currentPassword && newPassword) {
+      const isPasswordValid = await user.checkPassword(currentPassword);
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: 'Current password is incorrect' });
+      }
+      user.password = await bcrypt.hash(newPassword, 10);
     }
 
     await user.save();
@@ -184,13 +222,13 @@ const updateUserProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         parent_email: user.parent_email,
-        // Don't return password
       }
     });
   } catch (err) {
     res.status(500).json({ error: 'Error updating profile', details: err.message });
   }
 };
+
 
 module.exports = {
   registerUser,

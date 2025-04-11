@@ -21,6 +21,7 @@ const MotivationTranslation = require('./motivation_translations');
 const QuestionTranslation = require('./question_translations');
 const RewardTranslation = require('./reward_translations');
 const Feedback = require('./feedbacks');
+const AnalyticsEvent = require('./AnalyticsEvent');
 
 // for associations:
 User.hasMany(Achievement, { foreignKey: 'user_id', as: 'achievements' });
@@ -133,6 +134,9 @@ RewardTranslation.belongsTo(Reward, {
 User.hasMany(Feedback, { foreignKey: 'user_id', as: 'feedbacks' });
 Feedback.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
+// Add AnalyticsEvent associations
+User.hasMany(AnalyticsEvent, { foreignKey: 'user_id', as: 'analyticsEvents' });
+AnalyticsEvent.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 module.exports = {
   User,
@@ -157,5 +161,6 @@ module.exports = {
   MotivationTranslation,
   QuestionTranslation,
   RewardTranslation,
-  Feedback
+  Feedback,
+  AnalyticsEvent
 };
