@@ -11,18 +11,19 @@ const bodyParser = require('body-parser');
 const path = require("path");
 const chatbotRoutes = require('./routes/chatbotRoutes');
 const cookieParser = require("cookie-parser");
-// Import models to ensure associations are loaded
 const models = require('./models/index');
 const avatarRoutes = require('./routes/avatarRoutes');
 const motivationRoutes = require('./routes/motivationRoutes');
-
+const feedbackRoutes = require('./routes/feedbackRoutes');
 
 // Load environment variables
 dotenv.config();
 
 // Initialize express app
 const app = express();
-app.use(cookieParser()); // مهم لقراءة الكوكيز
+
+// Middleware
+app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,9 +41,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.options('*', cors(corsOptions));
-
 
 // Routes
 app.use('/api/users', userRoutes);
@@ -55,8 +54,7 @@ app.use("/videos", express.static(path.join(__dirname, "public/videos")));
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use('/', avatarRoutes);
 app.use('/api', motivationRoutes);
-
-
+app.use('/api/feedback', feedbackRoutes);
 
 
 // Database Connection

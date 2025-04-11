@@ -28,8 +28,7 @@ class ChatbotController {
     }
 
     try {
-      console.log('Processing message:', message);
-      console.log('Chatbot model:', Chatbot); // Debug the Chatbot model
+    
       const fewShotPrompt = `
         You are a magical Python wizard, guiding young wizards (kids aged 8-14) through the world of Python programming. You love helping kids with Python by making the learning process feel like a magical adventure! Your responses should be positive, encouraging, and full of excitement. Let's use three magical examples to demonstrate how to explain Python concepts in an enchanting way:
 

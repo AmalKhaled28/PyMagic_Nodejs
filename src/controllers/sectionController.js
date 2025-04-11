@@ -91,6 +91,99 @@ exports.getSectionDetails = async (req, res) => {
   }
 };
 
+
+
+////////////////////////////////
+
+// sectionController.js
+
+// ... (keep all your existing exports)
+
+exports.getSectionLessons = async (req, res) => {
+  try {
+    const sectionId = req.params.id;
+    const userId = req.user.id;
+    const language = req.headers["accept-language"] || "en";
+
+    const section = await Section.findOne({
+      where: { id: sectionId },
+      attributes: ['id'],
+      include: [
+        {
+          model: SectionTranslation,
+          as: 'translations',
+          where: { language },
+          required: false,
+          attributes: ['name'],
+        },
+        {
+          model: Unit,
+          as: "units",
+          attributes: ['id', 'section_id'],
+          order: [['id', 'ASC']],
+          include: [
+            {
+              model: UnitTranslation,
+              as: 'translations',
+              where: { language },
+              required: false,
+              attributes: ['name'],
+            },
+            {
+              model: Lesson,
+              as: "lessons",
+              attributes: ['id', 'unit_id'],
+              order: [['id', 'ASC']],
+              include: [
+                {
+                  model: LessonTranslation,
+                  as: 'translations',
+                  where: { language },
+                  required: false,
+                  attributes: ['title', 'content'],
+                },
+                {
+                  model: StudentQuiz,
+                  as: "quizzes",
+                  where: { user_id: userId },
+                  required: false,
+                  attributes: ["id", "is_passed"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!section) {
+      return res.status(404).json({ message: "Section not found" });
+    }
+
+    const formattedResponse = {
+      id: section.id,
+      name: section.translations.length > 0 ? section.translations[0].name : "Unnamed Section",
+      units: section.units.map(unit => ({
+        id: unit.id,
+        name: unit.translations.length > 0 ? unit.translations[0].name : "Unnamed Unit",
+        lessons: unit.lessons.map(lesson => ({
+          id: lesson.id,
+          title: lesson.translations.length > 0 ? lesson.translations[0].title : "Unnamed Lesson",
+          content: lesson.translations.length > 0 ? lesson.translations[0].content : "",
+          isPassed: lesson.quizzes.length > 0 ? lesson.quizzes[0].is_passed : false,
+        })),
+      })),
+    };
+
+    res.json(formattedResponse);
+  } catch (error) {
+    console.error("Error fetching section lessons:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+///////////////////////////////////
+
 // Update getSectionFlashcards to also sort units and use Arabic
 exports.getSectionFlashcards = async (req, res) => {
   try {
