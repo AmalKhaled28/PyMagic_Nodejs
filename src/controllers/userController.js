@@ -4,6 +4,8 @@
 /////////////////////////////////////////
 
 const User = require('../models/user');
+const StudentQuiz = require('../models/student_quiz');
+const Unit = require('../models/unit');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
@@ -44,7 +46,25 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: rememberMe ? '7d' : '1h',
-    });    
+    });
+    
+    let lastSectionId = 1;
+    const mostRecentQuiz = await StudentQuiz.findOne({
+      where: {
+        user_id: user.id,
+        is_passed: true
+      },
+      order: [['created_at', 'DESC']],
+      include: [{
+        model: Unit,
+        as : 'unit',
+        attributes: ['section_id']
+      }]
+    });
+
+    if (mostRecentQuiz?.Unit?.section_id) {
+      lastSectionId = mostRecentQuiz.Unit.section_id;
+    }
 
     // Include user details in the response
     res.status(200).json({
@@ -55,6 +75,7 @@ const loginUser = async (req, res) => {
         email: user.email,
         name: user.name,
         earned_points: user.earned_points,
+        lastSectionId: lastSectionId
         //add more static user data as needed
       },
     });

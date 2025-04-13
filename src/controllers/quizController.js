@@ -1,145 +1,4 @@
 
-
-
-
-
-// controllers/quizController.js
-// const { Question, StudentQuiz, StudentQuizQuestion, AnswerMotivation, Lesson, Unit, User } = require('../models');
-// const { Op, Sequelize } = require('sequelize');
-// const AchievementController = require('./achievementController'); // Import AchievementController
-
-// class QuizController {
-    // Existing getQuizQuestions (Lesson Quiz)
-//     static async getQuizQuestions(req, res) {
-//         try {
-//             const { id } = req.params;
-//             if (!id) return res.status(400).json({ success: false, message: 'Lesson ID is required' });
-
-//             const quizQuestions = await Question.findAll({
-//                 where: { lesson_id: id, level: { [Op.in]: ['easy', 'medium', 'hard'] } },
-//                 order: Sequelize.literal('RAND()'),
-//             });
-
-//             const selectedQuestions = {
-//                 easy: quizQuestions.filter(q => q.level === 'easy').slice(0, 3),
-//                 medium: quizQuestions.filter(q => q.level === 'medium').slice(0, 4),
-//                 hard: quizQuestions.filter(q => q.level === 'hard').slice(0, 3),
-//             };
-
-//             const questions = [...selectedQuestions.easy, ...selectedQuestions.medium, ...selectedQuestions.hard];
-//             res.json({ success: true, questions });
-//         } catch (error) {
-//             console.error('Error in getQuizQuestions:', error);
-//             res.status(500).json({ success: false, message: 'Server error', error: error.message });
-//         }
-//     }
-
- 
-
-// static async submitQuiz(req, res) {
-//     try {
-//         const { user_id, lesson_id, answers } = req.body;
-        
-//         console.log("Received submitQuiz request:", { user_id, lesson_id, answers });
-
-//         if (!user_id || !lesson_id || !Array.isArray(answers) || answers.length === 0) {
-//             return res.status(400).json({ success: false, message: 'Invalid input data' });
-//         }
-
-//         let score = 0, earnedPoints = 0;
-
-//         const quiz = await StudentQuiz.create({ 
-//             user_id, 
-//             lesson_id, 
-//             score: 0, 
-//             earned_points: 0, 
-//             is_passed: false 
-//         });
-        
-//         // Fetch questions without including StudentQuizQuestion initially
-//         const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
-//         const questions = await Question.findAll({
-//             where: { id: { [Op.in]: questionIds } }
-//         });
-
-//         console.log("Fetched questions:", questions);
-
-//         if (!questions || questions.length === 0) {
-//             return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
-//         }
-
-//         const answerMotivations = await AnswerMotivation.findAll();
-//         const motivationMap = answerMotivations.reduce((acc, item) => {
-//             acc[item.answer_type] = item.text;
-//             return acc;
-//         }, {});
-
-//         const detailedAnswers = [];
-
-//         for (const ans of answers) {
-//             const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
-//             if (!question) {
-//                 console.warn(`Question with ID ${ans.question_id} not found. Skipping...`);
-//                 continue;
-//             }
-
-//             console.log(`Checking answer for question ${ans.question_id}:`, { selected_answer: ans.selected_answer, correct_answer: question.correct_answer });
-
-//             const isCorrect = question.correct_answer === ans.selected_answer;
-//             if (isCorrect) {
-//                 score += 1;
-//                 earnedPoints += question.points || 0; // Ensure points exist, default to 0 if not
-//             }
-
-//             await StudentQuizQuestion.create({
-//                 quiz_id: quiz.id,
-//                 question_id: question.id,
-//                 answer: ans.selected_answer,
-//                 is_correct: isCorrect
-//             });
-
-//             const detailedAnswer = {
-//                 question_id: question.id,
-//                 question: question.question,
-//                 options: question.options,
-//                 correct_answer: question.correct_answer,
-//                 user_answer: ans.selected_answer,
-//                 is_correct: isCorrect,
-//                 motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!'
-//             };
-//             detailedAnswers.push(detailedAnswer);
-//         }
-
-//         console.log("Calculated score:", score, "Earned points:", earnedPoints, "Detailed answers:", detailedAnswers);
-
-//         const isPassed = score >= 5;
-//         await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
-
-//         // Update user's earned_points in the User table
-//         const user = await User.findByPk(user_id);
-//         if (user) {
-//             user.earned_points += earnedPoints; // Add the earned points to the existing total
-//             await user.save();
-//         }
-
-//         // Check and unlock achievements after updating points
-//         await AchievementController.checkAndUnlockAchievements({ params: { userId: user_id } }, res);
-
-//         res.json({ 
-//             success: true, 
-//             score, 
-//             earned_points: earnedPoints, 
-//             is_passed: isPassed, 
-//             total_user_points: user ? user.earned_points : 0, // Return updated total points
-//             answers: detailedAnswers // Return detailed answers for review
-//         });
-//     } catch (error) {
-//         console.error('Error in submitQuiz:', error);
-//         res.status(500).json({ success: false, message: 'Server error', error: error.message });
-//     }
-// }
-
-
 // controllers/quizController.js
 const { Question, StudentQuiz, StudentQuizQuestion, AnswerMotivation, Lesson,LessonTranslation, Unit, UnitTranslation, User, QuestionTranslation, AnswerMotivationTranslation } = require('../models');
 const { Op, Sequelize } = require('sequelize');
@@ -190,218 +49,224 @@ class QuizController {
         }
     }
 
-//     static async submitQuiz(req, res) {
-//         try {
-//             const { user_id, lesson_id, answers } = req.body;
-//             const language = req.headers['accept-language'] || 'en';
-            
-//             if (!user_id || !lesson_id || !Array.isArray(answers) || answers.length === 0) {
-//                 return res.status(400).json({ success: false, message: 'Invalid input data' });
-//             }
-
-//             let score = 0, earnedPoints = 0;
-
-//             const quiz = await StudentQuiz.create({ 
-//                 user_id, 
-//                 lesson_id, 
-//                 score: 0, 
-//                 earned_points: 0, 
-//                 is_passed: false 
-//             });
-            
-//             const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
-//             const questions = await Question.findAll({
-//                 where: { id: { [Op.in]: questionIds } },
-//                 include: [{
-//                     model: QuestionTranslation,
-//                     as: 'translations',
-//                     where: { language },
-//                     required: true
-//                 }]
-//             });
-
-//             if (!questions || questions.length === 0) {
-//                 return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
-//             }
-
-//             const answerMotivations = await AnswerMotivation.findAll({
-//                 include: [{
-//                     model: AnswerMotivationTranslation,
-//                     as: 'translations',
-//                     where: { language },
-//                     required: true
-//                 }]
-//             });
-
-//             const motivationMap = answerMotivations.reduce((acc, item) => {
-//                 acc[item.answer_type] = item.translations[0].text;
-//                 return acc;
-//             }, {});
-
-//             const detailedAnswers = [];
-
-//             for (const ans of answers) {
-//                 const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
-//                 if (!question) continue;
-
-//                 const isCorrect = question.translations[0].correct_answer === ans.selected_answer;
-//                 if (isCorrect) {
-//                     score += 1;
-//                     earnedPoints += question.points || 0;
-//                 }
-
-//                 await StudentQuizQuestion.create({
-//                     quiz_id: quiz.id,
-//                     question_id: question.id,
-//                     answer: ans.selected_answer,
-//                     is_correct: isCorrect
-//                 });
-
-//                 detailedAnswers.push({
-//                     question_id: question.id,
-//                     question: question.translations[0].question_text,
-//                     options: question.translations[0].options,
-//                     correct_answer: question.translations[0].correct_answer,
-//                     user_answer: ans.selected_answer,
-//                     is_correct: isCorrect,
-//                     motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!',
-//                     hint: question.translations[0].hint // Include hint in response
-//                 });
-//             }
-
-//             const isPassed = score >= 5;
-//             await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
-
-//             const user = await User.findByPk(user_id);
-//             if (user) {
-//                 user.earned_points += earnedPoints;
-//                 await user.save();
-//             }
-
-// // Assuming checkAndUnlockAchievements returns new achievements
-//             const achievements = await AchievementController.checkAndUnlockAchievements({userId: user_id});
-
-//             res.json({ 
-//                 success: true, 
-//                 score, 
-//                 earned_points: earnedPoints, 
-//                 is_passed: isPassed, 
-//                 total_user_points: user ? user.earned_points : 0,
-//                 answers: detailedAnswers,
-//                 achievements: achievements || [] // Include achievements
-//             });
-//         } catch (error) {
-//             console.error('Error in submitQuiz:', error);
-//             res.status(500).json({ success: false, message: 'Server error', error: error.message });
+// static async submitQuiz(req, res) {
+//     try {
+//       const { user_id, lesson_id, answers } = req.body;
+//       const language = req.headers['accept-language'] || 'en';
+  
+//       if (!user_id || !lesson_id || !Array.isArray(answers) || answers.length === 0) {
+//         return res.status(400).json({ success: false, message: 'Invalid input data' });
+//       }
+  
+//       let score = 0, earnedPoints = 0;
+  
+//       const quiz = await StudentQuiz.create({
+//         user_id,
+//         lesson_id,
+//         score: 0,
+//         earned_points: 0,
+//         is_passed: false,
+//       });
+  
+//       const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
+//       const questions = await Question.findAll({
+//         where: { id: { [Op.in]: questionIds } },
+//         include: [{
+//           model: QuestionTranslation,
+//           as: 'translations',
+//           where: { language },
+//           required: true,
+//         }],
+//       });
+  
+//       if (!questions || questions.length === 0) {
+//         return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
+//       }
+  
+//       const answerMotivations = await AnswerMotivation.findAll({
+//         include: [{
+//           model: AnswerMotivationTranslation,
+//           as: 'translations',
+//           where: { language },
+//           required: true,
+//         }],
+//       });
+  
+//       const motivationMap = answerMotivations.reduce((acc, item) => {
+//         acc[item.answer_type] = item.translations[0].text;
+//         return acc;
+//       }, {});
+  
+//       const detailedAnswers = [];
+  
+//       for (const ans of answers) {
+//         const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
+//         if (!question) continue;
+  
+//         const isCorrect = question.translations[0].correct_answer === ans.selected_answer;
+//         if (isCorrect) {
+//           score += 1;
+//           earnedPoints += question.points || 0;
 //         }
+  
+//         await StudentQuizQuestion.create({
+//           quiz_id: quiz.id,
+//           question_id: question.id,
+//           answer: ans.selected_answer,
+//           is_correct: isCorrect,
+//         });
+  
+//         detailedAnswers.push({
+//           question_id: question.id,
+//           question: question.translations[0].question_text,
+//           options: question.translations[0].options,
+//           correct_answer: question.translations[0].correct_answer,
+//           user_answer: ans.selected_answer,
+//           is_correct: isCorrect,
+//           motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!',
+//           hint: question.translations[0].hint,
+//         });
+//       }
+  
+//       const isPassed = score >= 5;
+//       await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
+  
+//       const user = await User.findByPk(user_id);
+//       if (user) {
+//         user.earned_points += earnedPoints;
+//         await user.save();
+//       }
+  
+//       const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
+  
+//       res.json({
+//         success: true,
+//         student_quiz_id: quiz.id, // Added student_quiz_id
+//         score,
+//         total_questions: questions.length, // Added for consistency with UnitQuiz
+//         earned_points: earnedPoints,
+//         is_passed: isPassed,
+//         total_user_points: user ? user.earned_points : 0,
+//         answers: detailedAnswers,
+//         achievements: achievements || [],
+//       });
+//     } catch (error) {
+//       console.error('Error in submitQuiz:', error);
+//       res.status(500).json({ success: false, message: 'Server error', error: error.message });
 //     }
-static async submitQuiz(req, res) {
-    try {
-      const { user_id, lesson_id, answers } = req.body;
-      const language = req.headers['accept-language'] || 'en';
-  
-      if (!user_id || !lesson_id || !Array.isArray(answers) || answers.length === 0) {
-        return res.status(400).json({ success: false, message: 'Invalid input data' });
-      }
-  
-      let score = 0, earnedPoints = 0;
-  
-      const quiz = await StudentQuiz.create({
-        user_id,
-        lesson_id,
-        score: 0,
-        earned_points: 0,
-        is_passed: false,
-      });
-  
-      const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
-      const questions = await Question.findAll({
-        where: { id: { [Op.in]: questionIds } },
-        include: [{
-          model: QuestionTranslation,
-          as: 'translations',
-          where: { language },
-          required: true,
-        }],
-      });
-  
-      if (!questions || questions.length === 0) {
-        return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
-      }
-  
-      const answerMotivations = await AnswerMotivation.findAll({
-        include: [{
-          model: AnswerMotivationTranslation,
-          as: 'translations',
-          where: { language },
-          required: true,
-        }],
-      });
-  
-      const motivationMap = answerMotivations.reduce((acc, item) => {
-        acc[item.answer_type] = item.translations[0].text;
-        return acc;
-      }, {});
-  
-      const detailedAnswers = [];
-  
-      for (const ans of answers) {
-        const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
-        if (!question) continue;
-  
-        const isCorrect = question.translations[0].correct_answer === ans.selected_answer;
-        if (isCorrect) {
-          score += 1;
-          earnedPoints += question.points || 0;
-        }
-  
-        await StudentQuizQuestion.create({
-          quiz_id: quiz.id,
-          question_id: question.id,
-          answer: ans.selected_answer,
-          is_correct: isCorrect,
-        });
-  
-        detailedAnswers.push({
-          question_id: question.id,
-          question: question.translations[0].question_text,
-          options: question.translations[0].options,
-          correct_answer: question.translations[0].correct_answer,
-          user_answer: ans.selected_answer,
-          is_correct: isCorrect,
-          motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!',
-          hint: question.translations[0].hint,
-        });
-      }
-  
-      const isPassed = score >= 5;
-      await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
-  
-      const user = await User.findByPk(user_id);
-      if (user) {
-        user.earned_points += earnedPoints;
-        await user.save();
-      }
-  
-      const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
-  
-      res.json({
-        success: true,
-        student_quiz_id: quiz.id, // Added student_quiz_id
-        score,
-        total_questions: questions.length, // Added for consistency with UnitQuiz
-        earned_points: earnedPoints,
-        is_passed: isPassed,
-        total_user_points: user ? user.earned_points : 0,
-        answers: detailedAnswers,
-        achievements: achievements || [],
-      });
-    } catch (error) {
-      console.error('Error in submitQuiz:', error);
-      res.status(500).json({ success: false, message: 'Server error', error: error.message });
-    }
-  }
+//   }
 
+static async submitQuiz(req, res) {
+  try {
+    const { user_id, lesson_id, unit_id, answers } = req.body; // Added unit_id
+    const language = req.headers['accept-language'] || 'en';
+
+    // Validate unit_id along with other inputs
+    if (!user_id || !lesson_id || !unit_id || !Array.isArray(answers) || answers.length === 0) {
+      return res.status(400).json({ success: false, message: 'Invalid input data' });
+    }
+
+    let score = 0, earnedPoints = 0;
+
+    // Include unit_id in StudentQuiz.create
+    const quiz = await StudentQuiz.create({
+      user_id,
+      lesson_id,
+      unit_id, // Added unit_id
+      score: 0,
+      earned_points: 0,
+      is_passed: false,
+    });
+
+    const questionIds = answers.map(ans => parseInt(ans.question_id, 10));
+    const questions = await Question.findAll({
+      where: { id: { [Op.in]: questionIds } },
+      include: [{
+        model: QuestionTranslation,
+        as: 'translations',
+        where: { language },
+        required: true,
+      }],
+    });
+
+    if (!questions || questions.length === 0) {
+      return res.status(404).json({ success: false, message: 'No questions found for the provided IDs' });
+    }
+
+    const answerMotivations = await AnswerMotivation.findAll({
+      include: [{
+        model: AnswerMotivationTranslation,
+        as: 'translations',
+        where: { language },
+        required: true,
+      }],
+    });
+
+    const motivationMap = answerMotivations.reduce((acc, item) => {
+      acc[item.answer_type] = item.translations[0].text;
+      return acc;
+    }, {});
+
+    const detailedAnswers = [];
+
+    for (const ans of answers) {
+      const question = questions.find(q => q.id === parseInt(ans.question_id, 10));
+      if (!question) continue;
+
+      const isCorrect = question.translations[0].correct_answer === ans.selected_answer;
+      if (isCorrect) {
+        score += 1;
+        earnedPoints += question.points || 0;
+      }
+
+      await StudentQuizQuestion.create({
+        quiz_id: quiz.id,
+        question_id: question.id,
+        answer: ans.selected_answer,
+        is_correct: isCorrect,
+      });
+
+      detailedAnswers.push({
+        question_id: question.id,
+        question: question.translations[0].question_text,
+        options: question.translations[0].options,
+        correct_answer: question.translations[0].correct_answer,
+        user_answer: ans.selected_answer,
+        is_correct: isCorrect,
+        motivation_message: motivationMap[isCorrect ? 'correct' : 'wrong'] || 'Keep trying!',
+        hint: question.translations[0].hint,
+      });
+    }
+
+    const isPassed = score >= 5;
+    await quiz.update({ score, earned_points: earnedPoints, is_passed: isPassed });
+
+    const user = await User.findByPk(user_id);
+    if (user) {
+      user.earned_points += earnedPoints;
+      await user.save();
+    }
+
+    const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
+
+    res.json({
+      success: true,
+      student_quiz_id: quiz.id,
+      score,
+      total_questions: questions.length,
+      earned_points: earnedPoints,
+      is_passed: isPassed,
+      total_user_points: user ? user.earned_points : 0,
+      answers: detailedAnswers,
+      achievements: achievements || [],
+    });
+  } catch (error) {
+    console.error('Error in submitQuiz:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+}
+
+  ///
 static async getUnitQuiz(req, res) {
   try {
       const { user_id, unit_id } = req.params;
