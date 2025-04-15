@@ -156,6 +156,7 @@ class QuizController {
 //     }
 //   }
 
+// controllers/quizController.js
 static async submitQuiz(req, res) {
   try {
     const { user_id, lesson_id, unit_id, answers } = req.body; // Added unit_id

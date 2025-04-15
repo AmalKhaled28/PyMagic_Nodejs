@@ -1,8 +1,5 @@
-// Create a user
-// 
 
-/////////////////////////////////////////
-
+//controllers/userController.js
 const User = require('../models/user');
 const StudentQuiz = require('../models/student_quiz');
 const Unit = require('../models/unit');
@@ -46,6 +43,13 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: rememberMe ? '7d' : '1h',
+    });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV,
+      sameSite: 'Strict',
+      maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000, // بالمللي ثانية
     });
     
     let lastSectionId = 1;
@@ -178,40 +182,6 @@ const getUserProfileInfo = async (req, res) => {
 }
 
 
-// **Update User Profile**
-// const updateUserProfile = async (req, res) => {
-//   try {
-//     const { name, email, password, parentEmail } = req.body;
-//     const user = await User.findByPk(req.user.id);
-    
-//     if (!user) return res.status(404).json({ error: 'User not found' });
-
-//     // Update fields if they're provided
-//     if (name) user.name = name;
-//     if (email) user.email = email;
-//     if (parentEmail) user.parent_email = parentEmail;
-    
-//     // Handle password change separately
-//     if (password) {
-//       user.password = await bcrypt.hash(password, 10);
-//     }
-
-//     await user.save();
-
-//     res.status(200).json({ 
-//       message: 'Profile updated successfully',
-//       user: {
-//         id: user.id,
-//         name: user.name,
-//         email: user.email,
-//         parent_email: user.parent_email,
-//         // Don't return password
-//       }
-//     });
-//   } catch (err) {
-//     res.status(500).json({ error: 'Error updating profile', details: err.message });
-//   }
-// };
 
 const updateUserProfile = async (req, res) => {
   try {

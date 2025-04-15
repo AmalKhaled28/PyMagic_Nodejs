@@ -1,3 +1,4 @@
+// controllers/lessonController.js
 const { Lesson, LessonTranslation } = require("../models/index");
 
 exports.getLessonDetails = async (req, res) => {

@@ -1,3 +1,4 @@
+// controolers/avatarController.js
 const { User, Asset , UserAsset, UserPreference } = require("../models/index");
 const sequelize = require('../config/db');
 
