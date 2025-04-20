@@ -7,7 +7,7 @@ exports.submitFeedback = async (req, res) => {
   try {
     const { user_id, student_quiz_id, feedback_score, comment } = req.body;
 
-    // Log incoming request for debugging
+    // Log incoming feedback submission request
     console.log('Feedback submission request:', { user_id, student_quiz_id, feedback_score, comment });
 
     // Validate required fields
@@ -16,7 +16,7 @@ exports.submitFeedback = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    // Validate feedback_score range (1 to 5)
+    // Validate feedback score range (1 to 5)
     if (!Number.isInteger(feedback_score) || feedback_score < 1 || feedback_score > 5) {
       console.warn('Invalid feedback score:', feedback_score);
       return res.status(400).json({ success: false, message: 'Feedback score must be an integer between 1 and 5' });
@@ -29,7 +29,7 @@ exports.submitFeedback = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Verify student_quiz_id exists and belongs to the user
+    // Verify student quiz exists and belongs to the user
     const studentQuiz = await StudentQuiz.findOne({
       where: {
         id: student_quiz_id,
@@ -66,6 +66,8 @@ exports.submitFeedback = async (req, res) => {
       updated_at: new Date(),
     });
 
+    // Log successful feedback creation
+    console.log('Feedback created successfully:', feedback.toJSON());
     res.status(201).json({
       success: true,
       message: 'Feedback submitted successfully',
@@ -79,7 +81,33 @@ exports.submitFeedback = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Error submitting feedback:', err);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error('Error submitting feedback:', err.message, err.stack);
+    res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
+  }
+};
+
+// New endpoint to check if feedback exists
+exports.checkFeedback = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    // Validate quizId
+    if (!quizId) {
+      console.warn('Quiz ID is missing:', quizId);
+      return res.status(400).json({ success: false, message: 'Quiz ID is required' });
+    }
+
+    // Check for existing feedback
+    const existingFeedback = await Feedback.findOne({
+      where: { student_quiz_id: quizId },
+    });
+
+    res.status(200).json({
+      success: true,
+      exists: !!existingFeedback, // true if feedback exists, false otherwise
+    });
+  } catch (err) {
+    console.error('Error checking feedback:', err.message, err.stack);
+    res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
   }
 };
