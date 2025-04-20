@@ -15,9 +15,11 @@ router.post('/unit/submit', QuizController.submitUnitQuiz);
 router.get('/progress/:user_id', QuizController.getUserQuizProgress);
 router.get('/review/:quiz_id', QuizController.getQuizReviewDetails);
 
-// Updated route to handle both lesson and unit quiz access
-router.get('/check-access/:user_id/:lesson_id?', QuizController.checkLessonAccess); // lesson_id is optional
-router.get('/check-access/:user_id/unit/:unit_id', QuizController.checkLessonAccess); // Separate route for unit quiz
+// Route for lesson access
+router.get('/check-access/lesson/:user_id/:lesson_id', QuizController.checkLessonAccess);
+
+// Route for unit quiz access
+router.get('/check-access/unit/:user_id/:unit_id', QuizController.checkLessonAccess);
 
 module.exports = router;
 
