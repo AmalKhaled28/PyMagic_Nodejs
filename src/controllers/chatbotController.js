@@ -1,7 +1,6 @@
 // src/controllers/chatbotController.js
 require('dotenv').config();
 
-
 let Chatbot; // Declare Chatbot outside the class to avoid circular dependency issues
 try {
   Chatbot = require('../models/chatbot'); // Dynamically load the model
@@ -16,8 +15,7 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
 
 class ChatbotController {
   static async sendMessage(req, res) {
- 
-    const { message } = req.body; // Ensure this is the only use of `message`
+    const { message } = req.body;
     if (!message || message.trim() === '') {
       return res.status(400).json({ error: 'Message cannot be empty' });
     }
@@ -28,41 +26,41 @@ class ChatbotController {
     }
 
     try {
-    
       const fewShotPrompt = `
-        You are a magical Python wizard, guiding young wizards (kids aged 8-14) through the world of Python programming. You love helping kids with Python by making the learning process feel like a magical adventure! Your responses should be positive, encouraging, and full of excitement. Let's use three magical examples to demonstrate how to explain Python concepts in an enchanting way:
-
-        Example 1: Explaining Variables
-        "Think of variables as your magical spellbooks! Each book can store a different magic spell (or value). You can open your book anytime you want to use the spell again. Here's how you can create your own magical spellbook (variable)!"
+        You are a magical Python wizard, guiding young wizards (kids aged 8-14) through the world of Python programming. Your responses must be positive, brief, and clear, making learning feel like a magical adventure! Always separate explanatory text from Python code using Markdown. Use triple backticks 
+        ```
+        `python) for code blocks and keep text outside these blocks. Responses should be short (under 100 words) and exciting. For example:```
+          ```
+        **Variables**: Think of variables as magical spellbooks storing spells!
         \`\`\`python
-        magic_spell = "Abracadabra!"  # Creating a spellbook that stores the magic words
-        print(magic_spell)  # Calling the magic spell whenever you need it!
+        magic_spell = "Abracadabra!"
+        print(magic_spell)
         \`\`\`
-        "Now you can use the magic spell \`magic_spell\` whenever you want by simply saying its name!"
 
-        Example 2: Explaining Loops
-        "Imagine you need to cast the same spell over and over again. Instead of saying the same words a hundred times, we use a magical loop to cast the spell automatically! Here's how it works!"
+        **Loops**: Loops repeat spells automatically!
         \`\`\`python
-        for i in range(5):  # Repeating the spell 5 times!
-            print('✨ Magical Spell! ✨')
+        for i in range(5):
+            print("✨ Magic! ✨")
         \`\`\`
-        "With a loop, we only need to say the spell once, and it happens again and again!"
 
-        Example 3: Explaining Functions
-        "A function is like a magical potion! You create the potion once and use it whenever you need it. Just like casting a spell without having to say the incantation every time!"
+        **Functions**: Functions are like reusable potions!
         \`\`\`python
-        def magic_potion():  # Creating a magical potion
-            print("✨ Poof! Here's your magic spell! ✨")
-        
-        magic_potion()  # Using the potion whenever you want to cast the magic!
+        def magic_potion():
+            print("✨ Poof! ✨")
+        magic_potion()
         \`\`\`
-        "See? You've created your own magical function! Now, whenever you need it, just call upon your potion!"
 
-        Now, please answer this *briefly and clearly for kids* (without too much detail): ${message}
+        Now, answer this briefly for kids, using Markdown to separate text and code: ${message}
       `;
 
       const result = await model.generateContent(fewShotPrompt);
-      const responseText = result.response.text();
+      let responseText = result.response.text();
+
+      // Optional: Ensure code blocks are properly formatted
+      if (!responseText.includes('```python')) {
+        console.warn('Response lacks proper code block formatting. Adding default format.');
+        responseText = `Here's the answer:\n\n${responseText}\n\n\`\`\`python\n# Example code (if needed)\n\`\`\``;
+      }
 
       console.log('Generated response:', responseText);
       if (!Chatbot || typeof Chatbot.create !== 'function') {
@@ -85,7 +83,6 @@ class ChatbotController {
 
   static async getMessages(req, res) {
     try {
-      // Ensure user is authenticated
       if (!req.user || !req.user.id) {
         return res.status(401).json({ error: 'User not authenticated' });
       }
@@ -97,7 +94,7 @@ class ChatbotController {
 
       let messageList = [];
 
-      messages.forEach(msg => {
+      messages.forEach((msg) => {
         messageList.push({
           text: msg.prompt,
           sender: 'user',
@@ -108,7 +105,6 @@ class ChatbotController {
           sender: 'bot',
           timestamp: msg.created_at,
         });
-        
       });
 
       res.json(messageList);
