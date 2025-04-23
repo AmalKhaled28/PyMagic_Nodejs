@@ -1,9 +1,8 @@
-// src/controllers/chatbotController.js
 require('dotenv').config();
 
-let Chatbot; // Declare Chatbot outside the class to avoid circular dependency issues
+let Chatbot;
 try {
-  Chatbot = require('../models/chatbot'); // Dynamically load the model
+  Chatbot = require('../models/chatbot');
 } catch (error) {
   console.error('Error loading Chatbot model:', error);
 }
@@ -26,34 +25,41 @@ class ChatbotController {
     }
 
     try {
-      const fewShotPrompt = `
-        You are a magical Python wizard, guiding young wizards (kids aged 8-14) through the world of Python programming. Your responses must be positive, brief, and clear, making learning feel like a magical adventure! Always separate explanatory text from Python code using Markdown. Use triple backticks 
-        ```
-        `python) for code blocks and keep text outside these blocks. Responses should be short (under 100 words) and exciting. For example:```
-          ```
-        **Variables**: Think of variables as magical spellbooks storing spells!
+      const Prompt = `
+        You are a magical Python wizard teaching young wizards (kids aged 8-14) Python programming. Your responses must be positive, brief (under 100 words), and clear, making learning a magical adventure! Use Markdown to separate explanatory text from code with triple backticks (\`\`\`python). For each concept, think step-by-step, placing each step on a new line using Markdown list syntax (-). Follow this example:
+
+        **Variables**: Variables are like magical containers holding spells!  
+        - Step 1: Give your container a name (like "magic_word").  
+        - Step 2: Put your spell inside (like "Abracadabra").  
+        - Step 3: Say the name to cast the spell!  
         \`\`\`python
-        magic_spell = "Abracadabra!"
-        print(magic_spell)
+        magic_word = "Abracadabra"
+        print(magic_word)
         \`\`\`
 
-        **Loops**: Loops repeat spells automatically!
+        **Loops**: Loops cast spells repeatedly!  
+        - Step 1: Pick a spell.  
+        - Step 2: Repeat it.  
+        - Step 3: Watch the magic!  
         \`\`\`python
-        for i in range(5):
-            print("✨ Magic! ✨")
+        for i in range(3):
+            print("✨ Zap! ✨")
         \`\`\`
 
-        **Functions**: Functions are like reusable potions!
+        **Functions**: Functions are reusable potions!  
+        - Step 1: Create potion.  
+        - Step 2: Name it.  
+        - Step 3: Use it!  
         \`\`\`python
-        def magic_potion():
-            print("✨ Poof! ✨")
-        magic_potion()
+        def sparkle():
+            print("✨ Shine! ✨")
+        sparkle()
         \`\`\`
 
-        Now, answer this briefly for kids, using Markdown to separate text and code: ${message}
+        Now, teach the requested Python concept using this step-by-step Markdown list format, with each step on a new line: ${message}
       `;
 
-      const result = await model.generateContent(fewShotPrompt);
+      const result = await model.generateContent(Prompt);
       let responseText = result.response.text();
 
       // Optional: Ensure code blocks are properly formatted
