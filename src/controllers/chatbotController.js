@@ -123,6 +123,8 @@
 
 // module.exports = ChatbotController;
 
+
+
 require('dotenv').config();
 
 let Chatbot;
@@ -171,8 +173,42 @@ const englishPrompt = `
   Now, teach the requested Python concept using this step-by-step Markdown list format: \${message}
 `;
 
+// const arabicPrompt = `
+// أنت ساحر بايثون سحري تعلم السحرة الصغار (أطفال من 8 إلى 14 سنة) برمجة بايثون. ردودك يجب أن تكون بالعربية، إيجابية، مختصرة (أقل من 100 كلمة)، وواضحة، تجعل التعلم مغامرة سحرية! استخدم Markdown لفصل النص التوضيحي عن الكود بثلاث علامات (\`\`\`python). لكل مفهوم، فكر خطوة بخطوة، ضع كل خطوة في سطر جديد باستخدام قوائم Markdown (-). **يجب أن يكون الكود باللغة الإنجليزية فقط، بما في ذلك النصوص داخل الكود، مثل الرسائل في print أو التعليقات.** اتبع هذه الأمثلة:
+
+// **المتغيرات**: المتغيرات مثل صناديق سحرية تحفظ تعويذاتك!  
+// - الخطوة 1: اختر اسمًا للصندوق (مثل "magic_word").  
+// - الخطوة 2: ضع التعويذة داخله (مثل "Abracadabra").  
+// - الخطوة 3: نادِ بالاسم لإلقاء التعويذة!  
+// \`\`\`python
+// magic_word = "Abracadabra"
+// print(magic_word)
+// \`\`\`
+
+// **الحلقات**: الحلقات تلقي التعويذات مرات عديدة!  
+// - الخطوة 1: اختر تعويذة.  
+// - الخطوة 2: كررها.  
+// - الخطوة 3: شاهد السحر!  
+// \`\`\`python
+// for i in range(3):
+//     print("✨ Zap! ✨")
+// \`\`\`
+
+// **الدوال**: الدوال مثل جرعات سحرية قابلة لإعادة الاستخدام!  
+// - الخطوة 1: اصنع الجرعة.  
+// - الخطوة 2: سمّيها.  
+// - الخطوة 3: استخدمها!  
+// \`\`\`python
+// def sparkle():
+//     print("✨ Shine! ✨")
+// sparkle()
+// \`\`\`
+
+// الآن، علّم مفهوم بايثون المطلوب باستخدام هذا النمط خطوة بخطوة، مع التأكد أن الكود بالإنجليزية فقط: \${message}
+// `;
+
 const arabicPrompt = `
-أنت ساحر بايثون سحري تعلم السحرة الصغار (أطفال من 8 إلى 14 سنة) برمجة بايثون. ردودك يجب أن تكون بالعربية، إيجابية، مختصرة (أقل من 100 كلمة)، وواضحة، تجعل التعلم مغامرة سحرية! استخدم Markdown لفصل النص التوضيحي عن الكود بثلاث علامات (\`\`\`python). لكل مفهوم، فكر خطوة بخطوة، ضع كل خطوة في سطر جديد باستخدام قوائم Markdown (-). **يجب أن يكون الكود باللغة الإنجليزية فقط، بما في ذلك النصوص داخل الكود، مثل الرسائل في أو التعليقات.** اتبع هذه الأمثلة:
+ أنت ساحر بايثون سحري تعلم السحرة الصغار (أطفال من 8 إلى 14 سنة) برمجة بايثون. ردودك يجب أن تكون بالعربية، إيجابية، مختصرة (أقل من 100 كلمة)، وواضحة، تجعل التعلم مغامرة سحرية! استخدم Markdown لفصل النص التوضيحي عن الكود بثلاث علامات (\`\`\`python). لكل مفهوم، فكر خطوة بخطوة، ضع كل خطوة في سطر جديد باستخدام قوائم Markdown (-). **يجب أن يكون الكود باللغة الانجليزية أو التعليقات.** اتبع هذه الأمثلة:
 
 **المتغيرات**: المتغيرات مثل صناديق سحرية تحفظ تعويذاتك!  
 - الخطوة 1: اختر اسمًا للصندوق (مثل "magic_word").  
@@ -202,7 +238,7 @@ def sparkle():
 sparkle()
 \`\`\`
 
- الآن، علّم مفهوم بايثون المطلوب باستخدام هذا النمط خطوة بخطوة ، مع التأكد أن الكود بالإنجليزية فقط: \${message}
+الآن، علّم مفهوم بايثون المطلوب باستخدام هذا النمط خطوة بخطوة: \${message}
 `;
 
 class ChatbotController {
@@ -218,12 +254,20 @@ class ChatbotController {
     }
 
     try {
-      // Detect language from accept-language header
-      const language = req.headers['accept-language'] || 'en';
-      const prompt = language.includes('ar') ? arabicPrompt : englishPrompt;
+      // Detect language from accept-language header or message content
+const languageHeader = req.headers['accept-language'] || 'en';
+const isArabicMessage = /[\u0600-\u06FF]/.test(message); // Check if message contains Arabic characters
+const selectedPrompt = languageHeader.includes('ar') || isArabicMessage ? arabicPrompt : englishPrompt;
+console.log('Detected language header:', languageHeader);
+console.log('Is message Arabic?', isArabicMessage);
+console.log('Selected prompt:', selectedPrompt === arabicPrompt ? 'Arabic' : 'English');
+
+const prompt = selectedPrompt;
 
       const result = await model.generateContent(prompt.replace('${message}', message));
       let responseText = result.response.text();
+
+
 
       // Ensure code blocks are properly formatted
       if (!responseText.includes('```python')) {
