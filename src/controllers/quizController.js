@@ -335,6 +335,10 @@ class QuizController {
       }
 
       const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
+///
+      if (achievements.length > 0) {
+        responseData.new_achievements = achievements; // إضافة الإنجازات للرد
+      }
 
       res.json({
         success: true,
@@ -345,7 +349,8 @@ class QuizController {
         is_passed: isPassed,
         total_user_points: user ? user.earned_points : 0,
         answers: detailedAnswers,
-        achievements: achievements || [],
+        // achievements: achievements || [],
+        achievements: achievements.achievements || [], // تأكدي من استخدام achievements.achievements
       });
     } catch (error) {
       console.error('Error submitting quiz:', error);
@@ -618,7 +623,10 @@ class QuizController {
   
       console.log('Submitting unit quiz for user:', user_id);
       const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
-  
+      ////
+      if (achievements.length > 0) {
+        responseData.new_achievements = achievements; // إضافة الإنجازات للرد
+      }
       res.json({
         success: true,
         student_quiz_id: unitQuiz.id,
@@ -628,7 +636,8 @@ class QuizController {
         is_passed: isPassed,
         total_user_points: user ? user.earned_points : 0,
         answers: detailedAnswers,
-        achievements: achievements || [],
+        // achievements: achievements || [],
+        achievements: achievements.achievements || [], // تأكدي من استخدام achievements.achievements
         unit_name: unit.translations?.[0]?.name || `Unit ${unit_id}`,
       });
     } catch (error) {
