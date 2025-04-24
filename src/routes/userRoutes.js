@@ -10,7 +10,8 @@ const {
   resetPassword,
   getUserProfile,
   getUserProfileInfo,
-  updateUserProfile
+  updateUserProfile,
+  updateUserPoints
 } = UserController; // Destructure the required methods from UserController
 
 //Protected Routes (Require Authentication)**
@@ -27,6 +28,9 @@ router.get('/profile/:userId', authMiddleware,getUserProfileInfo);
 // edit user info 
 
 router.put('/Editprofile', authMiddleware, updateUserProfile);
+//
+router.post('/update-points', authMiddleware, updateUserPoints);
+
 
 
 

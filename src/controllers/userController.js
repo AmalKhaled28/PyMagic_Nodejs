@@ -220,6 +220,59 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+// **Update User Points**
+// const updateUserPoints = async (req, res) => {
+//   try {
+//     const { userId, points } = req.body;
+
+
+//   // التحقق من أن المستخدم المسجل هو نفسه صاحب الطلب
+//   if (req.user.id !== parseInt(userId)) {
+//     return res.status(403).json({ error: 'Unauthorized' });
+//   }
+
+
+
+//     const user = await User.findByPk(userId);
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+
+//     user.earned_points = (user.earned_points || 0) + points;
+//     await user.save();
+
+//     res.status(200).json({ message: 'Points updated successfully', earned_points: user.earned_points });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Error updating points', details: err.message });
+//   }
+// };
+
+const updateUserPoints = async (req, res) => {
+  try {
+    const { userId, points } = req.body;
+
+    // تحقق إضافي للنقاط
+    if (!Number.isInteger(points) || points < 0) {
+      return res.status(400).json({ error: "Points must be a positive integer" });
+    }
+
+    if (req.user.id !== parseInt(userId)) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.earned_points = (user.earned_points || 0) + points;
+    await user.save();
+
+    res.status(200).json({ message: "Points updated successfully", earned_points: user.earned_points });
+  } catch (err) {
+    res.status(500).json({ error: "Error updating points", details: err.message });
+  }
+};
 
 module.exports = {
   registerUser,
@@ -229,5 +282,6 @@ module.exports = {
   getUserProfile,
   getUserProfilePage,
   getUserProfileInfo,
-  updateUserProfile
+  updateUserProfile,
+  updateUserPoints
 };
