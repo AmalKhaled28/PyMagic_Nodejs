@@ -5,9 +5,19 @@ const StudentQuiz = require('../models/student_quiz');
 const Unit = require('../models/unit');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
 dotenv.config();
+
+// إعداد Nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // **Register User**
 const registerUser = async (req, res) => {
@@ -17,29 +27,68 @@ const registerUser = async (req, res) => {
     const existingUser = await User.getByEmail(email);
     if (existingUser) return res.status(400).json({ error: 'Email already exists' });
 
-    const newUser = await User.create({ name, email, password, parent_email: parentEmail, age });
+    const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
+    if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
 
-    res.status(201).json({ message: 'User created', userId: newUser.id });
+    const newUser = await User.create({ name, email, password, parent_email: parentEmail, age, verified: false });
+
+    // إنشاء رمز تحقق
+    const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // إرسال بريد التحقق
+    const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Verify Your Email',
+      html: `<p>Please verify your email by clicking <a href="${verificationLink}">here</a>.</p>`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ message: 'User created, please verify your email', userId: newUser.id });
   } catch (err) {
-    res.status(500).json({ error: 'Error creating user' });
+    res.status(500).json({ error: 'Error creating user: ' + err.message });
+  }
+};
+
+// **Verify Email**
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) return res.status(400).json({ error: 'No token provided' });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
+
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (user.verified) return res.status(400).json({ error: 'Email already verified' });
+
+    user.verified = true;
+    await user.save();
+
+    res.status(200).json({ message: 'Email verified successfully' });
+  } catch (err) {
+    res.status(400).json({ error: 'Invalid or expired token' });
   }
 };
 
 // **Login User**
 const loginUser = async (req, res) => {
   try {
-
     const { email, password, rememberMe } = req.body;
 
     const user = await User.getByEmail(email) || await User.getByEmail(req.body.parentEmail);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
+    if (!user.verified) return res.status(403).json({ error: 'Please verify your email first' });
+
     const isPasswordValid = await user.checkPassword(password);
     if (!isPasswordValid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    // Update `last_login_at` with the current date
     user.last_login_at = new Date();
-    await user.save(); // Save changes to the database
+    await user.save();
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: rememberMe ? '7d' : '1h',
@@ -47,9 +96,9 @@ const loginUser = async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict',
-      maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000, // بالمللي ثانية
+      maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000,
     });
     
     let lastSectionId = 1;
@@ -61,7 +110,7 @@ const loginUser = async (req, res) => {
       order: [['created_at', 'DESC']],
       include: [{
         model: Unit,
-        as : 'unit',
+        as: 'unit',
         attributes: ['section_id']
       }]
     });
@@ -70,7 +119,6 @@ const loginUser = async (req, res) => {
       lastSectionId = mostRecentQuiz.Unit.section_id;
     }
 
-    // Include user details in the response
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -80,15 +128,16 @@ const loginUser = async (req, res) => {
         name: user.name,
         earned_points: user.earned_points,
         lastSectionId: lastSectionId
-        //add more static user data as needed
       },
     });
   } catch (err) {
-    res.status(500).json({ error: 'Error logging in ' + err });
+    res.status(500).json({ error: 'Error logging in: ' + err.message });
   }
 };
 
 
+
+// **Forgot Password**
 // **Forgot Password**
 const forgotPassword = async (req, res) => {
   try {
@@ -96,27 +145,54 @@ const forgotPassword = async (req, res) => {
     const user = await User.getByEmail(email);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    //return forget password link 
-    res.json({ message: 'Password reset link sent' });
+    // إنشاء رمز إعادة تعيين كلمة المرور
+    const resetToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // إرسال بريد إعادة تعيين كلمة المرور
+    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Reset Your Password',
+      html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset your password. This link will expire in 1 hour.</p>`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Password reset link sent to your email' });
   } catch (err) {
-    res.status(500).json({ error: 'Error processing request' });
+    res.status(500).json({ error: 'Error sending reset link: ' + err.message });
   }
 };
-
 
 // **Reset Password**
 const resetPassword = async (req, res) => {
   try {
-    const { email, password, resetToken } = req.body;
-    const user = await User.getByEmail(email);
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ error: 'Token and new password are required' });
+    }
+
+    // التحقق من الرمز
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
+
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    //check password and update it 
-    res.json({ message: 'Password reset successful' });
+    // تحديث كلمة المرور
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successful' });
   } catch (err) {
-    res.status(500).json({ error: 'Error processing request' });
+    if (err.name === 'TokenExpiredError') {
+      return res.status(400).json({ error: 'Reset token has expired' });
+    }
+    res.status(400).json({ error: 'Invalid reset token' });
   }
 };
+
 
 ////
 const getUserProfile = async (req, res) => {
@@ -283,5 +359,6 @@ module.exports = {
   getUserProfilePage,
   getUserProfileInfo,
   updateUserProfile,
-  updateUserPoints
+  updateUserPoints,
+  verifyEmail
 };

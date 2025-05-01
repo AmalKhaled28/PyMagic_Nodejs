@@ -17,13 +17,10 @@ const motivationRoutes = require('./routes/motivationRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const analyticsEventRoutes = require('./routes/analyticsEventRoutes');
 
-// Load environment variables
 dotenv.config();
 
-// Initialize express app
 const app = express();
 
-// Middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -31,7 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use(express.json());
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -44,7 +40,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-// Routes
 app.use('/api/users', userRoutes);
 app.use('/api/achievements', achievementsRoutes);
 app.use("/sections", sectionRoutes);
@@ -58,8 +53,6 @@ app.use('/api', motivationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api', analyticsEventRoutes);
 
-
-// Database Connection
 sequelize.sync()
   .then(() => console.log("Database connected"))
   .catch(err => console.log("Database error:", err));

@@ -42,7 +42,6 @@
 // • findAll
 // • update
 // • destroy
-
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const bcrypt = require('bcrypt');
@@ -94,6 +93,10 @@ User.init(
     age: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     created_at: {
       type: DataTypes.DATE,
