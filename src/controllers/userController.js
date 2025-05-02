@@ -1,4 +1,3 @@
-
 //controllers/userController.js
 const User = require('../models/user');
 const StudentQuiz = require('../models/student_quiz');
@@ -9,6 +8,9 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
 dotenv.config();
+
+// console.log('EMAIL_USER:', process.env.EMAIL_USER);
+// console.log('EMAIL_PASS:', process.env.EMAIL_PASS);
 
 // إعداد Nodemailer
 const transporter = nodemailer.createTransport({
@@ -30,10 +32,19 @@ const registerUser = async (req, res) => {
     const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
     if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
 
+    // التحقق من قوة كلمة المرور
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+    if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+    error: 'Password must be at least 10 characters long and include uppercase, lowercase, number, and special character'
+    });
+    }
+
+
     const newUser = await User.create({ name, email, password, parent_email: parentEmail, age, verified: false });
 
     // إنشاء رمز تحقق
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
 
     // إرسال بريد التحقق
     const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
@@ -85,7 +96,7 @@ const loginUser = async (req, res) => {
     if (!user.verified) return res.status(403).json({ error: 'Please verify your email first' });
 
     const isPasswordValid = await user.checkPassword(password);
-    if (!isPasswordValid) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!isPasswordValid) return res.status(401).json({ error: 'Incorrect Password' });
 
     user.last_login_at = new Date();
     await user.save();
@@ -131,7 +142,7 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: 'Error logging in: ' + err.message });
+    res.status(500).json({ error: 'Incorrect Email' });
   }
 };
 
