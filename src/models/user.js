@@ -50,6 +50,10 @@ class User extends Model {
   static async getByEmail(email) {
     return await this.findOne({ where: { email } });
   }
+  
+  static async getByParentEmail(parentEmail) {
+    return await this.findOne({ where: { parent_email: parentEmail } });
+  }
 
   async checkPassword(password) {
     return await bcrypt.compare(password, this.password);

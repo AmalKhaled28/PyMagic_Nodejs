@@ -404,7 +404,7 @@ exports.checkFlashcardAccess = async (req, res) => {
     });
 
     if (!quiz) {
-      return res.status(403).json({
+      return res.status(200).json({
         message: "You must pass the lesson quiz to access this flashcard",
         accessGranted: false,
       });
