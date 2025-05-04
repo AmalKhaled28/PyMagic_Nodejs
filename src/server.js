@@ -40,6 +40,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
+app.get('/ping', (req, res) => {
+  res.status(200).json({ message: 'Server is up' });
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/achievements', achievementsRoutes);
 app.use("/sections", sectionRoutes);
