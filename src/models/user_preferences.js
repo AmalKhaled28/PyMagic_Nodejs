@@ -5,12 +5,10 @@ class UserPreference extends Model {}
 
 UserPreference.init(
   {
-    face: DataTypes.STRING(255),
     brow: DataTypes.STRING(255),
     eye: DataTypes.STRING(255),
     hairstyle: DataTypes.STRING(255),
     lip: DataTypes.STRING(255),
-    nose: DataTypes.STRING(255),
     headdress: DataTypes.STRING(255)
   },
   {

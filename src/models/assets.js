@@ -11,7 +11,7 @@ Asset.init(
       autoIncrement: true
     },
     type: {
-      type: DataTypes.ENUM('face', 'brow', 'eye', 'hairstyle', 'headdress', 'lip', 'nose'),
+      type: DataTypes.ENUM('brow', 'eye', 'hairstyle', 'headdress', 'lip'),
       allowNull: false
     },
     name: {
