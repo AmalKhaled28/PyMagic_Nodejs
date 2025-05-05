@@ -170,14 +170,14 @@ const forgotPassword = async (req, res) => {
     const user = await User.getByEmail(email);
     if (!user) return res.status(200).json({ error: 'User not found' });
 
-    const resetToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const resetToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
 
     const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Reset Your Password',
-      html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset your password. This link will expire in 1 hour.</p>`
+      html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset your password. This link will expire in 15 minute.</p>`
     };
 
     await transporter.sendMail(mailOptions);
