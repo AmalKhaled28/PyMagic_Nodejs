@@ -197,7 +197,7 @@ CREATE TABLE student_quiz_questions (
 
 CREATE TABLE assets (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    type ENUM('face', 'brow', 'eye', 'hairstyle', 'headdress', 'lip', 'nose') NOT NULL,
+    type ENUM('brow', 'eye', 'hairstyle', 'headdress', 'lip') NOT NULL,
     name VARCHAR(50) NOT NULL,
     image_url VARCHAR(255) NOT NULL,
     price INT NOT NULL,
@@ -219,12 +219,10 @@ CREATE TABLE user_assets (
 CREATE TABLE user_preferences (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    face VARCHAR(255),
     brow VARCHAR(255),
     eye VARCHAR(255),
     hairstyle VARCHAR(255),
     lip VARCHAR(255),
-    nose VARCHAR(255),
     headdress VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -255,4 +253,4 @@ CREATE TABLE analytics_events (
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Added foreign key
 );
--- -- Get-Content D:\PymagicBackend\src\migrations\createTables.sql | mysql -u root -p pymagic
+-- -- Get-Content D:\PymagicBackend\src\migrations\createTables.sql | mysql -u root -p py_magic

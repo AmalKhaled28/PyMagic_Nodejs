@@ -63,7 +63,10 @@ const verifyEmail = async (req, res) => {
     if (!token) return res.status(400).json({ error: 'No token provided' });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Decoded Token:', decoded);
     const user = await User.findByPk(decoded.id);
+    console.log('User Found:', user);
+
 
     if (!user) return res.status(404).json({ error: 'User not found' });
     if (user.verified) return res.status(400).json({ error: 'Email already verified' });

@@ -43,7 +43,7 @@ module.exports = {
           title: "What is Programming?",
           flash_card:
             "Programming is like asking a computer to do something for you, just like asking your mom for a sandwich. Instead of words, we use special languages to tell computers what to do!",
-          video_url: "/videos/lesson_python_intro.mp4",
+          video_url: "/videos/lesson_programming_intro.mp4",
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -276,7 +276,7 @@ module.exports = {
           title: "ما هي الـ Programming؟",
           flash_card:
             "الـ Programming هي عملية إعطاء تعليمات للكممبيوتر، مثلما تطلب من شخص تنفيذ مهمة. بدلاً من اللغة العادية، نستخدم لغات برمجة مثل Python لكتابة هذه التعليمات!",
-          video_url: "/videos/lesson_python_intro_ar.mp4",
+          video_url: "/videos/lesson_programming_intro_ar.mp4",
           created_at: new Date(),
           updated_at: new Date(),
         },
