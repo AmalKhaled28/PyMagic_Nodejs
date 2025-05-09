@@ -419,3 +419,50 @@ exports.checkFlashcardAccess = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.checkNextSectionAccess = async (req, res) => {
+  try {
+    const { user_id, section_id } = req.params;
+
+    if (!user_id || !section_id) {
+      return res.status(400).json({ success: false, message: "User ID and Section ID are required" });
+    }
+
+    // ابحث عن اخر Unit في الـ Section الحالي
+    const lastUnit = await Unit.findOne({
+      where: { section_id },
+      order: [['id', 'DESC']],
+    });
+
+    if (!lastUnit) {
+      return res.status(404).json({ success: false, message: "No units found in this section" });
+    }
+
+    // افحص إذا كان المستخدم نجح في Unit Quiz بتاع اخر Unit
+    const lastUnitQuiz = await StudentQuiz.findOne({
+      where: {
+        user_id,
+        unit_id: lastUnit.id,
+        lesson_id: null, // لأن Unit Quiz بيكون lesson_id = null
+        is_passed: true,
+      },
+    });
+
+    if (!lastUnitQuiz) {
+      return res.status(403).json({
+        success: false,
+        message: "You must pass the last unit quiz in this section to access the next section",
+      });
+    }
+
+    // لو نجح في الـ Quiz، ارجع نجاح
+    return res.json({
+      success: true,
+      message: "Access granted to next section",
+    });
+  } catch (error) {
+    console.error("Error checking next section access:", error);
+    return res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+};
