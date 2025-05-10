@@ -48,8 +48,8 @@ app.use("/sections", sectionRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use("/api", lessonRoutes);
 app.use('/api/chatbot', chatbotRoutes);
-// app.use("/videos", express.static(path.join(__dirname, "public/videos"))); // Removed
-// app.use("/images", express.static(path.join(__dirname, "public/images"))); // Removed
+app.use("/videos", express.static(path.join(__dirname, "./src/public/videos"))); 
+app.use("/images", express.static(path.join(__dirname, "./src/public/images"))); 
 app.use('/', avatarRoutes);
 app.use('/api', motivationRoutes);
 app.use('/api/feedback', feedbackRoutes);
