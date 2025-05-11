@@ -136,7 +136,6 @@ const loginUser = async (req, res) => {
       httpOnly: true,     // Recommended for security
       secure: true,       // HTTPS-only
       sameSite: "None",   // Allow cross-origin
-      domain: "pymagicnodejs-production.up.railway.app", // Backend's domain
     });
     //
     
