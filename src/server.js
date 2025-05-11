@@ -94,27 +94,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 
 
-///
-const allowedOrigins = [
-  'https://pymagic-gules.vercel.app'
-  // 'http://localhost:3000',
-  // 'https://pymagic-gules.vercel.app',
-  // 'https://pymagic-git-main-amals-projects-ae3e3718.vercel.app',
-  // 'https://pymagic-9xcpw9etd-amals-projects-ae3e3718.vercel.app'
-];
-
-//
-// تحديد الـ origin بناءً على البيئة
-
 const corsOptions = {
-  origin: (origin, callback) => {
-    // السماح للطلبات بدون origin (مثل Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin:  ['https://pymagic-gules.vercel.app'] ,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
