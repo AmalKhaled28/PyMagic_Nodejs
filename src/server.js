@@ -93,22 +93,35 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 
-// تحديد الـ origin بناءً على البيئة
+
+///
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://pymagic-gules.vercel.app', 
-  // 'https://your-frontend.railway.app', // استبدل هذا بـ URL الـ frontend على Railway
+  'https://pymagic-gules.vercel.app',
+  'https://pymagic-git-main-amals-projects-ae3e3718.vercel.app',
+  'https://pymagic-9xcpw9etd-amals-projects-ae3e3718.vercel.app'
 ];
 
+//
+// تحديد الـ origin بناءً على البيئة
+
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     // السماح للطلبات بدون origin (مثل Postman)
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, origin);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   optionsSuccessStatus: 200
+// };
+
 const corsOptions = {
-  origin: (origin, callback) => {
-    // السماح للطلبات بدون origin (مثل Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*', // مؤقتًا للاختبار
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
