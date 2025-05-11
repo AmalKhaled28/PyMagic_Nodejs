@@ -133,6 +133,9 @@ app.use('/', avatarRoutes);
 app.use('/api', motivationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api', analyticsEventRoutes);
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to the API' });
+});
 
 sequelize.sync()
   .then(() => console.log("Database connected"))
