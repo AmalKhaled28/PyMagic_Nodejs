@@ -94,17 +94,34 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 
 
+const allowedOrigins = [
+  'https://pymagic-gules.vercel.app'
+]
+
 const corsOptions = {
-  origin:  ['https://pymagic-gules.vercel.app'] ,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Blocked by CORS'))
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200
-};
+}
 
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.use((req, res, next) => {
+  console.log('Incoming origin:', req.headers.origin)
+  next()
+})
+
+
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
+
 
 app.get('/ping', (req, res) => {
   res.status(200).json({ message: 'Server is up' });
