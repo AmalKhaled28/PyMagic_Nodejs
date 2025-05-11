@@ -124,20 +124,20 @@ const loginUser = async (req, res) => {
       expiresIn: rememberMe ? '7d' : '1h',
     });
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // لازم يكون true على Railway لأنه HTTPS
-      sameSite: 'None', // عشان يسمح بتبادل الكوكيز عبر domains مختلفة
-    });
-
-    // //
-    // res.cookie("token", token, {
-    //   maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000,
-    //   httpOnly: true,     // Recommended for security
-    //   secure: true,       // HTTPS-only
-    //   sameSite: "None",   // Allow cross-origin
+    // res.cookie('token', token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production', // لازم يكون true على Railway لأنه HTTPS
+    //   sameSite: 'None', // عشان يسمح بتبادل الكوكيز عبر domains مختلفة
     // });
+
     //
+    res.cookie("token", token, {
+      maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000,
+      httpOnly: true,     // Recommended for security
+      secure: true,       // HTTPS-only
+      sameSite: "None",   // Allow cross-origin
+    });
+    
     
     let lastSectionId = 1;
     const mostRecentQuiz = await StudentQuiz.findOne({
