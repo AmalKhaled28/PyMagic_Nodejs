@@ -105,28 +105,21 @@ const allowedOrigins = [
 //
 // تحديد الـ origin بناءً على البيئة
 
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     // السماح للطلبات بدون origin (مثل Postman)
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, origin);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   optionsSuccessStatus: 200
-// };
-
 const corsOptions = {
-  origin: '*', // مؤقتًا للاختبار
+  origin: (origin, callback) => {
+    // السماح للطلبات بدون origin (مثل Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200
 };
+
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
