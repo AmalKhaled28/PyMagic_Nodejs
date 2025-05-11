@@ -94,32 +94,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 
 // تحديد الـ origin بناءً على البيئة
-// const allowedOrigins = [
-//   'http://localhost:3000', // للتطوير
-//   // 'https://your-frontend.railway.app', // استبدل هذا بـ URL الـ frontend على Railway
-// ];
-
 const allowedOrigins = [
   'http://localhost:3000', // للتطوير
-  'https://your-frontend.railway.app', // استبدل بـ URL الـ frontend بتاعك
+  // 'https://your-frontend.railway.app', // استبدل هذا بـ URL الـ frontend على Railway
 ];
 
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     // السماح للطلبات بدون origin (مثل Postman)
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, origin);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   optionsSuccessStatus: 200
-// };
 const corsOptions = {
-  origin: '*', // مؤقتًا، عدّله لاحقًا للأمان
+  origin: (origin, callback) => {
+    // السماح للطلبات بدون origin (مثل Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
