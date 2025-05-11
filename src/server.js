@@ -96,7 +96,7 @@ app.use(express.urlencoded({ extended: true }));
 // تحديد الـ origin بناءً على البيئة
 const allowedOrigins = [
   'http://localhost:3000', // للتطوير
-  'https://your-frontend.railway.app', // استبدل هذا بـ URL الـ frontend على Railway
+  // 'https://your-frontend.railway.app', // استبدل هذا بـ URL الـ frontend على Railway
 ];
 
 const corsOptions = {
@@ -129,13 +129,11 @@ app.use("/api", lessonRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use("/videos", express.static(path.join(__dirname, "public/videos")));
 app.use("/images", express.static(path.join(__dirname, "public/images")));
-app.use('/', avatarRoutes);
+app.use('/avatar', avatarRoutes);
 app.use('/api', motivationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api', analyticsEventRoutes);
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Welcome to the API' });
-});
+
 
 sequelize.sync()
   .then(() => console.log("Database connected"))
