@@ -95,7 +95,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // تحديد الـ origin بناءً على البيئة
 const allowedOrigins = [
-  'http://localhost:3000', // للتطوير
+  'https://pymagic-g5ed6ex78-amals-projects-ae3e3718.vercel.app', // للتطوير
   // 'https://your-frontend.railway.app', // استبدل هذا بـ URL الـ frontend على Railway
 ];
 
