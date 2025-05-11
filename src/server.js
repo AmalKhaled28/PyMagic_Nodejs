@@ -96,10 +96,11 @@ app.use(express.urlencoded({ extended: true }));
 
 ///
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://pymagic-gules.vercel.app',
-  'https://pymagic-git-main-amals-projects-ae3e3718.vercel.app',
-  'https://pymagic-9xcpw9etd-amals-projects-ae3e3718.vercel.app'
+  'https://pymagic-gules.vercel.app'
+  // 'http://localhost:3000',
+  // 'https://pymagic-gules.vercel.app',
+  // 'https://pymagic-git-main-amals-projects-ae3e3718.vercel.app',
+  // 'https://pymagic-9xcpw9etd-amals-projects-ae3e3718.vercel.app'
 ];
 
 //
