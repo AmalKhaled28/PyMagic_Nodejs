@@ -137,7 +137,7 @@ try {
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
 const englishPrompt = `
   You are a magical Python wizard teaching young wizards (kids aged 8-14) Python programming. Your responses must be in English, positive, brief (under 100 words), and clear, making learning a magical adventure! Use Markdown to separate explanatory text from code with triple backticks (\`\`\`python). For each concept, think step-by-step, placing each step on a new line using Markdown list syntax (-). Follow these examples:
@@ -172,7 +172,6 @@ const englishPrompt = `
   
   Now, teach the requested Python concept using this step-by-step Markdown list format: \${message}
 `;
-
 
 const arabicPrompt = `
  أنت ساحر بايثون سحري تعلم السحرة الصغار (أطفال من 8 إلى 14 سنة) برمجة بايثون. ردودك يجب أن تكون بالعربية، إيجابية، مختصرة (أقل من 100 كلمة)، وواضحة، تجعل التعلم مغامرة سحرية! استخدم Markdown لفصل النص التوضيحي عن الكود بثلاث علامات (\`\`\`python). لكل مفهوم، فكر خطوة بخطوة، ضع كل خطوة في سطر جديد باستخدام قوائم Markdown (-). **يجب أن يكون الكود باللغة الانجليزية أو التعليقات.** اتبع هذه الأمثلة:
@@ -222,41 +221,65 @@ class ChatbotController {
 
     try {
       // Detect language from accept-language header or message content
-const languageHeader = req.headers['accept-language'] || 'en';
-const isArabicMessage = /[\u0600-\u06FF]/.test(message); // Check if message contains Arabic characters
-const selectedPrompt = languageHeader.includes('ar') || isArabicMessage ? arabicPrompt : englishPrompt;
-console.log('Detected language header:', languageHeader);
-console.log('Is message Arabic?', isArabicMessage);
-console.log('Selected prompt:', selectedPrompt === arabicPrompt ? 'Arabic' : 'English');
+      const languageHeader = req.headers['accept-language'] || 'en';
+      const isArabicMessage = /[\u0600-\u06FF]/.test(message); // Check if message contains Arabic characters
+      const selectedPrompt = languageHeader.includes('ar') || isArabicMessage ? arabicPrompt : englishPrompt;
+      console.log('Detected language header:', languageHeader);
+      console.log('Is message Arabic?', isArabicMessage);
+      console.log('Selected prompt:', selectedPrompt === arabicPrompt ? 'Arabic' : 'English');
 
-const prompt = selectedPrompt;
+      const prompt = selectedPrompt.replace('${message}', message);
 
-      const result = await model.generateContent(prompt.replace('${message}', message));
-      let responseText = result.response.text();
+      // Add a small delay to avoid hitting rate limits
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
 
+      let attempts = 0;
+      const maxAttempts = 3;
 
+      while (attempts < maxAttempts) {
+        try {
+          const result = await model.generateContent(prompt);
+          let responseText = result.response.text();
 
-      // Ensure code blocks are properly formatted
-      if (!responseText.includes('```python')) {
-        console.warn('Response lacks proper code block formatting. Adding default format.');
-        responseText = `Here's the answer:\n\n${responseText}\n\n\`\`\`python\n# Example code (if needed)\n\`\`\``;
+          // Ensure code blocks are properly formatted
+          if (!responseText.includes('```python')) {
+            console.warn('Response lacks proper code block formatting. Adding default format.');
+            responseText = `Here's the answer:\n\n${responseText}\n\n\`\`\`python\n# Example code (if needed)\n\`\`\``;
+          }
+
+          console.log('Generated response:', responseText);
+          if (!Chatbot || typeof Chatbot.create !== 'function') {
+            console.error('Chatbot model is not properly defined or loaded');
+            return res.status(500).json({ error: 'Database model not available' });
+          }
+
+          await Chatbot.create({
+            user_id: req.user?.id || 1,
+            prompt: message,
+            answer: responseText,
+          });
+
+          return res.json({ reply: responseText });
+        } catch (error) {
+          if (error.status === 429) {
+            attempts++;
+            console.warn(`Rate limit exceeded (attempt ${attempts}/${maxAttempts}). Retrying after 42 seconds...`);
+            await new Promise(resolve => setTimeout(resolve, 42000)); // Wait 42 seconds as suggested by the error
+            if (attempts >= maxAttempts) {
+              console.error('Max retry attempts reached for rate limit error:', error);
+              return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
+            }
+          } else {
+            throw error; // Rethrow other errors
+          }
+        }
       }
-
-      console.log('Generated response:', responseText);
-      if (!Chatbot || typeof Chatbot.create !== 'function') {
-        console.error('Chatbot model is not properly defined or loaded');
-        return res.status(500).json({ error: 'Database model not available' });
-      }
-
-      await Chatbot.create({
-        user_id: req.user?.id || 1,
-        prompt: message,
-        answer: responseText,
-      });
-
-      res.json({ reply: responseText });
     } catch (error) {
-      console.error('Error generating response or saving to database:', error);
+      console.error('Error generating response or saving to database:', {
+        message: error.message,
+        status: error.status,
+        stack: error.stack,
+      });
       res.status(500).json({ error: 'Failed to generate response or save to database' });
     }
   }
@@ -289,7 +312,10 @@ const prompt = selectedPrompt;
 
       res.json(messageList);
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.error('Error fetching messages:', {
+        message: error.message,
+        stack: error.stack,
+      });
       res.status(500).json({ error: 'Failed to fetch messages' });
     }
   }

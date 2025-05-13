@@ -95,6 +95,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const allowedOrigins = [
+  // 'http://localhost:3000'
   'https://pymagic-gules.vercel.app'
 ]
 
@@ -113,10 +114,10 @@ const corsOptions = {
 }
 
 
-app.use((req, res, next) => {
-  console.log('Incoming origin:', req.headers.origin)
-  next()
-})
+// app.use((req, res, next) => {
+//   console.log('Incoming origin:', req.headers.origin)
+//   next()
+// })
 
 
 app.use(cors(corsOptions))
