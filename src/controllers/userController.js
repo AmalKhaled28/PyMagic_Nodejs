@@ -17,6 +17,47 @@ const transporter = nodemailer.createTransport({
 });
 
 // **Register User**
+// const registerUser = async (req, res) => {
+//   try {
+//     const { name, email, password, parentEmail, age } = req.body;
+    
+//     const existingUser = await User.getByEmail(email);
+//     if (existingUser) return res.status(400).json({ error: 'Email already exists' });
+
+//     const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
+//     if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
+
+//     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+//     if (!passwordRegex.test(password)) {
+//       return res.status(400).json({
+//         error: 'Password must be at least 10 characters long and include uppercase, lowercase, number, and special character'
+//       });
+//     }
+
+//     const newUser = await User.create({ name, email, password, parent_email: parentEmail, age, verified: false });
+
+//     const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+//         // const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+
+//     const verificationLink = `https://pymagic-gules.vercel.app/verify-email?token=${token}`;
+//     const mailOptions = {
+//       from: process.env.EMAIL_USER,
+//       to: email,
+//       subject: 'Verify Your Email',
+//       html: `<p>Please verify your email by clicking <a href="${verificationLink}">here</a>.</p>`
+//     };
+
+//     await transporter.sendMail(mailOptions);
+
+//     res.status(201).json({ message: 'User created, please verify your email', userId: newUser.id });
+//   } catch (err) {
+//     console.error('Error in registerUser:', err);
+//     res.status(500).json({ error: 'Error creating user: ' + err.message });
+//   }
+// };
+
+// **Register User**
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, parentEmail, age } = req.body;
@@ -38,8 +79,6 @@ const registerUser = async (req, res) => {
 
     const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
 
-        // const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
-
     const verificationLink = `https://pymagic-gules.vercel.app/verify-email?token=${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -52,7 +91,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: 'User created, please verify your email', userId: newUser.id });
   } catch (err) {
-    console.error('Error in registerUser:', err);
+    console.error('Error in registerUser:', err); 
     res.status(500).json({ error: 'Error creating user: ' + err.message });
   }
 };
@@ -183,7 +222,7 @@ const forgotPassword = async (req, res) => {
     const user = await User.getByEmail(email);
     if (!user) return res.status(200).json({ error: 'User not found' });
 
-    const resetToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    const resetToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
