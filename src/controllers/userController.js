@@ -27,18 +27,17 @@ const transporter = nodemailer.createTransport({
 //     const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
 //     if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
 
-//     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+//     // Updated regex to include all common special characters
+//     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~]{10,}$/;
 //     if (!passwordRegex.test(password)) {
 //       return res.status(400).json({
-//         error: 'Password must be at least 10 characters long and include uppercase, lowercase, number, and special character'
+//         error: 'Password must be at least 10 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., !@#$%^&*()_+-=[]{}|;:\'",.<>?/~)'
 //       });
 //     }
 
 //     const newUser = await User.create({ name, email, password, parent_email: parentEmail, age, verified: false });
 
-//     const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-//         // const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+//     const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
 
 //     const verificationLink = `https://pymagic-gules.vercel.app/verify-email?token=${token}`;
 //     const mailOptions = {
@@ -52,7 +51,7 @@ const transporter = nodemailer.createTransport({
 
 //     res.status(201).json({ message: 'User created, please verify your email', userId: newUser.id });
 //   } catch (err) {
-//     console.error('Error in registerUser:', err);
+//     console.error('Error in registerUser:', err); 
 //     res.status(500).json({ error: 'Error creating user: ' + err.message });
 //   }
 // };
@@ -68,7 +67,8 @@ const registerUser = async (req, res) => {
     const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
     if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+    // Updated regex to include all common special characters
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~]{10,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         error: 'Password must be at least 10 characters long and include uppercase, lowercase, number, and special character'
