@@ -171,12 +171,17 @@ const loginUser = async (req, res) => {
     //   sameSite: 'None', // عشان يسمح بتبادل الكوكيز عبر domains مختلفة
     // });
 
-    //
-    res.cookie("token", token, {
+  
+    ///////////////
+    console.log('Setting cookie with token:', token); // سجل لتتبع التوكن
+  /////////////////////////////
+
+    res.cookie('token', token, {
       maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000,
-      httpOnly: true,     // Recommended for security
-      secure: true,       // HTTPS-only
-      sameSite: "None",   // Allow cross-origin
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      path: '/',
     });
     
     
@@ -197,6 +202,10 @@ const loginUser = async (req, res) => {
     if (mostRecentQuiz?.Unit?.section_id) {
       lastSectionId = mostRecentQuiz.Unit.section_id;
     }
+    
+    /////////////////
+console.log('Login successful for user:', user.email); // سجل نجاح تسجيل الدخول
+/////////////////
 
     res.status(200).json({
       message: 'Login successful',
