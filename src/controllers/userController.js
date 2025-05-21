@@ -177,6 +177,7 @@ const loginUser = async (req, res) => {
       secure: true,
       sameSite: 'None',
       path: '/',
+      partitioned: true,
     });
 
     let lastSectionId = 1;
