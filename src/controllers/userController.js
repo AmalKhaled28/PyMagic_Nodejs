@@ -127,13 +127,10 @@ const loginUser = async (req, res) => {
   try {
     const { email, password, rememberMe, parentEmail } = req.body;
 
-
-    // التحقق من وجود الإيميل والباسوورد في الطلب
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    // البحث عن المستخدم باستخدام الإيميل أو إيميل الوالد
     let user;
     try {
       user = await User.getByEmail(email);
@@ -181,12 +178,7 @@ const loginUser = async (req, res) => {
       sameSite: 'None',
       path: '/',
     });
-    
 
-       ///////////////
-    console.log('Setting cookie with token:', token); // سجل لتتبع التوكن
-  /////////////////////////////
-    
     let lastSectionId = 1;
     const mostRecentQuiz = await StudentQuiz.findOne({
       where: {
@@ -204,11 +196,8 @@ const loginUser = async (req, res) => {
     if (mostRecentQuiz?.Unit?.section_id) {
       lastSectionId = mostRecentQuiz.Unit.section_id;
     }
-    
-    /////////////////
-console.log('Login successful for user:', user.email); // سجل نجاح تسجيل الدخول
-/////////////////
 
+    console.log('Login successful for user:', user.email); // سجل نجاح تسجيل الدخول
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -220,7 +209,6 @@ console.log('Login successful for user:', user.email); // سجل نجاح تسج
         lastSectionId: lastSectionId
       },
     });
-
     console.log('Login response sent:', { message: 'Login successful', user: { id: user.id, email: user.email } });
   } catch (err) {
     console.error('Error in loginUser:', err);
