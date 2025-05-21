@@ -172,9 +172,7 @@ const loginUser = async (req, res) => {
     // });
 
   
-    ///////////////
-    console.log('Setting cookie with token:', token); // سجل لتتبع التوكن
-  /////////////////////////////
+ 
 
     res.cookie('token', token, {
       maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000,
@@ -184,6 +182,10 @@ const loginUser = async (req, res) => {
       path: '/',
     });
     
+
+       ///////////////
+    console.log('Setting cookie with token:', token); // سجل لتتبع التوكن
+  /////////////////////////////
     
     let lastSectionId = 1;
     const mostRecentQuiz = await StudentQuiz.findOne({
@@ -218,6 +220,8 @@ console.log('Login successful for user:', user.email); // سجل نجاح تسج
         lastSectionId: lastSectionId
       },
     });
+
+    console.log('Login response sent:', { message: 'Login successful', user: { id: user.id, email: user.email } });
   } catch (err) {
     console.error('Error in loginUser:', err);
     return res.status(500).json({ error: 'Server error during login: ' + err.message });

@@ -198,7 +198,7 @@ app.use((req, res, next) => {
 // إعدادات CORS
 const allowedOrigins = [
   'https://pymagic-gules.vercel.app'
-  // 'http://localhost:3000' // للتطوير المحلي فقط
+  // 'http://localhost:3000' // للتطوير المحلي
 ];
 
 const corsOptions = {
@@ -206,7 +206,7 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error('CORS blocked for origin:', origin); // سجل لتصحيح الأخطاء
+      console.error('CORS blocked for origin:', origin);
       callback(new Error('Blocked by CORS'));
     }
   },
@@ -218,7 +218,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// التعامل مع طلبات OPTIONS (Preflight)
+// التعامل مع طلبات OPTIONS
 app.options('*', cors({
   origin: 'https://pymagic-gules.vercel.app',
   credentials: true,
