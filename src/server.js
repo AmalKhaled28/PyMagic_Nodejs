@@ -203,7 +203,10 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    console.log('Received origin:', origin); // سجل الـ origin لتتبع المشكلة
+    // السماح بجميع الـ origins إذا لم يكن هناك origin (مثل طلبات غير متصفح)
+    // أو إذا كان الـ origin موجودًا في allowedOrigins
+    if (!origin || allowedOrigins.some(allowed => origin === allowed || origin === allowed + '/')) {
       callback(null, true);
     } else {
       console.error('CORS blocked for origin:', origin);
@@ -212,18 +215,19 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
-  optionsSuccessStatus: 200
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Accept-Language'],
+  optionsSuccessStatus: 200,
+  preflightContinue: false
 };
 
 app.use(cors(corsOptions));
 
-// التعامل مع طلبات OPTIONS
+// التعامل مع طلبات OPTIONS يدويًا
 app.options('*', cors({
-  origin: 'https://pymagic-gules.vercel.app',
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Accept-Language'],
   optionsSuccessStatus: 200
 }));
 
