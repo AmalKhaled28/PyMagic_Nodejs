@@ -14,7 +14,7 @@ Lesson.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'units', // Table name for the foreign key
+        model: 'units', 
         key: 'id'
       },
       onDelete: 'CASCADE'
@@ -32,8 +32,8 @@ Lesson.init(
     sequelize,
     modelName: 'Lesson',
     tableName: 'lessons',
-    timestamps: true, // Enable Sequelize to handle created_at and updated_at
-    underscored: true // Use snake_case for column names
+    timestamps: true,
+    underscored: true 
   }
 );
 

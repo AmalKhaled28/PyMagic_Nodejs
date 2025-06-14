@@ -13,9 +13,8 @@ const {
   updateUserProfile,
   updateUserPoints,
   verifyEmail
-} = UserController; // Destructure the required methods from UserController
+} = UserController; 
 
-//Protected Routes (Require Authentication)**
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
@@ -24,15 +23,13 @@ router.post('/reset-password', resetPassword);
 
 router.get('/verify-email', verifyEmail);
 
-
-// **Protected Routes (Require Authentication)**
+//test
 router.get('/profile', authMiddleware, getUserProfile);
-//profile page 
+
 router.get('/profile/:userId', authMiddleware,getUserProfileInfo);
-// edit user info 
 
 router.put('/Editprofile', authMiddleware, updateUserProfile);
-//
+
 router.post('/update-points', authMiddleware, updateUserPoints);
 
 

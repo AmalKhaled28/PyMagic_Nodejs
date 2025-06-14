@@ -51,7 +51,6 @@ const getMotivationalMessage = async (req, res) => {
 
     const language = req.headers["accept-language"] || "en";
 
-    // Fetch the translation for the given language
     let translation = await MotivationTranslation.findOne({
       where: {
         motivation_id: motivation.id,

@@ -3,84 +3,36 @@ const { Op, Sequelize } = require('sequelize');
 const AchievementController = require('./achievementController');
 
 class QuizController {
-  // static async getQuizQuestions(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     const language = req.headers['accept-language'] || 'en';
-      
-  //     if (!id) return res.status(400).json({ success: false, message: 'Lesson ID is required' });
-
-  //     const quizQuestions = await Question.findAll({
-  //       where: { lesson_id: id, level: { [Op.in]: ['easy', 'medium', 'hard'] } },
-  //       include: [{
-  //         model: QuestionTranslation,
-  //         as: 'translations',
-  //         where: { language },
-  //         required: true,
-  //       }],
-  //       order: Sequelize.literal('RAND()'),
-  //     });
-
-  //     const selectedQuestions = {
-  //       easy: quizQuestions.filter(q => q.level === 'easy').slice(0, 3),
-  //       medium: quizQuestions.filter(q => q.level === 'medium').slice(0, 4),
-  //       hard: quizQuestions.filter(q => q.level === 'hard').slice(0, 3),
-  //     };
-
-  //     const questions = [...selectedQuestions.easy, ...selectedQuestions.medium, ...selectedQuestions.hard]
-  //       .map(q => ({
-  //         id: q.id,
-  //         lesson_id: q.lesson_id,
-  //         type: q.type,
-  //         level: q.level,
-  //         points: q.points,
-  //         question: q.translations[0].question_text,
-  //         options: q.translations[0].options,
-  //         correct_answer: q.translations[0].correct_answer,
-  //         hint: q.translations[0].hint,
-  //       }));
-
-  //     res.json({ success: true, questions });
-  //   } catch (error) {
-  //     console.error('Error fetching quiz questions:', error);
-  //     res.status(500).json({ success: false, message: 'Server error', error: error.message });
-  //   }
-  // }
 
   static async getQuizQuestions(req, res) {
       try {
-        const { id } = req.params; // lesson_id
+        const { id } = req.params; 
         const language = req.headers['accept-language'] || 'en';
   
         if (!id) return res.status(400).json({ success: false, message: 'Lesson ID is required' });
   
-        // Fetch all questions for the lesson with translations
         const quizQuestions = await Question.findAll({
           where: { lesson_id: id, level: { [Op.in]: ['easy', 'medium', 'hard'] } },
           include: [{
             model: QuestionTranslation,
             as: 'translations',
             where: { language },
-            required: true, // Only include questions with translations for the requested language
+            required: true, 
           }],
           order: Sequelize.literal('RAND()'),
         });
   
-        // Log available questions for debugging
         console.log(`Total questions found for lesson ${id}: ${quizQuestions.length}`);
         console.log(`Easy: ${quizQuestions.filter(q => q.level === 'easy').length}, Medium: ${quizQuestions.filter(q => q.level === 'medium').length}, Hard: ${quizQuestions.filter(q => q.level === 'hard').length}`);
   
-        // Select questions: aim for 3 easy, 4 medium, 3 hard
         let selectedQuestions = {
           easy: quizQuestions.filter(q => q.level === 'easy').slice(0, 3),
           medium: quizQuestions.filter(q => q.level === 'medium').slice(0, 4),
           hard: quizQuestions.filter(q => q.level === 'hard').slice(0, 3),
         };
   
-        // Calculate total selected questions
         let totalSelected = selectedQuestions.easy.length + selectedQuestions.medium.length + selectedQuestions.hard.length;
   
-        // If less than 10 questions, fill the gap with random questions from other levels
         if (totalSelected < 10) {
           console.log(`Only ${totalSelected} questions selected. Filling the gap...`);
           const remainingQuestions = quizQuestions.filter(
@@ -94,7 +46,6 @@ class QuizController {
           console.log(`Added ${additionalQuestions.length} additional questions. Total now: ${totalSelected}`);
         }
   
-        // Combine all selected questions
         const questions = [
           ...selectedQuestions.easy,
           ...selectedQuestions.medium,
@@ -113,7 +64,6 @@ class QuizController {
             hint: q.translations[0].hint,
           }));
   
-        // Log final question count
         console.log(`Final question count for lesson ${id}: ${questions.length}`);
   
         if (questions.length < 10) {
@@ -136,14 +86,13 @@ class QuizController {
         const { user_id, lesson_id, unit_id, answers } = req.body;
         const language = req.headers['accept-language'] || 'en';
   
-        // Validate inputs
         if (!user_id || !lesson_id || !unit_id || !Array.isArray(answers) || answers.length === 0) {
           return res.status(400).json({ success: false, message: 'Invalid input data' });
         }
   
         let score = 0, earnedPoints = 0;
   
-        // Create new StudentQuiz entry
+        // new StudentQuiz entry
         const quiz = await StudentQuiz.create({
           user_id,
           lesson_id,
@@ -241,21 +190,18 @@ class QuizController {
       }
     }
   
-    // Other methods (getUnitQuiz, submitUnitQuiz, getUserQuizProgress, etc.) remain unchanged
 
   static async submitQuiz(req, res) {
     try {
       const { user_id, lesson_id, unit_id, answers } = req.body;
       const language = req.headers['accept-language'] || 'en';
 
-      // Validate inputs
       if (!user_id || !lesson_id || !unit_id || !Array.isArray(answers) || answers.length === 0) {
         return res.status(400).json({ success: false, message: 'Invalid input data' });
       }
 
       let score = 0, earnedPoints = 0;
 
-      // Create new StudentQuiz entry
       const quiz = await StudentQuiz.create({
         user_id,
         lesson_id,
@@ -337,7 +283,7 @@ class QuizController {
       const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
 ///
       if (achievements.length > 0) {
-        responseData.new_achievements = achievements; // إضافة الإنجازات للرد
+        responseData.new_achievements = achievements; 
       }
 
       res.json({
@@ -349,8 +295,7 @@ class QuizController {
         is_passed: isPassed,
         total_user_points: user ? user.earned_points : 0,
         answers: detailedAnswers,
-        // achievements: achievements || [],
-        achievements: achievements.achievements || [], // تأكدي من استخدام achievements.achievements
+        achievements: achievements.achievements || [],
       });
     } catch (error) {
       console.error('Error submitting quiz:', error);
@@ -383,7 +328,6 @@ class QuizController {
         return res.status(404).json({ success: false, message: 'Unit not found' });
       }
 
-      // Get all lessons in this unit
       const lessons = await Lesson.findAll({
         where: { unit_id },
         attributes: ['id'],
@@ -400,7 +344,7 @@ class QuizController {
         where: { 
           user_id, 
           lesson_id: { [Op.in]: lessonIds },
-          score: { [Op.ne]: null } // Ensure we only get quizzes with valid scores
+          score: { [Op.ne]: null }
         },
         attributes: ['lesson_id', 'score', 'is_passed', 'created_at'],
         order: [['created_at', 'DESC']],
@@ -438,7 +382,6 @@ class QuizController {
           let questionLimit;
 
           if (!quiz) {
-            // If no quiz for this lesson, default to 3 questions
             questionLimit = 3;
           } else if (quiz.score >= 8) {
             questionLimit = 2;
@@ -461,17 +404,15 @@ class QuizController {
           });
 
           selectedQuestions.push(...questions);
-          totalQuestions += Math.min(questionLimit, questions.length); // Account for cases where fewer questions are available
+          totalQuestions += Math.min(questionLimit, questions.length);
         }
       }
 
-      // Ensure we don't exceed a reasonable number of questions 25
       if (totalQuestions > 25) {
         selectedQuestions = selectedQuestions.slice(0, 25);
         totalQuestions = 25;
       }
 
-      // Format questions with translations
       const formattedQuestions = selectedQuestions.map((q, index) => {
         const translation = q.translations && q.translations.length > 0 
           ? q.translations[0] 
@@ -487,7 +428,7 @@ class QuizController {
           options: translation?.options || ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
           correct_answer: translation?.correct_answer || 'Option 1',
           hint: translation?.hint || 'No hint available',
-          question_index: index + 1, // Add index for unique identification
+          question_index: index + 1, 
         };
       });
 
@@ -509,7 +450,7 @@ class QuizController {
 
   static async submitUnitQuiz(req, res) {
     try {
-      const { user_id, unit_id, answers, total_questions } = req.body; // Added total_questions from Frontend
+      const { user_id, unit_id, answers, total_questions } = req.body; 
       const language = req.headers['accept-language'] || 'en';
   
       if (!user_id || !unit_id || !Array.isArray(answers) || answers.length === 0) {
@@ -623,21 +564,20 @@ class QuizController {
   
       console.log('Submitting unit quiz for user:', user_id);
       const achievements = await AchievementController.checkAndUnlockAchievements({ userId: user_id });
-      ////
+      
       if (achievements.length > 0) {
-        responseData.new_achievements = achievements; // إضافة الإنجازات للرد
+        responseData.new_achievements = achievements; 
       }
       res.json({
         success: true,
         student_quiz_id: unitQuiz.id,
         score,
-        total_questions: total_questions || questions.length, // Use provided total_questions or fallback
+        total_questions: total_questions || questions.length, 
         earned_points: earnedPoints,
         is_passed: isPassed,
         total_user_points: user ? user.earned_points : 0,
         answers: detailedAnswers,
-        // achievements: achievements || [],
-        achievements: achievements.achievements || [], // تأكدي من استخدام achievements.achievements
+        achievements: achievements.achievements || [],
         unit_name: unit.translations?.[0]?.name || `Unit ${unit_id}`,
       });
     } catch (error) {
@@ -660,7 +600,6 @@ class QuizController {
         return res.status(400).json({ success: false, message: 'User ID is required' });
       }
   
-      // Fetch all quizzes for the user
       const quizzes = await StudentQuiz.findAll({
         where: { user_id },
         attributes: ['id', 'lesson_id', 'unit_id', 'score', 'earned_points', 'is_passed', 'created_at'],
@@ -702,7 +641,6 @@ class QuizController {
         order: [['created_at', 'DESC']],
       });
   
-      // Get lesson numbers by querying lesson order per unit
       const unitLessons = await Lesson.findAll({
         attributes: ['id', 'unit_id'],
         order: [['unit_id', 'ASC'], ['id', 'ASC']],
@@ -713,17 +651,13 @@ class QuizController {
         if (!lessonNumbers[lesson.unit_id]) {
           lessonNumbers[lesson.unit_id] = {};
         }
-        // Use a counter for each unit to assign lesson numbers
         const lessonsInUnit = unitLessons.filter(l => l.unit_id === lesson.unit_id);
         const lessonIndex = lessonsInUnit.findIndex(l => l.id === lesson.id);
         lessonNumbers[lesson.unit_id][lesson.id] = lessonIndex + 1;
       });
   
-      // Format the progress data
       const progress = quizzes.map(quiz => {
-        const totalQuestions = quiz.questions ? quiz.questions.length : 0; // Calculate total_questions dynamically
-        
-        // Determine lesson number if applicable
+        const totalQuestions = quiz.questions ? quiz.questions.length : 0; 
         const lessonNumber = quiz.lesson_id 
           ? lessonNumbers[quiz.lesson?.unit_id]?.[quiz.lesson_id] || null
           : null;
@@ -733,13 +667,13 @@ class QuizController {
           lesson_id: quiz.lesson_id,
           unit_id: quiz.unit_id,
           score: quiz.score || 0,
-          total_questions: totalQuestions, // Use dynamically calculated value
+          total_questions: totalQuestions, 
           earned_points: quiz.earned_points || 0,
           is_passed: quiz.is_passed || false,
           created_at: quiz.created_at,
           lesson_name: quiz.lesson?.translations?.[0]?.title || `Lesson ${quiz.lesson_id || 'N/A'}`,
           unit_name: quiz.unit?.translations?.[0]?.name || `Unit ${quiz.unit_id || 'N/A'}`,
-          lesson_number: lessonNumber, // Add lesson_number here
+          lesson_number: lessonNumber, 
         };
       });
   
@@ -770,7 +704,7 @@ class QuizController {
         });
       }
 
-      // Fetch the quiz with all related data including translations
+      // Fetch the quiz data
       const quiz = await StudentQuiz.findOne({
         where: { id: quiz_id },
         include: [
@@ -849,7 +783,6 @@ class QuizController {
         return acc;
       }, {});
 
-      // Ensure unique question_ids in answers
       const seenQuestionIds = new Set();
       const uniqueAnswers = quiz.questions?.filter(q => {
         if (seenQuestionIds.has(q.question_id)) {
@@ -859,7 +792,6 @@ class QuizController {
         return true;
       }) || [];
 
-      // Format the response data
       const reviewData = {
         quiz_id: quiz.id,
         quiz_type: quiz.unit_id && !quiz.lesson_id ? 'unit' : 'lesson',

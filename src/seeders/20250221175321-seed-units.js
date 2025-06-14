@@ -2,7 +2,6 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // First insert units (without names/descriptions)
     await queryInterface.bulkInsert(
       "units",
       [
@@ -64,11 +63,9 @@ module.exports = {
       {}
     );
 
-    // Then insert translations for each unit (English and Arabic)
     await queryInterface.bulkInsert(
       "unit_translations",
       [
-        // English translations
         {
           id: 1,
           unit_id: 1,
@@ -142,7 +139,6 @@ module.exports = {
           updated_at: new Date(),
         },
 
-        // Arabic translations (الترجمات العربية)
         {
           id: 10,
           unit_id: 1,
@@ -221,9 +217,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    // First delete translations (to maintain referential integrity)
     await queryInterface.bulkDelete("unit_translations", null, {});
-    // Then delete units
     await queryInterface.bulkDelete("units", null, {});
   },
 };

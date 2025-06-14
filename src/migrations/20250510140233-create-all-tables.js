@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Create users table
+
     await queryInterface.createTable('users', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       name: { type: Sequelize.STRING(255), allowNull: false },
@@ -19,7 +19,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create motivations table
+    
     await queryInterface.createTable('motivations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       score_level: { type: Sequelize.STRING(50) },
@@ -27,7 +27,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create motivation_translations table
+    
     await queryInterface.createTable('motivation_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       motivation_id: { type: Sequelize.INTEGER, references: { model: 'motivations', key: 'id' } },
@@ -37,7 +37,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create answer_motivation table
+    
     await queryInterface.createTable('answer_motivation', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       answer_type: { type: Sequelize.ENUM('correct', 'wrong') },
@@ -45,7 +45,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create answer_motivation_translations table
+    
     await queryInterface.createTable('answer_motivation_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       answer_motivation_id: { type: Sequelize.INTEGER, references: { model: 'answer_motivation', key: 'id' } },
@@ -55,7 +55,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create rewards table
+   
     await queryInterface.createTable('rewards', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       image: { type: Sequelize.STRING(255) },
@@ -64,7 +64,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create reward_translations table
+    
     await queryInterface.createTable('reward_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       reward_id: { type: Sequelize.INTEGER, references: { model: 'rewards', key: 'id' } },
@@ -74,7 +74,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create achievements table
+    
     await queryInterface.createTable('achievements', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       user_id: { type: Sequelize.INTEGER, references: { model: 'users', key: 'id' } },
@@ -83,7 +83,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create chatbot table
+    
     await queryInterface.createTable('chatbot', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       user_id: { type: Sequelize.INTEGER, references: { model: 'users', key: 'id' } },
@@ -93,14 +93,14 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create sections table
+    
     await queryInterface.createTable('sections', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       created_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create section_translations table
+    
     await queryInterface.createTable('section_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       section_id: { type: Sequelize.INTEGER, references: { model: 'sections', key: 'id' } },
@@ -110,7 +110,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create units table
+    
     await queryInterface.createTable('units', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       section_id: { type: Sequelize.INTEGER, references: { model: 'sections', key: 'id' } },
@@ -118,7 +118,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create unit_translations table
+    
     await queryInterface.createTable('unit_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       unit_id: { type: Sequelize.INTEGER, references: { model: 'units', key: 'id' } },
@@ -128,7 +128,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create lessons table
+    
     await queryInterface.createTable('lessons', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       unit_id: { type: Sequelize.INTEGER, references: { model: 'units', key: 'id' } },
@@ -136,7 +136,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create lesson_translations table
+    
     await queryInterface.createTable('lesson_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       lesson_id: { type: Sequelize.INTEGER, references: { model: 'lessons', key: 'id' } },
@@ -148,7 +148,7 @@ module.exports = {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create questions table
+    
 await queryInterface.createTable('questions', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   lesson_id: { type: Sequelize.INTEGER, references: { model: 'lessons', key: 'id' } },
@@ -156,10 +156,10 @@ await queryInterface.createTable('questions', {
   level: { type: Sequelize.ENUM('easy', 'medium', 'hard') },
   points: { type: Sequelize.INTEGER },
   created_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
-  updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }, // إضافة العمود
+  updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }, 
 });
 
-    // Create question_translations table
+    
     await queryInterface.createTable('question_translations', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       question_id: { type: Sequelize.INTEGER, references: { model: 'questions', key: 'id' } },
@@ -172,7 +172,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create student_quizzes table
+    
     await queryInterface.createTable('student_quizzes', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       lesson_id: { type: Sequelize.INTEGER, references: { model: 'lessons', key: 'id' } },
@@ -185,7 +185,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create student_quiz_questions table
+    
     await queryInterface.createTable('student_quiz_questions', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       question_id: { type: Sequelize.INTEGER, references: { model: 'questions', key: 'id' } },
@@ -196,7 +196,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create assets table
+    
     await queryInterface.createTable('assets', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       type: { type: Sequelize.ENUM('brow', 'eye', 'hairstyle', 'headdress', 'lip'), allowNull: false },
@@ -207,7 +207,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create user_assets table
+    
     await queryInterface.createTable('user_assets', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       user_id: { type: Sequelize.INTEGER, references: { model: 'users', key: 'id' } },
@@ -216,7 +216,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create user_preferences table
+    
     await queryInterface.createTable('user_preferences', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       user_id: { type: Sequelize.INTEGER, references: { model: 'users', key: 'id' }, allowNull: false },
@@ -229,7 +229,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create feedbacks table
+    
     await queryInterface.createTable('feedbacks', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       user_id: { type: Sequelize.INTEGER, references: { model: 'users', key: 'id' } },
@@ -240,7 +240,7 @@ await queryInterface.createTable('questions', {
       updated_at: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP') }
     });
 
-    // Create analytics_events table
+    
     await queryInterface.createTable('analytics_events', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       user_id: { type: Sequelize.INTEGER, references: { model: 'users', key: 'id' }, onDelete: 'CASCADE' },
@@ -281,4 +281,7 @@ await queryInterface.createTable('questions', {
   }
 };
 
-//npx sequelize-cli db:migrate
+
+//  npx sequelize-cli migration:generate --name create-all-tables
+//  npx sequelize-cli db:migrate 
+// npx sequelize-cli db:migrate:undo:all

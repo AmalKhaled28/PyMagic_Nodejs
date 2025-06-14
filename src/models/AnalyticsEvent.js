@@ -12,10 +12,10 @@ AnalyticsEvent.init(
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false, // Assuming events must be tied to a user
+      allowNull: false, 
       references: {
-        model: 'users', // Table name
-        key: 'id',     // Column in users table
+        model: 'users', 
+        key: 'id',     
       },
     },
     event_type: {
@@ -47,8 +47,8 @@ AnalyticsEvent.init(
     sequelize,
     modelName: 'AnalyticsEvent',
     tableName: 'analytics_events',
-    timestamps: true, // Handles timestamp column
-    underscored: true, // Matches snake_case column names
+    timestamps: true, 
+    underscored: true, 
   }
 );
 module.exports = AnalyticsEvent;

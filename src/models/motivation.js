@@ -27,8 +27,8 @@ Motivation.init(
     sequelize,
     modelName: 'Motivation',
     tableName: 'motivations',
-    timestamps: true, // Enable Sequelize to handle created_at and updated_at
-    underscored: true // Use snake_case for column names
+    timestamps: true, 
+    underscored: true 
   }
 );
 

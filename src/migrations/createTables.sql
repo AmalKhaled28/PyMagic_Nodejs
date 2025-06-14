@@ -26,7 +26,7 @@ CREATE TABLE motivations (
 CREATE TABLE motivation_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     motivation_id INT,
-    language VARCHAR(50), -- e.g., 'en', 'fr', 'es',ar
+    language VARCHAR(50),
     text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -68,7 +68,6 @@ CREATE TABLE reward_translations (
     FOREIGN KEY (reward_id) REFERENCES rewards(id)
 );
 
--- not need to translate
 CREATE TABLE achievements ( 
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -79,7 +78,6 @@ CREATE TABLE achievements (
     FOREIGN KEY (reward_id) REFERENCES rewards(id)
 );
 
--- not need to translate
 CREATE TABLE chatbot (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -233,8 +231,8 @@ CREATE TABLE feedbacks (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     student_quiz_id INT,
-    feedback_score INT, -- 1 to 5 (emoji scale)
-    comment TEXT, -- Optional text-based comment
+    feedback_score INT, 
+    comment TEXT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
@@ -251,6 +249,6 @@ CREATE TABLE analytics_events (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Added foreign key
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE 
 );
 -- -- Get-Content D:\PymagicBackend\src\migrations\createTables.sql | mysql -u root -p py_magic

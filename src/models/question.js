@@ -14,7 +14,7 @@ Question.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'lessons', // Table name for the foreign key
+        model: 'lessons',
         key: 'id'
       },
       onDelete: 'CASCADE'
@@ -44,8 +44,8 @@ Question.init(
     sequelize,
     modelName: 'Question',
     tableName: 'questions',
-    timestamps: true, // Enable Sequelize to handle created_at and updated_at
-    underscored: true // Use snake_case for column names
+    timestamps: true, 
+    underscored: true
   }
 );
 

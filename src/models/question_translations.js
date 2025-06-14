@@ -24,7 +24,7 @@ QuestionTranslation.init(
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    question_text: { // Renamed to avoid collision
+    question_text: { 
       type: DataTypes.TEXT,
       allowNull: false
     },

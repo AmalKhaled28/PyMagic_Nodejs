@@ -17,14 +17,14 @@ exports.submitFeedback = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Feedback score must be an integer between 1 and 5' });
     }
 
-    // Verify user exists
+    // if user exists
     const user = await User.findByPk(user_id);
     if (!user) {
       console.warn('User not found:', user_id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Verify student quiz exists 
+    // if student quiz exists 
     const studentQuiz = await StudentQuiz.findOne({
       where: {
         id: student_quiz_id,
@@ -51,7 +51,6 @@ exports.submitFeedback = async (req, res) => {
       });
     }
 
-    // Create new feedback entry
     const feedback = await Feedback.create({
       user_id,
       student_quiz_id,

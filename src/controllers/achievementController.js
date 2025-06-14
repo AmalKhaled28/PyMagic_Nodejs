@@ -81,7 +81,6 @@ static async getUserAchievements(req, res) {
 
   static async checkAndUnlockAchievements({ userId }) {
     try {
-        // const userId = req.params.userId || req.body.user_id; // Try to get userId from params or body
         if (!userId) {
             return res.status(400).json({ success: false, message: "User ID is required" });
         }
@@ -113,15 +112,12 @@ static async getUserAchievements(req, res) {
             newAchievements.push({
                 id: reward.id,
                 title: reward.text,
-                // description: `Unlocked at ${reward.required_points} points`,
                 image: reward.image
             });
         }
 
-        // Return the response instead of sending it directly
         return { success: true, message: "Achievements checked and unlocked if applicable", achievements: newAchievements };
     } catch (error) {
-        // Throw the error to be caught by the calling function
         throw new Error(error.message || "Server error");
     }
 }}

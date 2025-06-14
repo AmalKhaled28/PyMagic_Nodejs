@@ -2,7 +2,6 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // First insert base lessons (without localized content)
     await queryInterface.bulkInsert(
       "lessons",
       [
@@ -31,11 +30,9 @@ module.exports = {
       {}
     );
 
-    // Then insert translations (English and Arabic)
     await queryInterface.bulkInsert(
       "lesson_translations",
       [
-        // English Translations
         {
           id: 1,
           lesson_id: 1,
@@ -268,7 +265,6 @@ module.exports = {
           updated_at: new Date(),
         },
 
-        // Arabic Translations
         {
           id: 22,
           lesson_id: 1,
@@ -506,9 +502,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    // First delete translations to maintain referential integrity
     await queryInterface.bulkDelete("lesson_translations", null, {});
-    // Then delete lessons
     await queryInterface.bulkDelete("lessons", null, {});
   },
 };

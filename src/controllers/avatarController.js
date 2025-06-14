@@ -1,4 +1,3 @@
-// controolers/avatarController.js
 const { User, Asset , UserAsset, UserPreference } = require("../models/index");
 const sequelize = require('../config/db');
 
@@ -6,16 +5,14 @@ exports.savePreferences = async (req, res) => {
   try {
     const { userId, ...preferences } = req.body;
     
-    // Check if the user already has preferences
+    // if user already has preferences
     const existingPreferences = await UserPreference.findOne({
       where: { user_id: userId }
     });
 
     if (existingPreferences) {
-      // Update existing preferences
       await existingPreferences.update(preferences);
     } else {
-      // Create new preferences
       await UserPreference.create({
         user_id: userId,
         ...preferences
@@ -40,15 +37,6 @@ exports.getUserPreferences = async (req, res) => {
   }
 };
 
-// exports.getUser = async (req, res) => {
-//   try {
-//     const user = await User.findByPk(req.params.id);
-//     if (!user) return res.status(404).json({ message: "User not found" });
-//     res.json(user);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
 
 exports.getAssets = async (req, res) => {
   try {
@@ -110,26 +98,22 @@ exports.buyItem = async (req, res) => {
       return res.status(400).json({ message: "Not Enough Points!" });
     }
 
-    // Deduct the points from the user
     await user.decrement('earned_points', { by: asset.price, transaction });
 
-    // Create the UserAsset record to mark the asset as owned
     await UserAsset.create({
       user_id: userId,
       asset_id: assetId
     }, { transaction });
 
-    // Fetch the updated user data to get the new earned_points value
     const updatedUser = await User.findByPk(userId, { transaction });
 
     await transaction.commit();
 
-    // Return the purchased asset data and the updated points
     res.json({ 
       success: true, 
       message: "Item Purchased!",
-      asset: asset.get({ plain: true }), // Convert Sequelize instance to plain object
-      updatedPoints: updatedUser.earned_points // Include the updated points
+      asset: asset.get({ plain: true }), 
+      updatedPoints: updatedUser.earned_points 
     });
     
   } catch (error) {

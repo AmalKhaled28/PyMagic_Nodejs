@@ -2,7 +2,6 @@ const { Sequelize } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // First insert base answer motivations (without text)
     await queryInterface.bulkInsert(
       "answer_motivation",
       [
@@ -100,11 +99,10 @@ module.exports = {
       {}
     );
 
-    // Then insert translations (English and Arabic)
     await queryInterface.bulkInsert(
       "answer_motivation_translations",
       [
-        // English Translations
+        
         {
           id: 1,
           answer_motivation_id: 1,
@@ -226,7 +224,6 @@ module.exports = {
           updated_at: new Date(),
         },
 
-        // Arabic Translations
         {
           id: 16,
           answer_motivation_id: 1,
@@ -353,9 +350,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    // First delete translations to maintain referential integrity
     await queryInterface.bulkDelete("answer_motivation_translations", null, {});
-    // Then delete answer motivations
     await queryInterface.bulkDelete("answer_motivation", null, {});
   },
 };

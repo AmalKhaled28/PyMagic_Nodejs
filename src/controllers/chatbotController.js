@@ -93,17 +93,13 @@ class ChatbotController {
     }
 
     try {
-      // Detect language from accept-language header or message content
+      // Detect language from accept-language header 
       const languageHeader = req.headers['accept-language'] || 'en';
-      const isArabicMessage = /[\u0600-\u06FF]/.test(message); // Check if message contains Arabic characters
+      const isArabicMessage = /[\u0600-\u06FF]/.test(message); 
       const selectedPrompt = languageHeader.includes('ar') || isArabicMessage ? arabicPrompt : englishPrompt;
-      console.log('Detected language header:', languageHeader);
-      console.log('Is message Arabic?', isArabicMessage);
-      console.log('Selected prompt:', selectedPrompt === arabicPrompt ? 'Arabic' : 'English');
-
+     
       const prompt = selectedPrompt.replace('${message}', message);
 
-      // Add a small delay to avoid hitting rate limits
       await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
 
       let attempts = 0;
@@ -114,7 +110,6 @@ class ChatbotController {
           const result = await model.generateContent(prompt);
           let responseText = result.response.text();
 
-          // Ensure code blocks are properly formatted
           if (!responseText.includes('```python')) {
             console.warn('Response lacks proper code block formatting. Adding default format.');
             responseText = `Here's the answer:\n\n${responseText}\n\n\`\`\`python\n# Example code (if needed)\n\`\`\``;
@@ -137,13 +132,13 @@ class ChatbotController {
           if (error.status === 429) {
             attempts++;
             console.warn(`Rate limit exceeded (attempt ${attempts}/${maxAttempts}). Retrying after 42 seconds...`);
-            await new Promise(resolve => setTimeout(resolve, 42000)); // Wait 42 seconds as suggested by the error
+            await new Promise(resolve => setTimeout(resolve, 42000));
             if (attempts >= maxAttempts) {
               console.error('Max retry attempts reached for rate limit error:', error);
               return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
             }
           } else {
-            throw error; // Rethrow other errors
+            throw error; 
           }
         }
       }

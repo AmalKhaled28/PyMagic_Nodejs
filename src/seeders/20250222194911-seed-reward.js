@@ -1,6 +1,5 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // First insert rewards (without text)
     await queryInterface.bulkInsert(
       "rewards",
       [
@@ -43,7 +42,6 @@ module.exports = {
     await queryInterface.bulkInsert(
       "reward_translations",
       [
-        // English Translations
         {
           id: 1,
           reward_id: 1,
@@ -229,7 +227,6 @@ module.exports = {
           updated_at: new Date(),
         },
 
-        // Arabic Translations
         {
           id: 24,
           reward_id: 1,
@@ -420,9 +417,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    // First delete translations
     await queryInterface.bulkDelete("reward_translations", null, {});
-    // Then delete rewards
     await queryInterface.bulkDelete("rewards", null, {});
   },
 };

@@ -1,4 +1,3 @@
-//controllers/sectionController.js
 
 const { Section, Unit, Lesson, StudentQuiz, SectionTranslation, UnitTranslation, LessonTranslation } = require("../models/index");
 
@@ -72,7 +71,6 @@ exports.getSectionDetails = async (req, res) => {
 
     const sectionCount = await Section.count();
 
-    // Fetch previous section name (if exists)
     let prevSectionName = "";
     if (parseInt(sectionId) > 1) {
       const prevSection = await Section.findOne({
@@ -90,7 +88,6 @@ exports.getSectionDetails = async (req, res) => {
       prevSectionName = prevSection?.translations?.[0]?.name || "Unnamed Section";
     }
 
-    // Fetch next section name (if exists)
     let nextSectionName = "";
     if (parseInt(sectionId) < sectionCount) {
       const nextSection = await Section.findOne({
@@ -108,13 +105,12 @@ exports.getSectionDetails = async (req, res) => {
       nextSectionName = nextSection?.translations?.[0]?.name || "Unnamed Section";
     }
 
-    // Format response to include translated names and adjacent section names
     const formattedSection = {
       id: section.id,
       sectionCount: sectionCount,
       name: section.translations.length > 0 ? section.translations[0].name : "Unnamed Section",
-      prevSectionName, // Include previous section name
-      nextSectionName, // Include next section name
+      prevSectionName, 
+      nextSectionName, 
       units: section.units.map(unit => ({
         id: unit.id,
         name: unit.translations.length > 0 ? unit.translations[0].name : "Unnamed Unit",
@@ -134,113 +130,7 @@ exports.getSectionDetails = async (req, res) => {
   }
 };
 
-// exports.getSectionFlashcards = async (req, res) => {
-//   try {
-//     const sectionId = req.params.id;
-//     const userId = req.user.id;
-//     const language = req.headers["accept-language"] || "en";
 
-//     const section = await Section.findOne({
-//       where: { id: sectionId },
-//       attributes: ['id', 'created_at', 'updated_at'],
-//       include: [
-//         {
-//           model: SectionTranslation,
-//           as: 'translations',
-//           where: { language },
-//           required: false,
-//           attributes: ['name'],
-//         },
-//         {
-//           model: Unit,
-//           as: "units",
-//           attributes: ['id', 'section_id', 'created_at', 'updated_at'],
-//           include: [
-//             {
-//               model: UnitTranslation,
-//               as: 'translations',
-//               where: { language },
-//               required: false,
-//               attributes: ['name'],
-//             },
-//             {
-//               model: Lesson,
-//               as: "lessons",
-//               attributes: ['id', 'unit_id', 'created_at', 'updated_at'],
-//               include: [
-//                 {
-//                   model: LessonTranslation,
-//                   as: 'translations',
-//                   where: { language },
-//                   required: false,
-//                   attributes: ['title', 'flash_card'],
-//                 },
-//                 {
-//                   model: StudentQuiz,
-//                   as: "quizzes",
-//                   where: { user_id: userId },
-//                   required: false,
-//                   attributes: ["id", "is_passed"],
-//                 },
-//               ],
-//             },
-//           ],
-//         },
-//       ],
-//       order: [
-//         [{ model: Unit, as: 'units' }, 'id', 'ASC'],
-//         [{ model: Unit, as: 'units' }, { model: Lesson, as: 'lessons' }, 'id', 'ASC']
-//       ],
-//     });
-
-//     if (!section) {
-//       return res.status(404).json({ message: "Section not found" });
-//     }
-
-//     // Get section name with fallback logic
-//     const sectionName = section.translations.length > 0 
-//       ? section.translations[0].name 
-//       : "Unnamed Section";
-
-//     // Group flashcards by unit with translated data
-//     const flashcardsByUnit = section.units.map(unit => ({
-//       unitId: unit.id,
-//       unitName: unit.translations.length > 0 
-//         ? unit.translations[0].name 
-//         : "Unnamed Unit",
-//       lessons: unit.lessons.map((lesson, index) => ({
-//         lessonId: lesson.id,
-//         lessonName: lesson.translations.length > 0 
-//           ? lesson.translations[0].title 
-//           : "Unnamed Lesson",
-//         lessonNumber: index + 1,
-//         flashCard: lesson.translations.length > 0 
-//           ? lesson.translations[0].flash_card 
-//           : null,
-//         isPassed: lesson.quizzes && lesson.quizzes.length > 0 
-//           ? lesson.quizzes[0].is_passed 
-//           : false,
-//       })),
-//     }));
-
-//     res.json({
-//       sectionId: section.id,
-//       sectionName: sectionName,  // Include the section name in the response
-//       units: flashcardsByUnit,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching flashcards:", error);
-//     res.status(500).json({ 
-//       message: "Server error",
-//       error: process.env.NODE_ENV === 'development' ? error.message : undefined
-//     });
-//   }
-// };
-
-// checkFlashcardAccess remains unchanged as it doesn't deal with translations or ordering
-
-// controllers/sectionController.js
-// const { Section, Unit, Lesson, StudentQuiz, SectionTranslation, UnitTranslation, LessonTranslation } = require("../models/index");
 
 exports.getSectionFlashcards = async (req, res) => {
   try {
@@ -308,12 +198,10 @@ exports.getSectionFlashcards = async (req, res) => {
     // Get section count
     const sectionCount = await Section.count();
 
-    // Get section name with fallback logic
     const sectionName = section.translations.length > 0 
       ? section.translations[0].name 
       : "Unnamed Section";
 
-    // Fetch previous section name (if exists)
     let prevSectionName = "";
     if (parseInt(sectionId) > 1) {
       const prevSection = await Section.findOne({
@@ -331,7 +219,6 @@ exports.getSectionFlashcards = async (req, res) => {
       prevSectionName = prevSection?.translations?.[0]?.name || "Unnamed Section";
     }
 
-    // Fetch next section name (if exists)
     let nextSectionName = "";
     if (parseInt(sectionId) < sectionCount) {
       const nextSection = await Section.findOne({
@@ -349,7 +236,6 @@ exports.getSectionFlashcards = async (req, res) => {
       nextSectionName = nextSection?.translations?.[0]?.name || "Unnamed Section";
     }
 
-    // Group flashcards by unit with translated data
     const flashcardsByUnit = section.units.map(unit => ({
       unitId: unit.id,
       unitName: unit.translations.length > 0 
@@ -373,9 +259,9 @@ exports.getSectionFlashcards = async (req, res) => {
     res.json({
       sectionId: section.id,
       sectionName: sectionName,
-      sectionCount: sectionCount, // Include section count
-      prevSectionName, // Include previous section name
-      nextSectionName, // Include next section name
+      sectionCount: sectionCount, 
+      prevSectionName, 
+      nextSectionName, 
       units: flashcardsByUnit,
     });
   } catch (error) {
@@ -429,7 +315,6 @@ exports.checkNextSectionAccess = async (req, res) => {
       return res.status(400).json({ success: false, message: "User ID and Section ID are required" });
     }
 
-    // ابحث عن اخر Unit في الـ Section الحالي
     const lastUnit = await Unit.findOne({
       where: { section_id },
       order: [['id', 'DESC']],
@@ -439,12 +324,11 @@ exports.checkNextSectionAccess = async (req, res) => {
       return res.status(404).json({ success: false, message: "No units found in this section" });
     }
 
-    // افحص إذا كان المستخدم نجح في Unit Quiz بتاع اخر Unit
     const lastUnitQuiz = await StudentQuiz.findOne({
       where: {
         user_id,
         unit_id: lastUnit.id,
-        lesson_id: null, // لأن Unit Quiz بيكون lesson_id = null
+        lesson_id: null, 
         is_passed: true,
       },
     });
@@ -456,7 +340,6 @@ exports.checkNextSectionAccess = async (req, res) => {
       });
     }
 
-    // لو نجح في الـ Quiz، ارجع نجاح
     return res.json({
       success: true,
       message: "Access granted to next section",

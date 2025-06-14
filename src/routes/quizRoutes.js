@@ -15,10 +15,8 @@ router.post('/unit/submit', QuizController.submitUnitQuiz);
 router.get('/progress/:user_id', QuizController.getUserQuizProgress);
 router.get('/review/:quiz_id', QuizController.getQuizReviewDetails);
 
-// Route for lesson access
 router.get('/check-access/lesson/:user_id/:lesson_id', QuizController.checkLessonAccess);
 
-// Route for unit quiz access
 router.get('/check-access/unit/:user_id/:unit_id', QuizController.checkLessonAccess);
 
 module.exports = router;

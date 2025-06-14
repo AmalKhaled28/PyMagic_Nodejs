@@ -16,47 +16,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// **Register User**
-// const registerUser = async (req, res) => {
-//   try {
-//     const { name, email, password, parentEmail, age } = req.body;
-    
-//     const existingUser = await User.getByEmail(email);
-//     if (existingUser) return res.status(400).json({ error: 'Email already exists' });
 
-//     const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
-//     if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
-
-//     // Updated regex to include all common special characters
-//     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~]{10,}$/;
-//     if (!passwordRegex.test(password)) {
-//       return res.status(400).json({
-//         error: 'Password must be at least 10 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., !@#$%^&*()_+-=[]{}|;:\'",.<>?/~)'
-//       });
-//     }
-
-//     const newUser = await User.create({ name, email, password, parent_email: parentEmail, age, verified: false });
-
-//     const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
-
-//     const verificationLink = `https://pymagic-gules.vercel.app/verify-email?token=${token}`;
-//     const mailOptions = {
-//       from: process.env.EMAIL_USER,
-//       to: email,
-//       subject: 'Verify Your Email',
-//       html: `<p>Please verify your email by clicking <a href="${verificationLink}">here</a>.</p>`
-//     };
-
-//     await transporter.sendMail(mailOptions);
-
-//     res.status(201).json({ message: 'User created, please verify your email', userId: newUser.id });
-//   } catch (err) {
-//     console.error('Error in registerUser:', err); 
-//     res.status(500).json({ error: 'Error creating user: ' + err.message });
-//   }
-// };
-
-// **Register User**
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, parentEmail, age } = req.body;
@@ -67,7 +27,6 @@ const registerUser = async (req, res) => {
     const existingParentEmail = await User.findOne({ where: { parent_email: parentEmail } });
     if (existingParentEmail) return res.status(400).json({ error: 'Parent email already exists' });
 
-    // Updated regex to include all common special characters
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~]{10,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
@@ -97,7 +56,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-// **Verify Email**
 const verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
@@ -123,7 +81,6 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-// **Login User**
 const loginUser = async (req, res) => {
   try {
     const { email, password, rememberMe, parentEmail } = req.body;
@@ -163,12 +120,6 @@ const loginUser = async (req, res) => {
       expiresIn: rememberMe ? '7d' : '1h',
     });
 
-    // res.cookie('token', token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production', // لازم يكون true على Railway لأنه HTTPS
-    //   sameSite: 'None', // عشان يسمح بتبادل الكوكيز عبر domains مختلفة
-    // });
-
   
  
 
@@ -200,7 +151,7 @@ const loginUser = async (req, res) => {
       lastSectionId = mostRecentQuiz.Unit.section_id;
     }
 
-    console.log('Login successful for user:', user.email); // سجل نجاح تسجيل الدخول
+    console.log('Login successful for user:', user.email); 
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -219,7 +170,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-// **Forgot Password**
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -246,7 +196,6 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// **Reset Password**
 const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -273,7 +222,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// **Get User Profile**
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, { attributes: { exclude: ['password'] } });
@@ -284,7 +232,6 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-// **Get User Profile Page**
 const getUserProfilePage = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
@@ -320,7 +267,6 @@ const getUserProfilePage = async (req, res) => {
   }
 };
 
-// **Get User Profile Info**
 const getUserProfileInfo = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.userId);
@@ -340,7 +286,6 @@ const getUserProfileInfo = async (req, res) => {
   }
 };
 
-// **Update User Profile**
 const updateUserProfile = async (req, res) => {
   try {
     const { name, email, currentPassword, newPassword, parentEmail } = req.body;
@@ -377,7 +322,6 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-// **Update User Points**
 const updateUserPoints = async (req, res) => {
   try {
     const { userId, points } = req.body;

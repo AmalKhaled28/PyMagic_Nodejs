@@ -67,6 +67,3 @@ module.exports = {
 // npx sequelize-cli db:seed:all
 
 
-//  npx sequelize-cli migration:generate --name create-all-tables
-//  npx sequelize-cli db:migrate 
-// npx sequelize-cli db:migrate:undo:all
