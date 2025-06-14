@@ -78,8 +78,9 @@ const registerUser = async (req, res) => {
     const newUser = await User.create({ name, email, password, parent_email: parentEmail, age, verified: false });
 
     const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '15m' });
-
-    const verificationLink = `https://pymagic-gules.vercel.app/verify-email?token=${token}`;
+   
+    // const verificationLink = `https://pymagic-gules.vercel.app/verify-email?token=${token}`;
+    const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -227,9 +228,8 @@ const forgotPassword = async (req, res) => {
 
     const resetToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
-
-    const resetLink = `https://pymagic-gules.vercel.app/reset-password?token=${resetToken}`;
+    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    // const resetLink = `https://pymagic-gules.vercel.app/reset-password?token=${resetToken}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,

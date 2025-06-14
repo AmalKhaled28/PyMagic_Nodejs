@@ -1,4 +1,3 @@
-// controllers/achievementController.js
 const Achievement = require('../models/achievement');
 const Reward = require('../models/reward');
 const RewardTranslation = require('../models/reward_translations');
@@ -21,7 +20,6 @@ static async getUserAchievements(req, res) {
           });
       }
 
-      // Verify user exists
       const user = await User.findByPk(userId);
       if (!user) {
           return res.status(404).json({ 
@@ -31,7 +29,6 @@ static async getUserAchievements(req, res) {
           });
       }
 
-      // Fetch achievements with translations
       const achievements = await Achievement.findAll({
           where: { user_id: userId },
           include: [
@@ -44,7 +41,7 @@ static async getUserAchievements(req, res) {
                           as: 'translations',
                           where: { language },
                           required: false,
-                          attributes: ['text'] // Removed 'image' from attributes
+                          attributes: ['text'] 
                       }
                   ]
               }
@@ -52,14 +49,13 @@ static async getUserAchievements(req, res) {
           order: [['created_at', 'DESC']]
       });
 
-      // Format the response data
       const formattedAchievements = achievements.map(achievement => {
           const translation = achievement.reward.translations?.[0] || {};
           
           return {
               id: achievement.id,
               title: translation.text || achievement.reward.text || 'Achievement',
-              image: achievement.reward.image || '', // Use the image from the Reward table
+              image: achievement.reward.image || '', 
               points_required: achievement.reward.required_points,
               unlocked_at: achievement.created_at
           };

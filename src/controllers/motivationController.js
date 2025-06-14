@@ -1,12 +1,11 @@
 const { Motivation, MotivationTranslation } = require('../models');
 const { Sequelize } = require('sequelize');
 
-// Controller to fetch a motivational message based on score percentage and language
+// fetch a motivational message based on score percentage and language
 const getMotivationalMessage = async (req, res) => {
   try {
     const { score, total } = req.query;
 
-    // Validate that both score and total are provided
     if (!score || !total) {
       return res.status(400).json({
         success: false,
@@ -14,11 +13,9 @@ const getMotivationalMessage = async (req, res) => {
       });
     }
 
-    // Convert score and total to numbers
     const userScore = parseFloat(score);
     const totalScore = parseFloat(total);
 
-    // Validate that score and total are valid numbers
     if (isNaN(userScore) || isNaN(totalScore) || totalScore <= 0) {
       return res.status(400).json({
         success: false,
@@ -42,7 +39,7 @@ const getMotivationalMessage = async (req, res) => {
     // Fetch a random motivational message for the given score level
     const motivation = await Motivation.findOne({
       where: { score_level: scoreLevel },
-      order: Sequelize.literal('RAND()'), // Use RAND() for MySQL
+      order: Sequelize.literal('RAND()'), 
     });
 
     if (!motivation) {
@@ -52,18 +49,16 @@ const getMotivationalMessage = async (req, res) => {
       });
     }
 
-    // Fetch language from Accept-Language header, default to 'en' if not provided
     const language = req.headers["accept-language"] || "en";
 
     // Fetch the translation for the given language
     let translation = await MotivationTranslation.findOne({
       where: {
         motivation_id: motivation.id,
-        language: language.split('-')[0], // Extract base language (e.g., 'en' from 'en-US')
+        language: language.split('-')[0], 
       },
     });
 
-    // Fallback to English if the language is not found
     if (!translation) {
       translation = await MotivationTranslation.findOne({
         where: {
